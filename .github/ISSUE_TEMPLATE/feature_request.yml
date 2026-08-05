@@ -1,0 +1,29 @@
+name: Feature request
+description: Propose a grounded skill, constraint, verifier, or experiment.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+    validations:
+      required: true
+  - type: textarea
+    id: state
+    attributes:
+      label: Required observable state and UNKNOWN behavior
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Expected effects and physical verification
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Resources, conflicts, and recovery
+    validations:
+      required: true

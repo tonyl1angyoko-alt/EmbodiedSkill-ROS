@@ -1,0 +1,35 @@
+name: Bug report
+description: Report a reproducible defect without sensitive robot data.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include commands, Mock state, plan, and fault events. Remove credentials, addresses, and personal data.
+    validations:
+      required: true
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: Validation environment
+      options:
+        - Mock Backend
+        - Static inspection only
+        - ROS2 simulation
+        - Supervised hardware
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs
+      render: shell
