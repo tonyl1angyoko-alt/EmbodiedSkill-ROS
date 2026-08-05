@@ -1,0 +1,259 @@
+[
+  {
+    "id": "single_01_head", "category": "single", "goal": "set head yaw",
+    "initial_state": {},
+    "steps": [{"id": "s1", "skill": "set_head", "arguments": {"yaw_deg": 15.0}}],
+    "expected_state": {"head_yaw_deg": 15.0}
+  },
+  {
+    "id": "single_02_retract", "category": "single", "goal": "retract right arm",
+    "initial_state": {"right_arm_safe": false},
+    "steps": [{"id": "s1", "skill": "retract_arm", "arguments": {"arm": "right"}}],
+    "expected_state": {"right_arm_safe": true}
+  },
+  {
+    "id": "single_03_lift", "category": "single", "goal": "raise lift",
+    "initial_state": {},
+    "steps": [{"id": "s1", "skill": "set_lift", "arguments": {"height_mm": 300.0}}],
+    "expected_state": {"lift_height_mm": 300.0}
+  },
+  {
+    "id": "single_04_agv", "category": "single", "goal": "move base",
+    "initial_state": {},
+    "steps": [{"id": "s1", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+    "expected_state": {"agv_position_m": 1.0}
+  },
+  {
+    "id": "single_05_extend", "category": "single", "goal": "extend left arm",
+    "initial_state": {},
+    "steps": [{"id": "s1", "skill": "extend_arm", "arguments": {"arm": "left"}}],
+    "expected_state": {"left_arm_safe": false}
+  },
+
+  {
+    "id": "multi_01_required_demo", "category": "multi", "goal": "retract right arm, move to workstation, raise lift",
+    "initial_state": {"right_arm_safe": false},
+    "steps": [
+      {"id": "s1", "skill": "retract_arm", "arguments": {"arm": "right"}},
+      {"id": "s2", "skill": "move_agv", "arguments": {"distance_m": 1.0}},
+      {"id": "s3", "skill": "set_lift", "arguments": {"height_mm": 300.0}}
+    ],
+    "expected_state": {"right_arm_safe": true, "agv_position_m": 1.0, "lift_height_mm": 300.0}
+  },
+  {
+    "id": "multi_02_head_move", "category": "multi", "goal": "look and move",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "set_head", "arguments": {"yaw_deg": 20.0}},
+      {"id": "s2", "skill": "move_agv", "arguments": {"distance_m": 0.5}}
+    ],
+    "expected_state": {"head_yaw_deg": 20.0, "agv_position_m": 0.5}
+  },
+  {
+    "id": "multi_03_manipulate_transport", "category": "multi", "goal": "extend, retract, transport",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "extend_arm", "arguments": {"arm": "right"}},
+      {"id": "s2", "skill": "retract_arm", "arguments": {"arm": "right"}},
+      {"id": "s3", "skill": "move_agv", "arguments": {"distance_m": 0.75}}
+    ],
+    "expected_state": {"right_arm_safe": true, "agv_position_m": 0.75}
+  },
+  {
+    "id": "multi_04_lift_head_move", "category": "multi", "goal": "raise, look, move",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "set_lift", "arguments": {"height_mm": 250.0}},
+      {"id": "s2", "skill": "set_head", "arguments": {"pitch_deg": -10.0}},
+      {"id": "s3", "skill": "move_agv", "arguments": {"distance_m": 0.25}}
+    ],
+    "expected_state": {"lift_height_mm": 250.0, "head_pitch_deg": -10.0, "agv_position_m": 0.25}
+  },
+  {
+    "id": "multi_05_move_lift_head", "category": "multi", "goal": "move, raise, look",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "move_agv", "arguments": {"distance_m": -0.5}},
+      {"id": "s2", "skill": "set_lift", "arguments": {"height_mm": 180.0}},
+      {"id": "s3", "skill": "set_head", "arguments": {"yaw_deg": -25.0}}
+    ],
+    "expected_state": {"agv_position_m": -0.5, "lift_height_mm": 180.0, "head_yaw_deg": -25.0}
+  },
+  {
+    "id": "multi_06_dual_retract_move", "category": "multi", "goal": "prepare both arms and move",
+    "initial_state": {"left_arm_safe": false, "right_arm_safe": false},
+    "steps": [
+      {"id": "s1", "skill": "retract_arm", "arguments": {"arm": "left"}},
+      {"id": "s2", "skill": "retract_arm", "arguments": {"arm": "right"}},
+      {"id": "s3", "skill": "move_agv", "arguments": {"distance_m": 1.5}}
+    ],
+    "expected_state": {"left_arm_safe": true, "right_arm_safe": true, "agv_position_m": 1.5}
+  },
+  {
+    "id": "multi_07_head_scan", "category": "multi", "goal": "move head through two poses",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "set_head", "arguments": {"yaw_deg": -30.0}},
+      {"id": "s2", "skill": "set_head", "arguments": {"yaw_deg": 30.0, "pitch_deg": -5.0}}
+    ],
+    "expected_state": {"head_yaw_deg": 30.0, "head_pitch_deg": -5.0}
+  },
+  {
+    "id": "multi_08_round_trip", "category": "multi", "goal": "move out and back",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "move_agv", "arguments": {"distance_m": 1.0}},
+      {"id": "s2", "skill": "move_agv", "arguments": {"distance_m": -1.0}}
+    ],
+    "expected_state": {"agv_position_m": 0.0}
+  },
+  {
+    "id": "multi_09_two_lift_targets", "category": "multi", "goal": "raise and lower lift",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "set_lift", "arguments": {"height_mm": 500.0}},
+      {"id": "s2", "skill": "set_lift", "arguments": {"height_mm": 200.0}}
+    ],
+    "expected_state": {"lift_height_mm": 200.0}
+  },
+  {
+    "id": "multi_10_long_horizon", "category": "multi", "goal": "five component actions",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "set_head", "arguments": {"yaw_deg": 10.0}},
+      {"id": "s2", "skill": "extend_arm", "arguments": {"arm": "left"}},
+      {"id": "s3", "skill": "retract_arm", "arguments": {"arm": "left"}},
+      {"id": "s4", "skill": "move_agv", "arguments": {"distance_m": 2.0}},
+      {"id": "s5", "skill": "set_lift", "arguments": {"height_mm": 350.0}}
+    ],
+    "expected_state": {"head_yaw_deg": 10.0, "left_arm_safe": true, "agv_position_m": 2.0, "lift_height_mm": 350.0}
+  },
+
+  {
+    "id": "state_01_right_unsafe", "category": "state", "goal": "move with right arm extended",
+    "initial_state": {"right_arm_safe": false},
+    "steps": [{"id": "s1", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+    "expected_state": {"right_arm_safe": true, "agv_position_m": 1.0}
+  },
+  {
+    "id": "state_02_left_unsafe", "category": "state", "goal": "move with left arm extended",
+    "initial_state": {"left_arm_safe": false},
+    "steps": [{"id": "s1", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+    "expected_state": {"left_arm_safe": true, "agv_position_m": 1.0}
+  },
+  {
+    "id": "state_03_both_unknown", "category": "state", "goal": "move from unknown arm state",
+    "initial_state": {"left_arm_safe": null, "right_arm_safe": null},
+    "steps": [{"id": "s1", "skill": "move_agv", "arguments": {"distance_m": 0.5}}],
+    "expected_state": {"left_arm_safe": true, "right_arm_safe": true, "agv_position_m": 0.5}
+  },
+  {
+    "id": "state_04_lift_with_unsafe_arms", "category": "state", "goal": "raise lift from manipulation pose",
+    "initial_state": {"left_arm_safe": false, "right_arm_safe": false},
+    "steps": [{"id": "s1", "skill": "set_lift", "arguments": {"height_mm": 450.0}}],
+    "expected_state": {"left_arm_safe": true, "right_arm_safe": true, "lift_height_mm": 450.0}
+  },
+  {
+    "id": "state_05_head_then_transport", "category": "state", "goal": "look then move from unsafe state",
+    "initial_state": {"right_arm_safe": false},
+    "steps": [
+      {"id": "s1", "skill": "set_head", "arguments": {"pitch_deg": 10.0}},
+      {"id": "s2", "skill": "move_agv", "arguments": {"distance_m": 0.4}}
+    ],
+    "expected_state": {"head_pitch_deg": 10.0, "right_arm_safe": true, "agv_position_m": 0.4}
+  },
+
+  {
+    "id": "conflict_01_extend_and_move", "category": "conflict", "goal": "serialize arm extension and base motion",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "extend_arm", "arguments": {"arm": "right"}, "parallel_group": "g1"},
+      {"id": "s2", "skill": "move_agv", "arguments": {"distance_m": 1.0, "speed_mps": 0.5}, "parallel_group": "g1"}
+    ],
+    "expected_state": {"right_arm_safe": true, "agv_position_m": 1.0}
+  },
+  {
+    "id": "conflict_02_lift_and_move", "category": "conflict", "goal": "serialize lift and base",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "set_lift", "arguments": {"height_mm": 300.0}, "parallel_group": "g1"},
+      {"id": "s2", "skill": "move_agv", "arguments": {"distance_m": 0.5}, "parallel_group": "g1"}
+    ],
+    "expected_state": {"lift_height_mm": 300.0, "agv_position_m": 0.5}
+  },
+  {
+    "id": "conflict_03_two_arm_actions", "category": "conflict", "goal": "serialize shared arm resource",
+    "initial_state": {"left_arm_safe": false},
+    "steps": [
+      {"id": "s1", "skill": "retract_arm", "arguments": {"arm": "left"}, "parallel_group": "g1"},
+      {"id": "s2", "skill": "extend_arm", "arguments": {"arm": "right"}, "parallel_group": "g1"}
+    ],
+    "expected_state": {"left_arm_safe": true, "right_arm_safe": false}
+  },
+  {
+    "id": "conflict_04_two_head_actions", "category": "conflict", "goal": "serialize shared head resource",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "set_head", "arguments": {"yaw_deg": 10.0}, "parallel_group": "g1"},
+      {"id": "s2", "skill": "set_head", "arguments": {"pitch_deg": -10.0}, "parallel_group": "g1"}
+    ],
+    "expected_state": {"head_yaw_deg": 10.0, "head_pitch_deg": -10.0}
+  },
+  {
+    "id": "conflict_05_extend_and_lift", "category": "conflict", "goal": "insert transport pose before lift",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "extend_arm", "arguments": {"arm": "left"}, "parallel_group": "g1"},
+      {"id": "s2", "skill": "set_lift", "arguments": {"height_mm": 400.0}, "parallel_group": "g1"}
+    ],
+    "expected_state": {"left_arm_safe": true, "lift_height_mm": 400.0}
+  },
+
+  {
+    "id": "fault_01_physical_failure", "category": "fault", "goal": "recover lift slip",
+    "initial_state": {},
+    "steps": [{"id": "s1", "skill": "set_lift", "arguments": {"height_mm": 400.0}}],
+    "faults": [{"skill": "set_lift", "events": [{"mode": "physical_failure", "message": "motor slipped"}]}],
+    "expected_state": {"lift_height_mm": 400.0}
+  },
+  {
+    "id": "fault_02_timeout", "category": "fault", "goal": "recover AGV timeout",
+    "initial_state": {},
+    "steps": [{"id": "s1", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+    "faults": [{"skill": "move_agv", "events": [{"mode": "timeout", "message": "ROS2 service timeout"}]}],
+    "expected_state": {"agv_position_m": 1.0}
+  },
+  {
+    "id": "fault_03_replan_after_retries", "category": "fault", "goal": "recover head motion through replan",
+    "initial_state": {},
+    "steps": [{"id": "s1", "skill": "set_head", "arguments": {"yaw_deg": 20.0}}],
+    "faults": [{"skill": "set_head", "events": [
+      {"mode": "command_failure", "message": "controller busy"},
+      {"mode": "command_failure", "message": "controller still busy"}
+    ]}],
+    "expected_state": {"head_yaw_deg": 20.0}
+  },
+  {
+    "id": "fault_04_state_drift", "category": "fault", "goal": "recover outcome failure and body drift",
+    "initial_state": {},
+    "steps": [
+      {"id": "s1", "skill": "set_head", "arguments": {"yaw_deg": -15.0}},
+      {"id": "s2", "skill": "move_agv", "arguments": {"distance_m": 0.5}}
+    ],
+    "faults": [{"skill": "set_head", "events": [{
+      "mode": "state_drift", "message": "arm state changed during head motion", "drift": {"right_arm_safe": false}
+    }]}],
+    "expected_state": {"head_yaw_deg": -15.0, "right_arm_safe": true, "agv_position_m": 0.5}
+  },
+  {
+    "id": "fault_05_actuator_unavailable", "category": "fault", "goal": "stop when AGV remains unavailable",
+    "initial_state": {},
+    "steps": [{"id": "s1", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+    "faults": [{"skill": "move_agv", "events": [
+      {"mode": "command_failure", "message": "AGV offline", "drift": {"agv_ready": false}},
+      {"mode": "command_failure", "message": "AGV offline"},
+      {"mode": "command_failure", "message": "AGV offline"}
+    ]}],
+    "expected_state": {"agv_position_m": 1.0}
+  }
+]
