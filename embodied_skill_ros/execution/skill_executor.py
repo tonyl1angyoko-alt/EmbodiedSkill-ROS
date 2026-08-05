@@ -1,0 +1,182 @@
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+import time
+from typing import Callable
+
+from .outcome_verifier import OutcomeVerifier
+from .recovery_manager import RecoveryAction, RecoveryManager
+from .runtime_guard import RuntimeGuard
+from ..backends.base_backend import RobotBackend
+from ..grounding.plan_grounder import EmbodiedPlanGrounder
+from ..grounding.plan_repairer import PlanRepairer
+from ..models.skill_result import SkillResult
+from ..models.task_plan import TaskPlan
+from ..skills.registry import SkillRegistry
+from ..state.state_manager import StateManager
+from ..tracing.execution_trace import ExecutionTrace, TraceRecord, utc_now
+
+
+@dataclass
+class ExecutionReport:
+    success: bool
+    decision: str
+    plan: TaskPlan
+    results: list[SkillResult] = field(default_factory=list)
+    trace: ExecutionTrace | None = None
+    message: str = ""
+
+
+class SkillExecutor:
+    def __init__(self, registry: SkillRegistry, backend: RobotBackend,
+                 max_retries: int = 1,
+                 max_replans: int = 1,
+                 replanner: Callable[[TaskPlan, object], TaskPlan | None] | None = None):
+        self.registry = registry
+        self.backend = backend
+        self.state_manager = StateManager(backend)
+        self.grounder = EmbodiedPlanGrounder(registry)
+        self.repairer = PlanRepairer()
+        self.guard = RuntimeGuard()
+        self.verifier = OutcomeVerifier()
+        self.recovery = RecoveryManager(max_retries)
+        if max_replans < 0:
+            raise ValueError("max_replans must be non-negative")
+        self.max_replans = max_replans
+        self.replanner = replanner
+
+    def execute(self, plan: TaskPlan, allow_repair: bool = True,
+                verify_outcomes: bool = True, allow_recovery: bool = True,
+                ground_plan: bool = True, runtime_guard: bool = True) -> ExecutionReport:
+        state = self.state_manager.refresh()
+        decision = "EXECUTE"
+        if ground_plan:
+            grounding = self.grounder.ground(plan, state)
+            if not grounding.valid:
+                if grounding.requires_stop:
+                    return ExecutionReport(False, "STOP", plan,
+                                           message="; ".join(i.message for i in grounding.issues))
+                if not allow_repair:
+                    return ExecutionReport(False, "STOP", plan, message="plan is not grounded")
+                repaired = self.repairer.repair(plan, state, grounding)
+                if repaired is None:
+                    return ExecutionReport(False, "STOP", plan, message="plan repair failed")
+                plan = repaired
+                decision = "REPAIR"
+                grounding = self.grounder.ground(plan, state)
+                if not grounding.valid:
+                    return ExecutionReport(False, "STOP", plan, message="repaired plan remains invalid")
+
+        trace = ExecutionTrace(plan.plan_id, decisions=[decision])
+        results: list[SkillResult] = []
+        index = 0
+        replan_count = 0
+        runtime_repair_count = 0
+        while index < len(plan.steps):
+            step = plan.steps[index]
+            try:
+                skill = self.registry.get(step.skill)
+                skill.validate_arguments(step.arguments)
+            except (KeyError, TypeError, ValueError) as exc:
+                self.backend.stop()
+                trace.decisions.append("STOP")
+                return ExecutionReport(False, "STOP", plan, results, trace, str(exc))
+            before = self.state_manager.refresh()
+            if runtime_guard:
+                guard = self.guard.check(step, skill, before)
+                if not guard.allowed:
+                    # State may have drifted since initial grounding. Re-ground
+                    # only the unexecuted suffix and prefer a local plan repair.
+                    remaining = TaskPlan(
+                        plan.goal, plan.steps[index:], plan.plan_id, plan.revision, dict(plan.metadata)
+                    )
+                    suffix_report = self.grounder.ground(remaining, before)
+                    repaired = None
+                    if allow_repair and not suffix_report.requires_stop and runtime_repair_count < 2:
+                        repaired = self.repairer.repair(remaining, before, suffix_report)
+                    if repaired is not None and repaired.steps != remaining.steps:
+                        plan = TaskPlan(
+                            plan.goal,
+                            plan.steps[:index] + repaired.steps,
+                            plan.plan_id,
+                            max(plan.revision, repaired.revision),
+                            {**plan.metadata, "runtime_repaired": True},
+                        )
+                        runtime_repair_count += 1
+                        decision = "REPAIR" if decision == "EXECUTE" else decision
+                        trace.decisions.append("REPAIR")
+                        continue
+                    self.backend.stop()
+                    trace.decisions.append("STOP")
+                    return ExecutionReport(False, "STOP", plan, results, trace,
+                                           "runtime guard: " + "; ".join(guard.reasons))
+            attempt = 1
+            restart_from_replan = False
+            restart_current_step = False
+            while True:
+                started = utc_now()
+                monotonic_start = time.monotonic()
+                receipt = skill.execute(self.backend, step.arguments)
+                elapsed = time.monotonic() - monotonic_start
+                if elapsed > skill.timeout:
+                    receipt.accepted = False
+                    receipt.timed_out = True
+                    receipt.backend_message = (
+                        f"skill exceeded timeout: {elapsed:.3f}s > {skill.timeout:.3f}s"
+                    )
+                after = self.state_manager.refresh()
+                verification = (self.verifier.verify(skill, step.arguments, before, after)
+                                if receipt.accepted and verify_outcomes
+                                else None)
+                achieved = receipt.accepted and (verification.achieved if verification else True)
+                message = verification.message if verification else receipt.backend_message
+                after = self.state_manager.mark_result("success" if achieved else "failure")
+                result = SkillResult(skill.name, dict(step.arguments), receipt.accepted, achieved,
+                                     message, before, after, receipt.backend_message,
+                                     None if achieved else message,
+                                     receipt.timed_out, False, attempt)
+                record = TraceRecord(skill.name, dict(step.arguments), started, utc_now(),
+                                     receipt.accepted, receipt.backend_message,
+                                     before.to_dict(), after.to_dict(), achieved, message,
+                                     result.error, receipt.timed_out, False, attempt)
+                trace.add(record)
+                results.append(result)
+                if achieved:
+                    break
+                if not allow_recovery:
+                    self.backend.stop()
+                    trace.decisions.append("STOP")
+                    return ExecutionReport(False, "STOP", plan, results, trace, message)
+                may_replan = self.replanner is not None and replan_count < self.max_replans
+                recovery = self.recovery.decide(attempt, receipt.timed_out, may_replan)
+                result.recovery_triggered = True
+                record.recovery_triggered = True
+                trace.decisions.append(recovery.action.value.upper())
+                if recovery.action is RecoveryAction.RETRY:
+                    attempt += 1
+                    before = self.state_manager.refresh()
+                    if runtime_guard:
+                        retry_guard = self.guard.check(step, skill, before)
+                        if not retry_guard.allowed:
+                            # Return to the outer loop so the changed state is
+                            # re-grounded and, when possible, repaired before
+                            # another physical command is sent.
+                            trace.decisions.append("REGROUND")
+                            restart_current_step = True
+                            break
+                    continue
+                if recovery.action is RecoveryAction.REPLAN and self.replanner:
+                    replanned = self.replanner(plan, self.state_manager.refresh())
+                    if replanned is not None:
+                        plan = replanned
+                        replan_count += 1
+                        decision = "REPLAN"
+                        index = 0
+                        restart_from_replan = True
+                        break
+                self.backend.stop()
+                trace.decisions.append("STOP")
+                return ExecutionReport(False, "STOP", plan, results, trace, recovery.reason)
+            if not restart_from_replan and not restart_current_step:
+                index += 1
+        return ExecutionReport(True, decision, plan, results, trace, "task completed")
