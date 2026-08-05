@@ -1,0 +1,25 @@
+schema_version: 1
+decision_priority: [EXECUTE, REPAIR, REPLAN, STOP]
+constraints:
+  - id: emergency_stop
+    condition: emergency_stop == true
+    repairable: false
+  - id: robot_fault
+    condition: fault != null
+    repairable: false
+  - id: exclusive_body_resource
+    condition: required_resources intersects active_resources
+    repairable: true
+  - id: agv_transport_pose
+    condition: move_agv requires left_arm_safe == true and right_arm_safe == true
+    repair: "insert retract_arm for every unsafe or UNKNOWN arm"
+  - id: lift_arm_compatibility
+    condition: set_lift requires both arms transport-safe
+    repair: "insert retract_arm before lift motion"
+  - id: parallel_body_conflict
+    condition: "AGV motion cannot run in parallel with arm extension or lift motion"
+    repair: "serialize the parallel group and insert preparation actions"
+recovery:
+  max_local_retries: 1
+  max_replans: 1
+  order: [local_retry, parameter_correction, preparation_action, alternative_skill, replan, safe_stop]
