@@ -29,7 +29,6 @@ class RobotState:
 
     def copy(self, **changes: Any) -> "RobotState":
         changes.setdefault("active_resources", set(self.active_resources))
-        changes.setdefault("timestamp", datetime.now(timezone.utc).isoformat())
         return replace(self, **changes)
 
     def to_dict(self) -> dict[str, Any]:

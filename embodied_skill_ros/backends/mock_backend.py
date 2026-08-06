@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict, deque
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Any
 
 from .base_backend import RobotBackend
@@ -42,6 +43,7 @@ class MockRobotBackend(RobotBackend):
         return self._state.copy()
 
     def set_state(self, **changes: Any) -> None:
+        changes.setdefault("timestamp", datetime.now(timezone.utc).isoformat())
         self._state = self._state.copy(**changes)
 
     def command(self, skill_name: str, arguments: dict[str, Any]) -> CommandReceipt:

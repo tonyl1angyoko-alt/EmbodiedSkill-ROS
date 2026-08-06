@@ -49,10 +49,15 @@ class JakaBackendTests(unittest.TestCase):
         self.assertIsNone(state.agv_position_m)
 
     def test_explicit_state_provider_is_authoritative(self):
-        expected = RobotState(agv_ready=True, emergency_stop=False)
+        expected = RobotState(
+            agv_ready=True,
+            emergency_stop=False,
+            timestamp="2026-01-02T03:04:05+00:00",
+        )
         observed = JakaRobotBackend(state_provider=lambda: expected).observe()
         self.assertTrue(observed.agv_ready)
         self.assertFalse(observed.emergency_stop)
+        self.assertEqual(observed.timestamp, expected.timestamp)
 
     def test_single_arm_retract_is_not_advertised_or_executed(self):
         arm = FakeArm()

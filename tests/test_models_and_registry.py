@@ -1,13 +1,17 @@
 import json
 import unittest
+from unittest.mock import patch
 
+from embodied_skill_ros.backends.mock_backend import MockRobotBackend
 from embodied_skill_ros.grounding.plan_grounder import EmbodiedPlanGrounder
+from embodied_skill_ros.grounding.plan_repairer import PlanRepairer
 from embodied_skill_ros.models.robot_state import RobotState
 from embodied_skill_ros.models.task_plan import PlanStep, TaskPlan
 from embodied_skill_ros.planner.llm_adapter import LLMPlannerAdapter
 from embodied_skill_ros.skills.agv_skills import MoveAgvSkill
 from embodied_skill_ros.skills.base_skill import ParameterError
 from embodied_skill_ros.skills.registry import SkillRegistry, build_default_registry
+from embodied_skill_ros.state.state_manager import StateManager
 
 
 def ready_state(**changes):
@@ -30,6 +34,46 @@ def ready_state(**changes):
 
 
 class ModelsAndRegistryTests(unittest.TestCase):
+    def test_robot_state_copy_preserves_observation_timestamp(self):
+        state = ready_state().copy(timestamp="2026-01-02T03:04:05+00:00")
+        self.assertEqual(state.copy().timestamp, state.timestamp)
+
+    def test_state_manager_reads_and_metadata_updates_preserve_timestamp(self):
+        state = ready_state().copy(timestamp="2026-01-02T03:04:05+00:00")
+        manager = StateManager(MockRobotBackend(state))
+        self.assertEqual(manager.state.timestamp, state.timestamp)
+        self.assertEqual(manager.refresh().timestamp, state.timestamp)
+        self.assertEqual(manager.mark_result("success").timestamp, state.timestamp)
+
+    def test_mock_observe_changes_timestamp_only_after_state_update(self):
+        backend = MockRobotBackend(ready_state())
+        first = backend.observe()
+        second = backend.observe()
+        self.assertEqual(first.timestamp, second.timestamp)
+        backend.set_state(head_yaw_deg=5.0)
+        updated = backend.observe()
+        self.assertNotEqual(updated.timestamp, second.timestamp)
+        self.assertEqual(updated.timestamp, backend.observe().timestamp)
+
+    def test_grounding_and_repair_projections_preserve_measurement_timestamp(self):
+        state = ready_state(right_arm_safe=False).copy(
+            timestamp="2026-01-02T03:04:05+00:00"
+        )
+        timestamps = []
+        original_copy = RobotState.copy
+
+        def recording_copy(current, **changes):
+            copied = original_copy(current, **changes)
+            timestamps.append((current.timestamp, copied.timestamp))
+            return copied
+
+        plan = TaskPlan("move", [PlanStep("s1", "move_agv", {"distance_m": 1.0})])
+        grounder = EmbodiedPlanGrounder(build_default_registry())
+        with patch.object(RobotState, "copy", recording_copy):
+            report = grounder.ground(plan, state)
+            PlanRepairer().repair(plan, state, report)
+        self.assertTrue(timestamps)
+        self.assertTrue(all(before == after for before, after in timestamps))
     def test_default_skills_register(self):
         self.assertEqual(
             build_default_registry().names(),
