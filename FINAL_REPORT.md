@@ -45,7 +45,7 @@ The final standard-library suite was run from the standalone repository root wit
 PYTHONPATH=. python3 -m unittest discover -s tests -v
 ```
 
-Current result: **99 tests passed**. The suite additionally covers fail-closed UNKNOWN emergency-stop state, non-finite values, non-idempotent continuation checkpoints, backend capability filtering, verified-global-stop injection, preserved observation timestamps, tri-state physical outcomes, empty-plan rejection, and the shared Structured/LLM planner protocol. ROS2 Humble and JAKA hardware remain unverified.
+Current result: **100 tests passed**. The suite additionally covers fail-closed UNKNOWN emergency-stop state, non-finite values, non-idempotent continuation checkpoints, backend capability filtering, verified-global-stop injection, preserved observation timestamps, tri-state physical outcomes, empty-plan rejection, and the shared Structured/LLM planner protocol. ROS2 Humble and JAKA hardware remain unverified.
 
 `colcon` was not installed in the execution environment, so a ROS2 build was not claimed. Python compilation/import, four demos, the test suite, and benchmark were executed in the Mock environment.
 
