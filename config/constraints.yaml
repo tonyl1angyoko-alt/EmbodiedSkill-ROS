@@ -4,6 +4,9 @@ constraints:
   - id: emergency_stop
     condition: emergency_stop == true
     repairable: false
+  - id: emergency_stop_unknown
+    condition: emergency_stop == null
+    repairable: false
   - id: robot_fault
     condition: fault != null
     repairable: false

@@ -10,9 +10,9 @@
         "invalid_skill_call_rate": 0.1455,
         "plan_repair_success_rate": 0.0,
         "runtime_recovery_rate": 0.0,
-        "outcome_verification_accuracy": 0.8182,
+        "outcome_verification_accuracy": 0.0,
         "average_execution_steps": 1.8333,
-        "average_task_latency_ms": 0.1317
+        "average_task_latency_ms": 0.1179
       },
       "runs": [
         {
@@ -25,9 +25,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.142875
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.101422
         },
         {
           "scenario_id": "single_02_retract",
@@ -39,9 +39,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.077458
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.077927
         },
         {
           "scenario_id": "single_03_lift",
@@ -53,9 +53,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.074584
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.06803
         },
         {
           "scenario_id": "single_04_agv",
@@ -67,9 +67,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.073042
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.065033
         },
         {
           "scenario_id": "single_05_extend",
@@ -81,9 +81,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.073166
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.064721
         },
         {
           "scenario_id": "multi_01_required_demo",
@@ -95,9 +95,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 3,
-          "verification_correct": 3,
-          "verification_total": 3,
-          "latency_ms": 0.218417
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.190291
         },
         {
           "scenario_id": "multi_02_head_move",
@@ -109,9 +109,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 2,
-          "verification_correct": 2,
-          "verification_total": 2,
-          "latency_ms": 0.156917
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.129144
         },
         {
           "scenario_id": "multi_03_manipulate_transport",
@@ -123,9 +123,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 3,
-          "verification_correct": 3,
-          "verification_total": 3,
-          "latency_ms": 0.216041
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.199973
         },
         {
           "scenario_id": "multi_04_lift_head_move",
@@ -137,9 +137,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 3,
-          "verification_correct": 3,
-          "verification_total": 3,
-          "latency_ms": 0.214792
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.201449
         },
         {
           "scenario_id": "multi_05_move_lift_head",
@@ -151,9 +151,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 3,
-          "verification_correct": 3,
-          "verification_total": 3,
-          "latency_ms": 0.227208
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.198842
         },
         {
           "scenario_id": "multi_06_dual_retract_move",
@@ -165,9 +165,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 3,
-          "verification_correct": 3,
-          "verification_total": 3,
-          "latency_ms": 0.221084
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.186705
         },
         {
           "scenario_id": "multi_07_head_scan",
@@ -179,9 +179,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 2,
-          "verification_correct": 2,
-          "verification_total": 2,
-          "latency_ms": 0.150417
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.128965
         },
         {
           "scenario_id": "multi_08_round_trip",
@@ -193,9 +193,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 2,
-          "verification_correct": 2,
-          "verification_total": 2,
-          "latency_ms": 0.147167
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.132155
         },
         {
           "scenario_id": "multi_09_two_lift_targets",
@@ -207,9 +207,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 2,
-          "verification_correct": 2,
-          "verification_total": 2,
-          "latency_ms": 0.140458
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.131696
         },
         {
           "scenario_id": "multi_10_long_horizon",
@@ -221,9 +221,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 5,
-          "verification_correct": 5,
-          "verification_total": 5,
-          "latency_ms": 0.349792
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.320888
         },
         {
           "scenario_id": "state_01_right_unsafe",
@@ -236,8 +236,8 @@
           "invalid_calls": 1,
           "execution_steps": 1,
           "verification_correct": 0,
-          "verification_total": 1,
-          "latency_ms": 0.070542
+          "verification_total": 0,
+          "latency_ms": 0.062326
         },
         {
           "scenario_id": "state_02_left_unsafe",
@@ -250,8 +250,8 @@
           "invalid_calls": 1,
           "execution_steps": 1,
           "verification_correct": 0,
-          "verification_total": 1,
-          "latency_ms": 0.063125
+          "verification_total": 0,
+          "latency_ms": 0.063783
         },
         {
           "scenario_id": "state_03_both_unknown",
@@ -264,8 +264,8 @@
           "invalid_calls": 1,
           "execution_steps": 1,
           "verification_correct": 0,
-          "verification_total": 1,
-          "latency_ms": 0.064042
+          "verification_total": 0,
+          "latency_ms": 0.063181
         },
         {
           "scenario_id": "state_04_lift_with_unsafe_arms",
@@ -278,8 +278,8 @@
           "invalid_calls": 1,
           "execution_steps": 1,
           "verification_correct": 0,
-          "verification_total": 1,
-          "latency_ms": 0.063
+          "verification_total": 0,
+          "latency_ms": 0.060175
         },
         {
           "scenario_id": "state_05_head_then_transport",
@@ -291,9 +291,9 @@
           "recovery_used": false,
           "invalid_calls": 1,
           "execution_steps": 2,
-          "verification_correct": 1,
-          "verification_total": 2,
-          "latency_ms": 0.137083
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.116614
         },
         {
           "scenario_id": "conflict_01_extend_and_move",
@@ -305,9 +305,9 @@
           "recovery_used": false,
           "invalid_calls": 1,
           "execution_steps": 2,
-          "verification_correct": 1,
-          "verification_total": 2,
-          "latency_ms": 0.129292
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.118498
         },
         {
           "scenario_id": "conflict_02_lift_and_move",
@@ -319,9 +319,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 2,
-          "verification_correct": 2,
-          "verification_total": 2,
-          "latency_ms": 0.132875
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.117388
         },
         {
           "scenario_id": "conflict_03_two_arm_actions",
@@ -333,9 +333,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 2,
-          "verification_correct": 2,
-          "verification_total": 2,
-          "latency_ms": 0.1425
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.118304
         },
         {
           "scenario_id": "conflict_04_two_head_actions",
@@ -347,9 +347,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 2,
-          "verification_correct": 2,
-          "verification_total": 2,
-          "latency_ms": 0.134167
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.123512
         },
         {
           "scenario_id": "conflict_05_extend_and_lift",
@@ -361,9 +361,9 @@
           "recovery_used": false,
           "invalid_calls": 1,
           "execution_steps": 2,
-          "verification_correct": 1,
-          "verification_total": 2,
-          "latency_ms": 0.127459
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.122183
         },
         {
           "scenario_id": "fault_01_physical_failure",
@@ -376,8 +376,8 @@
           "invalid_calls": 0,
           "execution_steps": 1,
           "verification_correct": 0,
-          "verification_total": 1,
-          "latency_ms": 0.063083
+          "verification_total": 0,
+          "latency_ms": 0.061954
         },
         {
           "scenario_id": "fault_02_timeout",
@@ -389,9 +389,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.068375
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.069203
         },
         {
           "scenario_id": "fault_03_replan_after_retries",
@@ -403,9 +403,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.070125
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.062528
         },
         {
           "scenario_id": "fault_04_state_drift",
@@ -418,8 +418,8 @@
           "invalid_calls": 1,
           "execution_steps": 2,
           "verification_correct": 0,
-          "verification_total": 2,
-          "latency_ms": 0.130667
+          "verification_total": 0,
+          "latency_ms": 0.115556
         },
         {
           "scenario_id": "fault_05_actuator_unavailable",
@@ -431,9 +431,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.072083
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.06518
         }
       ]
     },
@@ -448,7 +448,7 @@
         "runtime_recovery_rate": 0.0,
         "outcome_verification_accuracy": 1.0,
         "average_execution_steps": 1.8,
-        "average_task_latency_ms": 0.1293
+        "average_task_latency_ms": 0.1255
       },
       "runs": [
         {
@@ -463,7 +463,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.070167
+          "latency_ms": 0.41021
         },
         {
           "scenario_id": "single_02_retract",
@@ -477,7 +477,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.069292
+          "latency_ms": 0.078848
         },
         {
           "scenario_id": "single_03_lift",
@@ -491,7 +491,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.067292
+          "latency_ms": 0.06992
         },
         {
           "scenario_id": "single_04_agv",
@@ -505,7 +505,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.06725
+          "latency_ms": 0.069047
         },
         {
           "scenario_id": "single_05_extend",
@@ -519,7 +519,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.067458
+          "latency_ms": 0.067682
         },
         {
           "scenario_id": "multi_01_required_demo",
@@ -533,7 +533,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.20275
+          "latency_ms": 0.188315
         },
         {
           "scenario_id": "multi_02_head_move",
@@ -547,7 +547,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.136292
+          "latency_ms": 0.123072
         },
         {
           "scenario_id": "multi_03_manipulate_transport",
@@ -561,7 +561,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.21975
+          "latency_ms": 0.18631
         },
         {
           "scenario_id": "multi_04_lift_head_move",
@@ -575,7 +575,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.205375
+          "latency_ms": 0.201799
         },
         {
           "scenario_id": "multi_05_move_lift_head",
@@ -589,7 +589,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.208791
+          "latency_ms": 0.184746
         },
         {
           "scenario_id": "multi_06_dual_retract_move",
@@ -603,7 +603,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.204625
+          "latency_ms": 0.18377
         },
         {
           "scenario_id": "multi_07_head_scan",
@@ -617,7 +617,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.138791
+          "latency_ms": 0.128402
         },
         {
           "scenario_id": "multi_08_round_trip",
@@ -631,7 +631,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.1515
+          "latency_ms": 0.127456
         },
         {
           "scenario_id": "multi_09_two_lift_targets",
@@ -645,7 +645,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.135416
+          "latency_ms": 0.129448
         },
         {
           "scenario_id": "multi_10_long_horizon",
@@ -659,7 +659,7 @@
           "execution_steps": 5,
           "verification_correct": 5,
           "verification_total": 5,
-          "latency_ms": 0.390125
+          "latency_ms": 0.299315
         },
         {
           "scenario_id": "state_01_right_unsafe",
@@ -673,7 +673,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.084334
+          "latency_ms": 0.066202
         },
         {
           "scenario_id": "state_02_left_unsafe",
@@ -687,7 +687,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.081916
+          "latency_ms": 0.06526
         },
         {
           "scenario_id": "state_03_both_unknown",
@@ -701,7 +701,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.070167
+          "latency_ms": 0.077274
         },
         {
           "scenario_id": "state_04_lift_with_unsafe_arms",
@@ -715,7 +715,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.073209
+          "latency_ms": 0.06623
         },
         {
           "scenario_id": "state_05_head_then_transport",
@@ -729,7 +729,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.139833
+          "latency_ms": 0.135358
         },
         {
           "scenario_id": "conflict_01_extend_and_move",
@@ -743,7 +743,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.139
+          "latency_ms": 0.137547
         },
         {
           "scenario_id": "conflict_02_lift_and_move",
@@ -757,7 +757,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.144333
+          "latency_ms": 0.127911
         },
         {
           "scenario_id": "conflict_03_two_arm_actions",
@@ -771,7 +771,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.159708
+          "latency_ms": 0.111983
         },
         {
           "scenario_id": "conflict_04_two_head_actions",
@@ -785,7 +785,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.141417
+          "latency_ms": 0.10973
         },
         {
           "scenario_id": "conflict_05_extend_and_lift",
@@ -799,7 +799,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.132667
+          "latency_ms": 0.113344
         },
         {
           "scenario_id": "fault_01_physical_failure",
@@ -813,7 +813,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.0805
+          "latency_ms": 0.063953
         },
         {
           "scenario_id": "fault_02_timeout",
@@ -825,9 +825,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.066833
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.058718
         },
         {
           "scenario_id": "fault_03_replan_after_retries",
@@ -839,9 +839,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.076542
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.060563
         },
         {
           "scenario_id": "fault_04_state_drift",
@@ -855,7 +855,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.080167
+          "latency_ms": 0.062808
         },
         {
           "scenario_id": "fault_05_actuator_unavailable",
@@ -867,9 +867,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.073083
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.058402
         }
       ]
     },
@@ -884,7 +884,7 @@
         "runtime_recovery_rate": 0.0,
         "outcome_verification_accuracy": 1.0,
         "average_execution_steps": 2.1,
-        "average_task_latency_ms": 0.1885
+        "average_task_latency_ms": 0.155
       },
       "runs": [
         {
@@ -899,7 +899,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.088833
+          "latency_ms": 0.080117
         },
         {
           "scenario_id": "single_02_retract",
@@ -913,7 +913,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.081125
+          "latency_ms": 0.071536
         },
         {
           "scenario_id": "single_03_lift",
@@ -927,7 +927,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.079042
+          "latency_ms": 0.066969
         },
         {
           "scenario_id": "single_04_agv",
@@ -941,7 +941,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.085791
+          "latency_ms": 0.066193
         },
         {
           "scenario_id": "single_05_extend",
@@ -955,7 +955,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.085584
+          "latency_ms": 0.066806
         },
         {
           "scenario_id": "multi_01_required_demo",
@@ -969,7 +969,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.232625
+          "latency_ms": 0.207803
         },
         {
           "scenario_id": "multi_02_head_move",
@@ -983,7 +983,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.168625
+          "latency_ms": 0.133944
         },
         {
           "scenario_id": "multi_03_manipulate_transport",
@@ -997,7 +997,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.224417
+          "latency_ms": 0.191318
         },
         {
           "scenario_id": "multi_04_lift_head_move",
@@ -1011,7 +1011,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.248
+          "latency_ms": 0.189869
         },
         {
           "scenario_id": "multi_05_move_lift_head",
@@ -1025,7 +1025,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.224166
+          "latency_ms": 0.197356
         },
         {
           "scenario_id": "multi_06_dual_retract_move",
@@ -1039,7 +1039,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.249125
+          "latency_ms": 0.201466
         },
         {
           "scenario_id": "multi_07_head_scan",
@@ -1053,7 +1053,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.15725
+          "latency_ms": 0.132956
         },
         {
           "scenario_id": "multi_08_round_trip",
@@ -1067,7 +1067,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.165333
+          "latency_ms": 0.12908
         },
         {
           "scenario_id": "multi_09_two_lift_targets",
@@ -1081,7 +1081,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.149291
+          "latency_ms": 0.135723
         },
         {
           "scenario_id": "multi_10_long_horizon",
@@ -1095,7 +1095,7 @@
           "execution_steps": 5,
           "verification_correct": 5,
           "verification_total": 5,
-          "latency_ms": 0.553334
+          "latency_ms": 0.417661
         },
         {
           "scenario_id": "state_01_right_unsafe",
@@ -1109,7 +1109,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.217875
+          "latency_ms": 0.171439
         },
         {
           "scenario_id": "state_02_left_unsafe",
@@ -1123,7 +1123,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.224916
+          "latency_ms": 0.158676
         },
         {
           "scenario_id": "state_03_both_unknown",
@@ -1137,7 +1137,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.332792
+          "latency_ms": 0.239063
         },
         {
           "scenario_id": "state_04_lift_with_unsafe_arms",
@@ -1151,7 +1151,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.297166
+          "latency_ms": 0.241894
         },
         {
           "scenario_id": "state_05_head_then_transport",
@@ -1165,7 +1165,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.266042
+          "latency_ms": 0.227091
         },
         {
           "scenario_id": "conflict_01_extend_and_move",
@@ -1179,7 +1179,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.269625
+          "latency_ms": 0.24536
         },
         {
           "scenario_id": "conflict_02_lift_and_move",
@@ -1193,7 +1193,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.183542
+          "latency_ms": 0.156764
         },
         {
           "scenario_id": "conflict_03_two_arm_actions",
@@ -1207,7 +1207,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.195042
+          "latency_ms": 0.164338
         },
         {
           "scenario_id": "conflict_04_two_head_actions",
@@ -1221,7 +1221,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.183917
+          "latency_ms": 0.151288
         },
         {
           "scenario_id": "conflict_05_extend_and_lift",
@@ -1235,7 +1235,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.265334
+          "latency_ms": 0.2294
         },
         {
           "scenario_id": "fault_01_physical_failure",
@@ -1249,7 +1249,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.084083
+          "latency_ms": 0.074656
         },
         {
           "scenario_id": "fault_02_timeout",
@@ -1261,9 +1261,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.087208
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.070464
         },
         {
           "scenario_id": "fault_03_replan_after_retries",
@@ -1275,9 +1275,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.079958
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.068557
         },
         {
           "scenario_id": "fault_04_state_drift",
@@ -1291,7 +1291,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.092209
+          "latency_ms": 0.08555
         },
         {
           "scenario_id": "fault_05_actuator_unavailable",
@@ -1303,9 +1303,9 @@
           "recovery_used": false,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.08275
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.075352
         }
       ]
     },
@@ -1320,7 +1320,7 @@
         "runtime_recovery_rate": 0.8,
         "outcome_verification_accuracy": 1.0,
         "average_execution_steps": 2.3333,
-        "average_task_latency_ms": 0.1965
+        "average_task_latency_ms": 0.1669
       },
       "runs": [
         {
@@ -1335,7 +1335,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.080125
+          "latency_ms": 0.068674
         },
         {
           "scenario_id": "single_02_retract",
@@ -1349,7 +1349,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.0795
+          "latency_ms": 0.068768
         },
         {
           "scenario_id": "single_03_lift",
@@ -1363,7 +1363,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.079
+          "latency_ms": 0.066564
         },
         {
           "scenario_id": "single_04_agv",
@@ -1377,7 +1377,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.081875
+          "latency_ms": 0.069048
         },
         {
           "scenario_id": "single_05_extend",
@@ -1391,7 +1391,7 @@
           "execution_steps": 1,
           "verification_correct": 1,
           "verification_total": 1,
-          "latency_ms": 0.094667
+          "latency_ms": 0.066583
         },
         {
           "scenario_id": "multi_01_required_demo",
@@ -1405,7 +1405,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.258125
+          "latency_ms": 0.203665
         },
         {
           "scenario_id": "multi_02_head_move",
@@ -1419,7 +1419,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.17575
+          "latency_ms": 0.140656
         },
         {
           "scenario_id": "multi_03_manipulate_transport",
@@ -1433,7 +1433,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.232583
+          "latency_ms": 0.196152
         },
         {
           "scenario_id": "multi_04_lift_head_move",
@@ -1447,7 +1447,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.227708
+          "latency_ms": 0.194068
         },
         {
           "scenario_id": "multi_05_move_lift_head",
@@ -1461,7 +1461,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.227833
+          "latency_ms": 0.187719
         },
         {
           "scenario_id": "multi_06_dual_retract_move",
@@ -1475,7 +1475,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.226417
+          "latency_ms": 0.201856
         },
         {
           "scenario_id": "multi_07_head_scan",
@@ -1489,7 +1489,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.156791
+          "latency_ms": 0.140539
         },
         {
           "scenario_id": "multi_08_round_trip",
@@ -1503,7 +1503,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.154292
+          "latency_ms": 0.127985
         },
         {
           "scenario_id": "multi_09_two_lift_targets",
@@ -1517,7 +1517,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.152708
+          "latency_ms": 0.128485
         },
         {
           "scenario_id": "multi_10_long_horizon",
@@ -1531,7 +1531,7 @@
           "execution_steps": 5,
           "verification_correct": 5,
           "verification_total": 5,
-          "latency_ms": 0.38675
+          "latency_ms": 0.333318
         },
         {
           "scenario_id": "state_01_right_unsafe",
@@ -1545,7 +1545,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.185792
+          "latency_ms": 0.163672
         },
         {
           "scenario_id": "state_02_left_unsafe",
@@ -1559,7 +1559,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.178542
+          "latency_ms": 0.158066
         },
         {
           "scenario_id": "state_03_both_unknown",
@@ -1573,7 +1573,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.256208
+          "latency_ms": 0.215678
         },
         {
           "scenario_id": "state_04_lift_with_unsafe_arms",
@@ -1587,7 +1587,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.255166
+          "latency_ms": 0.211797
         },
         {
           "scenario_id": "state_05_head_then_transport",
@@ -1601,7 +1601,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.259041
+          "latency_ms": 0.235973
         },
         {
           "scenario_id": "conflict_01_extend_and_move",
@@ -1615,7 +1615,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.265041
+          "latency_ms": 0.235014
         },
         {
           "scenario_id": "conflict_02_lift_and_move",
@@ -1629,7 +1629,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.1905
+          "latency_ms": 0.163789
         },
         {
           "scenario_id": "conflict_03_two_arm_actions",
@@ -1643,7 +1643,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.221
+          "latency_ms": 0.166826
         },
         {
           "scenario_id": "conflict_04_two_head_actions",
@@ -1657,7 +1657,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.182125
+          "latency_ms": 0.159804
         },
         {
           "scenario_id": "conflict_05_extend_and_lift",
@@ -1671,7 +1671,7 @@
           "execution_steps": 3,
           "verification_correct": 3,
           "verification_total": 3,
-          "latency_ms": 0.263916
+          "latency_ms": 0.21659
         },
         {
           "scenario_id": "fault_01_physical_failure",
@@ -1685,7 +1685,7 @@
           "execution_steps": 2,
           "verification_correct": 2,
           "verification_total": 2,
-          "latency_ms": 0.153709
+          "latency_ms": 0.12391
         },
         {
           "scenario_id": "fault_02_timeout",
@@ -1697,9 +1697,9 @@
           "recovery_used": true,
           "invalid_calls": 0,
           "execution_steps": 2,
-          "verification_correct": 2,
-          "verification_total": 2,
-          "latency_ms": 0.158167
+          "verification_correct": 1,
+          "verification_total": 1,
+          "latency_ms": 0.120438
         },
         {
           "scenario_id": "fault_03_replan_after_retries",
@@ -1711,9 +1711,9 @@
           "recovery_used": true,
           "invalid_calls": 0,
           "execution_steps": 3,
-          "verification_correct": 3,
-          "verification_total": 3,
-          "latency_ms": 0.236833
+          "verification_correct": 1,
+          "verification_total": 1,
+          "latency_ms": 0.237408
         },
         {
           "scenario_id": "fault_04_state_drift",
@@ -1727,7 +1727,7 @@
           "execution_steps": 4,
           "verification_correct": 4,
           "verification_total": 4,
-          "latency_ms": 0.333125
+          "latency_ms": 0.294087
         },
         {
           "scenario_id": "fault_05_actuator_unavailable",
@@ -1739,9 +1739,9 @@
           "recovery_used": true,
           "invalid_calls": 0,
           "execution_steps": 1,
-          "verification_correct": 1,
-          "verification_total": 1,
-          "latency_ms": 0.141292
+          "verification_correct": 0,
+          "verification_total": 0,
+          "latency_ms": 0.109948
         }
       ]
     }

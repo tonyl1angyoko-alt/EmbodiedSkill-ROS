@@ -4,7 +4,8 @@
 
 | Constraint | Detection | Repair / response |
 |---|---|---|
-| Emergency stop active | `emergency_stop is True` | non-repairable `STOP` |
+| Emergency stop active | `emergency_stop is True` | non-repairable `STOP`, attempt backend stop once |
+| Emergency stop UNKNOWN | `emergency_stop is None` | fail closed for every registered motion skill; attempt backend stop once |
 | Robot fault present | non-empty `fault` | non-repairable `STOP` |
 | Body resource busy | overlap of `active_resources` and skill resources | re-ground; stop if state does not clear |
 | AGV with unsafe or UNKNOWN arm | either `*_arm_safe is not True` | insert `retract_arm` before `move_agv` |
@@ -17,7 +18,7 @@
 
 ## UNKNOWN policy
 
-For safety-critical preconditions, UNKNOWN is treated as “not yet grounded,” not as false evidence of danger and not as permission to move. A repair can turn semantic UNKNOWN into known safe only when the repair skill itself has a verifiable outcome. On the default JAKA adapter, arm transport safety remains UNKNOWN unless the deployment supplies a validated state provider; therefore the adapter will not claim successful grounded transport from command acceptance alone.
+For safety-critical preconditions, UNKNOWN is treated as “not yet grounded,” not as false evidence of danger and not as permission to move. In particular, only `emergency_stop is False` permits motion. A repair can turn semantic UNKNOWN into known safe only when the repair skill itself has a verifiable outcome. JAKA capabilities are filtered to confirmed command semantics; without a validated emergency-stop provider the adapter cannot execute motion.
 
 ## Mock body model
 

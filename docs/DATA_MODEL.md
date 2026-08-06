@@ -2,7 +2,7 @@
 
 ## `RobotState`
 
-`RobotState` is a timestamped snapshot. `None` always means UNKNOWN; it never means safe or ready.
+`RobotState` is a timestamped observation snapshot. `None` always means UNKNOWN; it never means safe or ready. Ordinary copies, planning projections, and execution metadata updates preserve the observation timestamp. A backend must create a new timestamp only when it has a new observation or physical state update.
 
 | Field group | Fields | Mock | Default JAKA adapter |
 |---|---|---|---|
@@ -46,13 +46,14 @@ Every skill has:
 - `execute()` returning only a `CommandReceipt`;
 - `expected_effects()` and `verify_outcome()` for physical validation.
 
-`ParameterSpec` rejects missing, unknown, incorrectly typed, and out-of-range arguments. Boolean values are not accepted as numbers.
+`ParameterSpec` rejects missing, unknown, incorrectly typed, non-finite, and out-of-range arguments. Boolean values are not accepted as numbers.
 
 ## Result separation
 
 - `CommandReceipt.accepted` means the backend accepted/completed its call path.
 - `VerificationResult.achieved` means observed state matches the expected physical effect.
-- `SkillResult` stores both values, before/after snapshots, timeout/error data, attempt number, and whether recovery was triggered.
+- `SkillResult.physical_outcome_achieved` and trace `outcome_verified` are tri-state: `True` verified achieved, `False` verified not achieved, and `None` not physically verified.
+- Direct/baseline execution may advance after command acceptance, but it records `None` and an explicit “physical outcome not verified” message.
 
 This separation is visible in the recovery demo: the first lift command is accepted, but unchanged height makes `physical_outcome_achieved=false`.
 

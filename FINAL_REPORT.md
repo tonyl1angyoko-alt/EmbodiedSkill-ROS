@@ -14,7 +14,7 @@ EmbodiedSkill-ROS adds:
 - a registry-limited skill representation with schemas, resources, preconditions, expected effects, timeout, and recovery policy;
 - state projection, body/resource constraints, and deterministic plan repair;
 - closed-loop `execute → observe → verify → update` execution;
-- bounded retry, re-grounding, one bounded replan, and safe stop;
+- bounded retry, re-grounding, continuation-only bounded replan, and one recorded backend-stop attempt for every STOP decision;
 - full per-attempt execution traces;
 - deterministic Mock fault injection;
 - four demos, 48 automated tests, and a 30-scenario A/B/C/D benchmark.
@@ -45,7 +45,7 @@ The final standard-library suite was run from the standalone repository root wit
 PYTHONPATH=. python3 -m unittest discover -s tests -v
 ```
 
-Final result: **48 tests passed**. The suite covers registry behavior, invalid arguments, preconditions, UNKNOWN state, resource/body conflicts, unverifiable declared effects, repair, sequential stop behavior, timeout, command/physical distinction, local retry, retry exhaustion, bounded replan, state drift, safe stop, state updates, trace completeness, planner behavior, and ROS-free JAKA adapter import/UNKNOWN semantics.
+Current result: **99 tests passed**. The suite additionally covers fail-closed UNKNOWN emergency-stop state, non-finite values, non-idempotent continuation checkpoints, backend capability filtering, verified-global-stop injection, preserved observation timestamps, tri-state physical outcomes, empty-plan rejection, and the shared Structured/LLM planner protocol. ROS2 Humble and JAKA hardware remain unverified.
 
 `colcon` was not installed in the execution environment, so a ROS2 build was not claimed. Python compilation/import, four demos, the test suite, and benchmark were executed in the Mock environment.
 

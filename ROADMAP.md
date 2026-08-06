@@ -26,6 +26,8 @@ All items below are `PLANNED`, not completed capabilities.
 ## v0.5.0 — JAKA hardware validation
 
 - verified adapter mapping;
+- validate a deployment-wide stop contract and emergency-stop state source;
+- validate per-arm versus dual-arm transport-pose semantics before exposing arm capabilities;
 - low-risk real-robot tasks;
 - human-supervised execution;
 - real execution traces and videos.

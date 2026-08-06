@@ -17,7 +17,7 @@ EmbodiedSkill-ROS turns an LLM's high-level tool plan into a state-grounded, clo
 | JAKA hardware execution and transport-safe pose calibration | `UNVERIFIED` |
 | Gazebo, MoveIt2, and RViz integration | `PLANNED` |
 
-`CommandReceipt.accepted` is never presented as evidence that a real physical outcome occurred. In Mock execution, outcome success is determined from observed state; hardware validation still requires measured state providers and calibrated tolerances.
+`CommandReceipt.accepted` is never presented as evidence that a real physical outcome occurred. `physical_outcome_achieved` is `True` or `False` only after verification and is `None` when verification is disabled. Hardware validation still requires measured state providers and calibrated tolerances.
 
 ## Core question
 
@@ -77,6 +77,8 @@ python3 examples/normal_task.py
 python3 examples/state_grounded_task.py
 python3 examples/plan_repair_demo.py
 python3 examples/recovery_demo.py
+python3 examples/emergency_stop_unknown_demo.py
+python3 examples/replan_continuation_demo.py
 ```
 
 Run the standard-library test suite:
@@ -112,25 +114,34 @@ python3 -m pytest
 
 `recovery_demo.py` injects a lift command whose receipt is accepted while height feedback remains unchanged. The verifier detects the mismatch and a bounded local retry succeeds.
 
+### UNKNOWN emergency-stop
+
+`emergency_stop_unknown_demo.py` shows fail-closed behavior: UNKNOWN blocks AGV motion and the executor attempts its configured backend stop exactly once.
+
+### Continuation-only replan
+
+`replan_continuation_demo.py` lets a head command fail after a verified 1 m AGV move. Replan receives only the unfinished continuation, so the base remains at 1 m instead of replaying the completed move.
+
 ## JAKA hardware adapter — `STATICALLY-INSPECTED`, hardware `UNVERIFIED`
 
 `JakaRobotBackend` wraps the already-initialized legacy objects from `real_sdk_skills.make_real_sdk_skills(...)`; the new core does not import ROS2 or embed network configuration.
 
 ```python
 from embodied_skill_ros.backends import JakaRobotBackend
+from embodied_skill_ros.skills import build_registry_for_backend
 
 backend = JakaRobotBackend(
-    arm_skill=legacy_arm,
     agv_skill=legacy_agv,
     lift_skill=legacy_lift,
     head_skill=legacy_head,
-    transport_pose_name="<locally validated preset>",
     state_provider=my_verified_robot_state_provider,
     agv_position_provider=my_verified_odometry_provider,
+    stop_all_fn=my_verified_global_stop,
 )
+registry = build_registry_for_backend(backend)
 ```
 
-Important: merely configuring a preset name does not prove that an arm is transport-safe. Without a measured, deployment-validated state provider, arm safety, AGV motion state, faults, and emergency stop remain `UNKNOWN`; the system will not fabricate them. The current `safe_stop` adapter only sends the confirmed legacy AGV stop call.
+The registry is capability-filtered. The current JAKA adapter does not advertise `extend_arm` or the Mock single-arm `retract_arm`: the only inspected preset API moves both arms, so treating it as a single-arm skill would be misleading. Without a deployment-validated state provider, emergency stop remains `UNKNOWN` and all motion fails closed. Without an explicitly injected `stop_all_fn` that returns `True`, `safe_stop` is rejected rather than presented as a verified global stop.
 
 ## Benchmark — `MOCK-VERIFIED`
 
@@ -164,12 +175,12 @@ The following values come from the checked-in `benchmarks/benchmark_results.json
 
 | Configuration | Task success | Long-horizon | State-change | Invalid calls | Repair success | Recovery rate | Verification accuracy | Avg. steps |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A Direct | 60.00% | 100.00% | 0.00% | 14.55% | 0.00% | 0.00% | 81.82% | 1.83 |
+| A Direct | 60.00% | 100.00% | 0.00% | 14.55% | 0.00% | 0.00% | 0.00%* | 1.83 |
 | B Structured | 60.00% | 100.00% | 0.00% | 12.96% | 0.00% | 0.00% | 100.00% | 1.80 |
 | C Grounded | 83.33% | 100.00% | 100.00% | 0.00% | 100.00% | 0.00% | 100.00% | 2.10 |
 | D Grounded + Recovery | **96.67%** | **100.00%** | **100.00%** | **0.00%** | **100.00%** | **80.00%** | **100.00%** | 2.33 |
 
-These are deterministic Mock results, not hardware claims. The one D failure is the intentionally persistent “AGV unavailable” scenario, which safely stops after recovery options are exhausted.
+These are deterministic Mock results, not hardware claims. `*` Profile A performs no physical verification; unverified results are excluded, leaving a zero denominator that the current aggregator reports as `0.0`. The one D failure is the intentionally persistent “AGV unavailable” scenario, which attempts the configured Mock stop after recovery options are exhausted.
 
 ## Documentation map
 
@@ -182,6 +193,7 @@ These are deterministic Mock results, not hardware claims. The one D failure is 
 - Hardware execution was not available in this environment; Mock behavior is tested, JAKA wiring is not physically validated.
 - Transport-safe arm classification needs calibrated joint/TCP envelopes.
 - The legacy elementary AGV path is open-loop; odometry must be supplied for physical displacement verification.
+- JAKA global stop must be provided and validated by the deployment; no arm/lift/head stop API is inferred by this repository.
 - The deterministic language planner intentionally covers only the demos. The provider-neutral LLM adapter validates structured JSON but does not bundle a model client or credentials.
 - Parallel requests are conservatively serialized; no concurrent scheduler is implemented.
 - Parameter correction and alternative-skill selection are future recovery stages; bounded retry, preparation insertion, re-grounding, replanning, and stopping are implemented.

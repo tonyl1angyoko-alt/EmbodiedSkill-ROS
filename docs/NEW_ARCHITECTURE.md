@@ -80,17 +80,18 @@ The executor implements `EXECUTE → REPAIR → REPLAN → STOP` as an escalatio
 
 1. Execute a grounded plan.
 2. Repair unsafe/UNKNOWN arm state before AGV or lift motion and serialize conflicting parallel groups.
-3. Replan once bounded local retry is exhausted, if a replanner is configured.
-4. Stop when emergency/fault state is explicit, a repair remains invalid, or retry/replan budgets are exhausted.
+3. Replan the unexecuted continuation once bounded local retry is exhausted. Verified completed steps are passed as checkpoint context and are not replayed; the replacement continuation is grounded/repaired before execution.
+4. Stop when emergency state is active or UNKNOWN, a fault is explicit, a repair remains invalid, or retry/replan budgets are exhausted. Every executor STOP attempts backend stop exactly once and records whether the stop request was accepted.
 
 `STOP` is therefore a terminal mitigation, not the default response to every mismatch.
 
 ## Backend boundary
 
 - `MockRobotBackend` provides deterministic state transitions, command failure, timeout, physical failure, and state-drift injection.
-- `JakaRobotBackend` imports no ROS2 module itself. It calls legacy skill objects that are constructed by the original ROS2 application.
+- `JakaRobotBackend` imports no ROS2 module itself. It exposes only capabilities whose complete command semantics are confirmed; unsupported arm skills are excluded from its registry.
+- JAKA safe-stop is accepted only through an explicitly injected verified global-stop callable. The core does not invent subsystem stop APIs.
 - Unobservable fields are `None` (`UNKNOWN`). A callback-based `state_provider` and `agv_position_provider` allow an integrator to add verified observations without changing core code.
 
 ## Minimum implemented scope
 
-Five executable skills cover four components: arm retract/extend, AGV move, lift position, and head pose. The deterministic planner intentionally handles only the documented demo language. Arbitrary natural language belongs behind `LLMPlannerAdapter`, whose output is still registry-constrained and grounded before execution.
+The Mock backend exposes five executable skills across four components. A JAKA registry is a capability-filtered subset and currently excludes the Mock-only arm semantics. The deterministic planner intentionally handles only the documented demo language. `StructuredPlanner` and `LLMPlannerAdapter` share a state-aware protocol; arbitrary language still requires an injected completion provider, and its structured output remains registry-constrained and grounded before execution.

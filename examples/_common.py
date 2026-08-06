@@ -26,6 +26,9 @@ def show(report) -> None:
     payload = {
         "success": report.success,
         "decision": report.decision,
+        "stop_attempted": report.stop_attempted,
+        "stop_accepted": report.stop_accepted,
+        "stop_message": report.stop_message,
         "plan": report.plan.to_dict(),
         "results": [
             {
