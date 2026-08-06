@@ -17,7 +17,7 @@ class TraceRecord:
     backend_message: str
     before_state: dict[str, Any]
     after_state: dict[str, Any]
-    outcome_verified: bool
+    outcome_verified: bool | None
     verification_message: str
     error: str | None = None
     timed_out: bool = False

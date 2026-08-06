@@ -1,5 +1,6 @@
 import unittest
 
+from benchmarks.run_benchmark import verification_score
 from embodied_skill_ros.backends.mock_backend import FaultEvent, MockRobotBackend
 from embodied_skill_ros.execution.skill_executor import SkillExecutor
 from embodied_skill_ros.models.skill_result import CommandReceipt
@@ -101,6 +102,15 @@ class ExecutionTests(unittest.TestCase):
         )
         self.assertTrue(report.results[0].command_accepted)
         self.assertFalse(report.results[0].physical_outcome_achieved)
+        self.assertFalse(report.trace.records[0].outcome_verified)
+
+    def test_verified_achieved_outcome_is_true(self):
+        backend = MockRobotBackend(ready_state())
+        report = executor_for(backend).execute(
+            TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})])
+        )
+        self.assertTrue(report.results[0].physical_outcome_achieved)
+        self.assertTrue(report.trace.records[0].outcome_verified)
 
     def test_non_finite_parameter_never_reaches_backend_command(self):
         for value in (float("nan"), float("inf"), float("-inf")):
@@ -502,6 +512,29 @@ class ExecutionTests(unittest.TestCase):
         )
         self.assertTrue(report.success)
         self.assertEqual(backend.observe().lift_height_mm, 100.0)
+        self.assertIsNone(report.results[0].physical_outcome_achieved)
+        self.assertIsNone(report.trace.records[0].outcome_verified)
+        self.assertIn("physical outcome not verified", report.results[0].message)
+
+    def test_without_verification_rejected_command_still_fails(self):
+        backend = MockRobotBackend(ready_state())
+        backend.inject("set_head", FaultEvent("command_failure", "rejected"))
+        report = executor_for(backend, retries=0).execute(
+            TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})]),
+            verify_outcomes=False,
+        )
+        self.assertFalse(report.success)
+        self.assertFalse(report.results[0].command_accepted)
+        self.assertIsNone(report.results[0].physical_outcome_achieved)
+        self.assertIsNone(report.trace.records[0].outcome_verified)
+
+    def test_verification_metric_excludes_unverified_results(self):
+        backend = MockRobotBackend(ready_state())
+        report = executor_for(backend).execute(
+            TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})]),
+            verify_outcomes=False,
+        )
+        self.assertEqual(verification_score(report, build_default_registry()), (0, 0))
 
     def test_direct_mode_exposes_unsafe_unverified_call(self):
         backend = MockRobotBackend(ready_state(right_arm_safe=False))

@@ -94,6 +94,8 @@ def verification_score(report, registry) -> tuple[int, int]:
     correct = 0
     total = 0
     for result in report.results:
+        if result.physical_outcome_achieved is None:
+            continue
         skill = registry.get(result.skill_name)
         truth = skill.verify_outcome(
             result.arguments, result.before_state, result.after_state

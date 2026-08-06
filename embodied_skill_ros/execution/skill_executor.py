@@ -179,15 +179,24 @@ class SkillExecutor:
                                 if receipt.accepted and verify_outcomes
                                 else None)
                 achieved = receipt.accepted and (verification.achieved if verification else True)
-                message = verification.message if verification else receipt.backend_message
+                if verification is not None:
+                    physical_outcome = verification.achieved
+                    message = verification.message
+                elif receipt.accepted:
+                    physical_outcome = None
+                    message = "command accepted; physical outcome not verified"
+                else:
+                    physical_outcome = None
+                    message = receipt.backend_message
                 after = self.state_manager.mark_result("success" if achieved else "failure")
-                result = SkillResult(skill.name, dict(step.arguments), receipt.accepted, achieved,
+                result = SkillResult(skill.name, dict(step.arguments), receipt.accepted,
+                                     physical_outcome,
                                      message, before, after, receipt.backend_message,
                                      None if achieved else message,
                                      receipt.timed_out, False, attempt)
                 record = TraceRecord(skill.name, dict(step.arguments), started, utc_now(),
                                      receipt.accepted, receipt.backend_message,
-                                     before.to_dict(), after.to_dict(), achieved, message,
+                                     before.to_dict(), after.to_dict(), physical_outcome, message,
                                      result.error, receipt.timed_out, False, attempt)
                 trace.add(record)
                 results.append(result)

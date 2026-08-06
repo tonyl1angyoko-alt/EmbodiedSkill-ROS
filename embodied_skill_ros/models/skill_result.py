@@ -26,7 +26,7 @@ class SkillResult:
     skill_name: str
     arguments: dict[str, Any]
     command_accepted: bool
-    physical_outcome_achieved: bool
+    physical_outcome_achieved: bool | None
     message: str
     before_state: RobotState
     after_state: RobotState
