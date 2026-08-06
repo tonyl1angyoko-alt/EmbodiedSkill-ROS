@@ -49,6 +49,8 @@ class TaskPlan:
         raw_steps = data.get("steps")
         if not isinstance(raw_steps, list):
             raise TypeError("steps must be a list")
+        if not raw_steps:
+            raise ValueError("plan requires at least one executable step")
         return cls(goal, [PlanStep.from_dict(s) for s in raw_steps],
                    str(data.get("plan_id", "plan_1")), int(data.get("revision", 0)),
                    dict(data.get("metadata", {})))

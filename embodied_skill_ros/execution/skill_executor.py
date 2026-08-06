@@ -96,6 +96,8 @@ class SkillExecutor:
     def execute(self, plan: TaskPlan, allow_repair: bool = True,
                 verify_outcomes: bool = True, allow_recovery: bool = True,
                 ground_plan: bool = True, runtime_guard: bool = True) -> ExecutionReport:
+        if not plan.steps:
+            return self._stop_and_report(plan, "invalid empty executable plan")
         state = self.state_manager.refresh()
         decision = "EXECUTE"
         if ground_plan:

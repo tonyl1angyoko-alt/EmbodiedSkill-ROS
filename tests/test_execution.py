@@ -74,6 +74,20 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual([name for name, _ in backend.command_log],
                          ["retract_arm", "move_agv", "set_lift"])
 
+    def test_directly_constructed_empty_plan_stops_once_without_motion(self):
+        backend = SpyBackend(ready_state())
+        report = executor_for(backend).execute(TaskPlan("empty", []))
+        self.assert_stop_attempted_once(backend, report)
+        self.assertIn("empty executable plan", report.message)
+        self.assertEqual([name for name, _ in backend.command_log], ["safe_stop"])
+
+    def test_empty_plan_cannot_bypass_with_grounding_disabled(self):
+        backend = SpyBackend(ready_state())
+        report = executor_for(backend).execute(TaskPlan("empty", []), ground_plan=False)
+        self.assert_stop_attempted_once(backend, report)
+        self.assertIn("empty executable plan", report.message)
+        self.assertEqual([name for name, _ in backend.command_log], ["safe_stop"])
+
     def test_first_failure_stops_following_step(self):
         backend = MockRobotBackend(ready_state())
         backend.inject("set_head", FaultEvent("command_failure"))

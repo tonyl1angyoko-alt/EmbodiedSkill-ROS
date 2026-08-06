@@ -149,6 +149,10 @@ class ModelsAndRegistryTests(unittest.TestCase):
         }
         self.assertEqual(TaskPlan.from_dict(source).to_dict()["plan_id"], "p7")
 
+    def test_task_plan_from_dict_rejects_empty_steps(self):
+        with self.assertRaisesRegex(ValueError, "at least one"):
+            TaskPlan.from_dict({"goal": "empty", "steps": []})
+
     def test_invalid_plan_step_arguments_shape(self):
         with self.assertRaisesRegex(TypeError, "arguments"):
             PlanStep.from_dict({"id": "s1", "skill": "move_agv", "arguments": []})
@@ -182,6 +186,12 @@ class ModelsAndRegistryTests(unittest.TestCase):
                 adapter = LLMPlannerAdapter(lambda _prompt, _skills: payload, registry)
                 with self.assertRaisesRegex(ValueError, "non-finite"):
                     adapter.plan("bad")
+
+    def test_llm_adapter_rejects_empty_plan(self):
+        payload = json.dumps({"goal": "empty", "steps": []})
+        adapter = LLMPlannerAdapter(lambda _prompt, _skills: payload, build_default_registry())
+        with self.assertRaisesRegex(ValueError, "at least one"):
+            adapter.plan("empty")
 
 
 if __name__ == "__main__":
