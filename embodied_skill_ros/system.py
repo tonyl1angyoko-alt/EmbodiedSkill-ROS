@@ -8,6 +8,7 @@ from .backends.mock_backend import MockRobotBackend
 from .execution.skill_executor import ExecutionReport, SkillExecutor
 from .models.robot_state import RobotState
 from .models.task_plan import TaskPlan
+from .planner.base import Planner
 from .planner.structured_planner import StructuredPlanner
 from .skills.registry import SkillRegistry, build_registry_for_backend
 
@@ -16,7 +17,7 @@ from .skills.registry import SkillRegistry, build_registry_for_backend
 class EmbodiedSkillSystem:
     backend: RobotBackend
     registry: SkillRegistry
-    planner: StructuredPlanner
+    planner: Planner
     executor: SkillExecutor
 
     def run_instruction(self, instruction: str) -> ExecutionReport:
