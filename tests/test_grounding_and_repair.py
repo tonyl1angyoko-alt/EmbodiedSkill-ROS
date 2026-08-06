@@ -72,6 +72,17 @@ class GroundingAndRepairTests(unittest.TestCase):
         report = self.grounder.ground(plan, ready_state(emergency_stop=True))
         self.assertTrue(report.requires_stop)
 
+    def test_unknown_emergency_stop_is_nonrepairable_for_all_motion(self):
+        for skill, arguments in (
+            ("move_agv", {"distance_m": 1.0}),
+            ("set_head", {"yaw_deg": 5}),
+        ):
+            with self.subTest(skill=skill):
+                plan = TaskPlan("motion", [PlanStep("s1", skill, arguments)])
+                report = self.grounder.ground(plan, ready_state(emergency_stop=None))
+                self.assertTrue(report.requires_stop)
+                self.assertIn("EMERGENCY_STOP_UNKNOWN", {issue.code for issue in report.issues})
+
     def test_lift_plan_gets_arm_preparation(self):
         plan = TaskPlan("lift", [PlanStep("s1", "set_lift", {"height_mm": 300.0})])
         state = ready_state(left_arm_safe=False, right_arm_safe=False)

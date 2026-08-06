@@ -19,7 +19,11 @@ class ConstraintChecker:
     def check_step(self, step: PlanStep, skill: RobotSkill, state: RobotState) -> list[ConstraintViolation]:
         out: list[ConstraintViolation] = []
         if state.emergency_stop is True:
-            out.append(ConstraintViolation("EMERGENCY_STOP", step.id, "emergency stop is active", False))
+            out.append(ConstraintViolation("EMERGENCY_STOP_ACTIVE", step.id,
+                                           "emergency stop is active", False))
+        elif state.emergency_stop is None:
+            out.append(ConstraintViolation("EMERGENCY_STOP_UNKNOWN", step.id,
+                                           "emergency stop state is UNKNOWN", False))
         if state.fault:
             out.append(ConstraintViolation("ROBOT_FAULT", step.id, state.fault, False))
         busy = state.active_resources & skill.required_resources

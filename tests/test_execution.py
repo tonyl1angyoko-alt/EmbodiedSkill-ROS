@@ -143,6 +143,49 @@ class ExecutionTests(unittest.TestCase):
         self.assert_stop_attempted_once(backend, report)
         self.assertIn("emergency stop is active", report.message)
 
+    def test_unknown_emergency_stop_blocks_agv_and_head_motion(self):
+        for skill, arguments in (
+            ("move_agv", {"distance_m": 1.0}),
+            ("set_head", {"yaw_deg": 5}),
+        ):
+            with self.subTest(skill=skill):
+                backend = SpyBackend(ready_state(emergency_stop=None))
+                report = executor_for(backend).execute(
+                    TaskPlan("blocked", [PlanStep("s1", skill, arguments)])
+                )
+                self.assert_stop_attempted_once(backend, report)
+                self.assertNotIn(skill, [name for name, _ in backend.command_log])
+                self.assertIn("UNKNOWN", report.message)
+
+    def test_runtime_emergency_stop_drift_to_unknown_blocks_command(self):
+        backend = SpyBackend(ready_state(emergency_stop=False))
+        original_observe = backend.observe
+        calls = 0
+
+        def drifting_observe():
+            nonlocal calls
+            calls += 1
+            if calls == 3:
+                backend.set_state(emergency_stop=None)
+            return original_observe()
+
+        backend.observe = drifting_observe
+        report = executor_for(backend).execute(
+            TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})])
+        )
+        self.assert_stop_attempted_once(backend, report)
+        self.assertNotIn("set_head", [name for name, _ in backend.command_log])
+        self.assertIn("UNKNOWN", report.message)
+
+    def test_explicitly_clear_emergency_stop_allows_normal_motion(self):
+        backend = SpyBackend(ready_state(emergency_stop=False))
+        report = executor_for(backend).execute(
+            TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})])
+        )
+        self.assertTrue(report.success)
+        self.assertEqual(backend.stop_calls, 0)
+        self.assertIn("set_head", [name for name, _ in backend.command_log])
+
     def test_repair_disabled_stop_attempts_stop_once(self):
         backend = SpyBackend(ready_state(right_arm_safe=False))
         report = executor_for(backend).execute(
