@@ -31,6 +31,10 @@ class MockRobotBackend(RobotBackend):
         self._faults: dict[str, deque[FaultEvent]] = defaultdict(deque)
         self.command_log: list[tuple[str, dict[str, Any]]] = []
 
+    @property
+    def supported_skills(self) -> frozenset[str]:
+        return frozenset({"retract_arm", "extend_arm", "move_agv", "set_lift", "set_head"})
+
     def inject(self, skill_name: str, *events: FaultEvent) -> None:
         self._faults[skill_name].extend(events)
 

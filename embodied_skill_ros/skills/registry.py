@@ -33,3 +33,12 @@ def build_default_registry() -> SkillRegistry:
     for skill in (RetractArmSkill(), ExtendArmSkill(), MoveAgvSkill(), SetLiftSkill(), SetHeadSkill()):
         registry.register(skill)
     return registry
+
+
+def build_registry_for_backend(backend) -> SkillRegistry:
+    registry = SkillRegistry()
+    supported = backend.supported_skills
+    for skill in build_default_registry():
+        if skill.name in supported:
+            registry.register(skill)
+    return registry

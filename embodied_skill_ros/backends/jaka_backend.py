@@ -19,7 +19,8 @@ class JakaRobotBackend(RobotBackend):
                  lift_skill: Any = None, head_skill: Any = None,
                  transport_pose_name: str | None = None,
                  state_provider: Callable[[], RobotState] | None = None,
-                 agv_position_provider: Callable[[], float] | None = None):
+                 agv_position_provider: Callable[[], float] | None = None,
+                 stop_all_fn: Callable[[], bool] | None = None):
         self.arm = arm_skill
         self.agv = agv_skill
         self.lift = lift_skill
@@ -27,7 +28,20 @@ class JakaRobotBackend(RobotBackend):
         self.transport_pose_name = transport_pose_name
         self.state_provider = state_provider
         self.agv_position_provider = agv_position_provider
+        self.stop_all_fn = stop_all_fn
         self._last_agv_position: float | None = None  # No odometry adapter confirmed in chat_agent path.
+
+    @property
+    def supported_skills(self) -> frozenset[str]:
+        supported = set()
+        if callable(getattr(self.agv, "drive_distance", None)):
+            supported.add("move_agv")
+        if callable(getattr(self.lift, "lift_to", None)):
+            supported.add("set_lift")
+        if (callable(getattr(self.head, "yaw_to", None))
+                and callable(getattr(self.head, "pitch_to", None))):
+            supported.add("set_head")
+        return frozenset(supported)
 
     def observe(self) -> RobotState:
         if self.state_provider is not None:
@@ -78,17 +92,22 @@ class JakaRobotBackend(RobotBackend):
     def command(self, skill_name: str, arguments: dict[str, Any]) -> CommandReceipt:
         try:
             if skill_name == "retract_arm":
-                if self.arm is None or self.transport_pose_name is None:
-                    return CommandReceipt(False, "UNKNOWN: validated transport arm pose is not configured")
-                # Legacy API moves both arms; single-arm transport is not confirmed.
-                ok = bool(self.arm.go_preset(self.transport_pose_name))
+                return CommandReceipt(
+                    False,
+                    "single-arm retract is unsupported: the confirmed legacy preset moves both arms",
+                )
             elif skill_name == "move_agv":
-                if self.agv is None:
+                if "move_agv" not in self.supported_skills:
                     return CommandReceipt(False, "AGV adapter unavailable")
                 direction = "forward" if arguments["distance_m"] >= 0 else "backward"
-                self.agv.drive_distance(direction, abs(arguments["distance_m"]),
-                                        arguments.get("speed_mps", 0.2))
-                ok = True
+                call_result = self.agv.drive_distance(
+                    direction, abs(arguments["distance_m"]), arguments.get("speed_mps", 0.2)
+                )
+                if call_result is False:
+                    return CommandReceipt(False, "legacy AGV call returned failure", call_result)
+                message = ("legacy AGV command submitted; physical outcome not verified"
+                           if call_result is None else "legacy AGV call returned success")
+                return CommandReceipt(True, message, call_result)
             elif skill_name == "set_lift":
                 ok = self.lift is not None and bool(self.lift.lift_to(arguments["height_mm"]))
             elif skill_name == "set_head":
@@ -100,9 +119,14 @@ class JakaRobotBackend(RobotBackend):
                 if "pitch_deg" in arguments:
                     ok = bool(self.head.pitch_to(arguments["pitch_deg"])) and ok
             elif skill_name == "safe_stop":
-                if self.agv is not None:
-                    self.agv.stop()
-                ok = True
+                if self.stop_all_fn is None:
+                    return CommandReceipt(
+                        False, "verified global stop function is not configured"
+                    )
+                call_result = self.stop_all_fn()
+                if call_result is not True:
+                    return CommandReceipt(False, "verified global stop failed", call_result)
+                return CommandReceipt(True, "verified global stop returned success", call_result)
             else:
                 return CommandReceipt(False, f"JAKA adapter does not implement {skill_name}")
             return CommandReceipt(bool(ok), "legacy ROS2/SDK call returned success" if ok else "legacy call failed")

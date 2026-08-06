@@ -9,7 +9,7 @@ from .execution.skill_executor import ExecutionReport, SkillExecutor
 from .models.robot_state import RobotState
 from .models.task_plan import TaskPlan
 from .planner.structured_planner import StructuredPlanner
-from .skills.registry import SkillRegistry, build_default_registry
+from .skills.registry import SkillRegistry, build_registry_for_backend
 
 
 @dataclass
@@ -31,7 +31,7 @@ class EmbodiedSkillSystem:
 def build_mock_system(initial_state: RobotState | None = None, max_retries: int = 1,
                       max_replans: int = 1) -> EmbodiedSkillSystem:
     backend = MockRobotBackend(initial_state)
-    registry = build_default_registry()
+    registry = build_registry_for_backend(backend)
     planner = StructuredPlanner()
 
     def replan(previous: TaskPlan, state: RobotState,
