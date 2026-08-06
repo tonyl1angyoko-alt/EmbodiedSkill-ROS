@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import json
 
 from .backends.base_backend import RobotBackend
 from .backends.mock_backend import MockRobotBackend
@@ -41,17 +40,31 @@ def build_mock_system(initial_state: RobotState | None = None, max_retries: int 
             generated = planner.plan(previous.goal, state)
         except ValueError:
             return None
-        completed_signatures: dict[tuple[str, str], int] = {}
-        for step in completed_steps:
-            signature = (step.skill, json.dumps(step.arguments, sort_keys=True))
-            completed_signatures[signature] = completed_signatures.get(signature, 0) + 1
+        unmatched_completed = list(completed_steps)
+
+        def matches_completed(candidate, completed) -> bool:
+            if candidate.skill != completed.skill:
+                return False
+            schema = registry.get(candidate.skill).parameter_schema
+            for name in set(candidate.arguments) | set(completed.arguments):
+                if name in candidate.arguments and name in completed.arguments:
+                    if candidate.arguments[name] != completed.arguments[name]:
+                        return False
+                elif schema[name].required:
+                    return False
+            return True
+
         continuation = []
         for step in generated.steps:
-            signature = (step.skill, json.dumps(step.arguments, sort_keys=True))
-            if completed_signatures.get(signature, 0):
-                completed_signatures[signature] -= 1
-            else:
+            match = next(
+                (index for index, completed in enumerate(unmatched_completed)
+                 if matches_completed(step, completed)),
+                None,
+            )
+            if match is None:
                 continuation.append(step)
+            else:
+                unmatched_completed.pop(match)
         return TaskPlan(generated.goal, continuation, generated.plan_id,
                         generated.revision + 1, {**generated.metadata, "continuation": True})
 

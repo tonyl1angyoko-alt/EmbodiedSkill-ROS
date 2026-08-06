@@ -4,6 +4,7 @@ import unittest
 from embodied_skill_ros import build_mock_system
 from embodied_skill_ros.backends.mock_backend import FaultEvent, MockRobotBackend
 from embodied_skill_ros.execution.skill_executor import SkillExecutor
+from embodied_skill_ros.models.task_plan import PlanStep, TaskPlan
 from embodied_skill_ros.planner import LLMPlannerAdapter, Planner
 from embodied_skill_ros.planner.structured_planner import StructuredPlanner
 from embodied_skill_ros.skills.registry import build_default_registry
@@ -59,6 +60,19 @@ class PlannerAndSystemTests(unittest.TestCase):
         report = system.run_instruction("移动到工作台。")
         self.assertTrue(report.success)
         self.assertEqual(len(report.results), 2)
+
+    def test_default_replanner_matches_completed_step_with_optional_defaults(self):
+        system = build_mock_system(ready_state(), max_retries=0, max_replans=1)
+        system.backend.inject("set_head", FaultEvent("physical_failure"))
+        report = system.run_plan(TaskPlan("move then look up", [
+            PlanStep("move", "move_agv", {"distance_m": 1.0}),
+            PlanStep("head", "set_head", {"pitch_deg": 10.0}),
+        ]))
+        self.assertTrue(report.success)
+        self.assertEqual(system.backend.observe().agv_position_m, 1.0)
+        self.assertEqual(
+            [name for name, _arguments in system.backend.command_log].count("move_agv"), 1
+        )
 
     def test_llm_adapter_runs_directly_in_embodied_system(self):
         payload = json.dumps({
