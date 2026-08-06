@@ -69,6 +69,10 @@ class RobotSkill(ABC):
     def execute(self, backend: RobotBackend, arguments: dict[str, Any]) -> CommandReceipt:
         return backend.command(self.name, arguments)
 
+    def canonical_arguments(self, arguments: dict[str, Any]) -> dict[str, Any]:
+        """Return arguments normalized only by defaults confirmed by this skill."""
+        return dict(arguments)
+
     def expected_effects(self, arguments: dict[str, Any], before: RobotState) -> dict[str, Any]:
         return {}
 

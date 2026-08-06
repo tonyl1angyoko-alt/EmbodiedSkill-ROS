@@ -45,14 +45,11 @@ def build_mock_system(initial_state: RobotState | None = None, max_retries: int 
         def matches_completed(candidate, completed) -> bool:
             if candidate.skill != completed.skill:
                 return False
-            schema = registry.get(candidate.skill).parameter_schema
-            for name in set(candidate.arguments) | set(completed.arguments):
-                if name in candidate.arguments and name in completed.arguments:
-                    if candidate.arguments[name] != completed.arguments[name]:
-                        return False
-                elif schema[name].required:
-                    return False
-            return True
+            skill = registry.get(candidate.skill)
+            return (
+                skill.canonical_arguments(candidate.arguments)
+                == skill.canonical_arguments(completed.arguments)
+            )
 
         continuation = []
         for step in generated.steps:

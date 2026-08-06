@@ -16,6 +16,11 @@ class MoveAgvSkill(RobotSkill):
                           "left_arm_transport_safe": lambda s, a: s.left_arm_safe,
                           "right_arm_transport_safe": lambda s, a: s.right_arm_safe}, 30.0)
 
+    def canonical_arguments(self, arguments: dict[str, Any]) -> dict[str, Any]:
+        normalized = dict(arguments)
+        normalized.setdefault("speed_mps", 0.2)
+        return normalized
+
     def expected_effects(self, arguments: dict[str, Any], before: RobotState) -> dict[str, Any]:
         if before.agv_position_m is None:
             return {"agv_moving": False, "agv_position_m": None}

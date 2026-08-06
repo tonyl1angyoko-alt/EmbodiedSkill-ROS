@@ -74,6 +74,17 @@ class PlannerAndSystemTests(unittest.TestCase):
             [name for name, _arguments in system.backend.command_log].count("move_agv"), 1
         )
 
+    def test_default_replanner_does_not_conflate_distinct_optional_arguments(self):
+        system = build_mock_system(ready_state(), max_retries=0, max_replans=1)
+        system.backend.inject("set_lift", FaultEvent("physical_failure"))
+        report = system.run_plan(TaskPlan("lift then look up", [
+            PlanStep("yaw", "set_head", {"yaw_deg": 5.0}),
+            PlanStep("lift", "set_lift", {"height_mm": 300.0}),
+        ]))
+        self.assertTrue(report.success)
+        self.assertEqual(system.backend.observe().head_yaw_deg, 5.0)
+        self.assertEqual(system.backend.observe().head_pitch_deg, 10.0)
+
     def test_llm_adapter_runs_directly_in_embodied_system(self):
         payload = json.dumps({
             "goal": "head",
