@@ -25,6 +25,9 @@ class ExecutionReport:
     results: list[SkillResult] = field(default_factory=list)
     trace: ExecutionTrace | None = None
     message: str = ""
+    stop_attempted: bool = False
+    stop_accepted: bool | None = None
+    stop_message: str = ""
 
 
 class SkillExecutor:
@@ -45,6 +48,30 @@ class SkillExecutor:
         self.max_replans = max_replans
         self.replanner = replanner
 
+    def _stop_and_report(self, plan: TaskPlan, message: str,
+                         results: list[SkillResult] | None = None,
+                         trace: ExecutionTrace | None = None) -> ExecutionReport:
+        if trace is not None:
+            trace.decisions.append("STOP")
+        try:
+            receipt = self.backend.stop()
+            stop_accepted = bool(receipt.accepted)
+            stop_message = receipt.backend_message
+        except Exception as exc:
+            stop_accepted = False
+            stop_message = f"backend.stop() raised {type(exc).__name__}: {exc}"
+        return ExecutionReport(
+            False,
+            "STOP",
+            plan,
+            results or [],
+            trace,
+            message,
+            stop_attempted=True,
+            stop_accepted=stop_accepted,
+            stop_message=stop_message,
+        )
+
     def execute(self, plan: TaskPlan, allow_repair: bool = True,
                 verify_outcomes: bool = True, allow_recovery: bool = True,
                 ground_plan: bool = True, runtime_guard: bool = True) -> ExecutionReport:
@@ -54,18 +81,19 @@ class SkillExecutor:
             grounding = self.grounder.ground(plan, state)
             if not grounding.valid:
                 if grounding.requires_stop:
-                    return ExecutionReport(False, "STOP", plan,
-                                           message="; ".join(i.message for i in grounding.issues))
+                    return self._stop_and_report(
+                        plan, "; ".join(i.message for i in grounding.issues)
+                    )
                 if not allow_repair:
-                    return ExecutionReport(False, "STOP", plan, message="plan is not grounded")
+                    return self._stop_and_report(plan, "plan is not grounded")
                 repaired = self.repairer.repair(plan, state, grounding)
                 if repaired is None:
-                    return ExecutionReport(False, "STOP", plan, message="plan repair failed")
+                    return self._stop_and_report(plan, "plan repair failed")
                 plan = repaired
                 decision = "REPAIR"
                 grounding = self.grounder.ground(plan, state)
                 if not grounding.valid:
-                    return ExecutionReport(False, "STOP", plan, message="repaired plan remains invalid")
+                    return self._stop_and_report(plan, "repaired plan remains invalid")
 
         trace = ExecutionTrace(plan.plan_id, decisions=[decision])
         results: list[SkillResult] = []
@@ -78,9 +106,7 @@ class SkillExecutor:
                 skill = self.registry.get(step.skill)
                 skill.validate_arguments(step.arguments)
             except (KeyError, TypeError, ValueError) as exc:
-                self.backend.stop()
-                trace.decisions.append("STOP")
-                return ExecutionReport(False, "STOP", plan, results, trace, str(exc))
+                return self._stop_and_report(plan, str(exc), results, trace)
             before = self.state_manager.refresh()
             if runtime_guard:
                 guard = self.guard.check(step, skill, before)
@@ -106,10 +132,12 @@ class SkillExecutor:
                         decision = "REPAIR" if decision == "EXECUTE" else decision
                         trace.decisions.append("REPAIR")
                         continue
-                    self.backend.stop()
-                    trace.decisions.append("STOP")
-                    return ExecutionReport(False, "STOP", plan, results, trace,
-                                           "runtime guard: " + "; ".join(guard.reasons))
+                    return self._stop_and_report(
+                        plan,
+                        "runtime guard: " + "; ".join(guard.reasons),
+                        results,
+                        trace,
+                    )
             attempt = 1
             restart_from_replan = False
             restart_current_step = False
@@ -144,9 +172,7 @@ class SkillExecutor:
                 if achieved:
                     break
                 if not allow_recovery:
-                    self.backend.stop()
-                    trace.decisions.append("STOP")
-                    return ExecutionReport(False, "STOP", plan, results, trace, message)
+                    return self._stop_and_report(plan, message, results, trace)
                 may_replan = self.replanner is not None and replan_count < self.max_replans
                 recovery = self.recovery.decide(attempt, receipt.timed_out, may_replan)
                 result.recovery_triggered = True
@@ -174,9 +200,7 @@ class SkillExecutor:
                         index = 0
                         restart_from_replan = True
                         break
-                self.backend.stop()
-                trace.decisions.append("STOP")
-                return ExecutionReport(False, "STOP", plan, results, trace, recovery.reason)
+                return self._stop_and_report(plan, recovery.reason, results, trace)
             if not restart_from_replan and not restart_current_step:
                 index += 1
         return ExecutionReport(True, decision, plan, results, trace, "task completed")

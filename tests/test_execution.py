@@ -2,6 +2,7 @@ import unittest
 
 from embodied_skill_ros.backends.mock_backend import FaultEvent, MockRobotBackend
 from embodied_skill_ros.execution.skill_executor import SkillExecutor
+from embodied_skill_ros.models.skill_result import CommandReceipt
 from embodied_skill_ros.models.task_plan import PlanStep, TaskPlan
 from embodied_skill_ros.skills.registry import build_default_registry
 
@@ -15,7 +16,31 @@ def executor_for(backend, *, retries=1, replans=0, replanner=None):
     )
 
 
+class SpyBackend(MockRobotBackend):
+    def __init__(self, initial_state, *, stop_mode="accepted"):
+        super().__init__(initial_state)
+        self.stop_mode = stop_mode
+        self.stop_calls = 0
+
+    def stop(self):
+        self.stop_calls += 1
+        if self.stop_mode == "rejected":
+            return CommandReceipt(False, "safe-stop request rejected")
+        if self.stop_mode == "raises":
+            raise RuntimeError("safe-stop transport unavailable")
+        return super().stop()
+
+
 class ExecutionTests(unittest.TestCase):
+    def assert_stop_attempted_once(self, backend, report):
+        self.assertFalse(report.success)
+        self.assertEqual(report.decision, "STOP")
+        self.assertEqual(backend.stop_calls, 1)
+        self.assertTrue(report.stop_attempted)
+        self.assertTrue(report.stop_accepted)
+        if report.trace is not None:
+            self.assertEqual(report.trace.decisions.count("STOP"), 1)
+
     def test_sequential_plan_executes_in_order(self):
         backend = MockRobotBackend(ready_state())
         plan = TaskPlan("task", [
@@ -109,6 +134,113 @@ class ExecutionTests(unittest.TestCase):
         self.assertFalse(report.success)
         self.assertEqual(backend.command_log[-1][0], "safe_stop")
         self.assertFalse(backend.observe().agv_moving)
+
+    def test_nonrepairable_grounding_stop_attempts_stop_once(self):
+        backend = SpyBackend(ready_state(emergency_stop=True))
+        report = executor_for(backend).execute(
+            TaskPlan("blocked", [PlanStep("s1", "set_head", {"yaw_deg": 5})])
+        )
+        self.assert_stop_attempted_once(backend, report)
+        self.assertIn("emergency stop is active", report.message)
+
+    def test_repair_disabled_stop_attempts_stop_once(self):
+        backend = SpyBackend(ready_state(right_arm_safe=False))
+        report = executor_for(backend).execute(
+            TaskPlan("move", [PlanStep("s1", "move_agv", {"distance_m": 1.0})]),
+            allow_repair=False,
+        )
+        self.assert_stop_attempted_once(backend, report)
+        self.assertEqual(report.message, "plan is not grounded")
+
+    def test_repair_failure_stop_attempts_stop_once(self):
+        backend = SpyBackend(ready_state(right_arm_safe=False))
+        executor = executor_for(backend)
+        executor.repairer.repair = lambda _plan, _state, _report: None
+        report = executor.execute(
+            TaskPlan("move", [PlanStep("s1", "move_agv", {"distance_m": 1.0})])
+        )
+        self.assert_stop_attempted_once(backend, report)
+        self.assertEqual(report.message, "plan repair failed")
+
+    def test_invalid_repaired_plan_stop_attempts_stop_once(self):
+        backend = SpyBackend(ready_state(right_arm_ready=False, right_arm_safe=False))
+        report = executor_for(backend).execute(
+            TaskPlan("move", [PlanStep("s1", "move_agv", {"distance_m": 1.0})])
+        )
+        self.assert_stop_attempted_once(backend, report)
+        self.assertEqual(report.message, "repaired plan remains invalid")
+
+    def test_runtime_validation_stop_attempts_stop_once(self):
+        backend = SpyBackend(ready_state())
+        report = executor_for(backend).execute(
+            TaskPlan("bad", [PlanStep("s1", "unknown_skill", {})]),
+            ground_plan=False,
+        )
+        self.assert_stop_attempted_once(backend, report)
+        self.assertIn("unknown skill", report.message)
+
+    def test_runtime_guard_stop_attempts_stop_once(self):
+        backend = SpyBackend(ready_state(active_resources={"head"}))
+        report = executor_for(backend).execute(
+            TaskPlan("busy", [PlanStep("s1", "set_head", {"yaw_deg": 5})]),
+            ground_plan=False,
+        )
+        self.assert_stop_attempted_once(backend, report)
+        self.assertIn("runtime guard", report.message)
+
+    def test_recovery_disabled_stop_attempts_stop_once(self):
+        backend = SpyBackend(ready_state())
+        backend.inject("set_head", FaultEvent("command_failure", "head command failed"))
+        report = executor_for(backend).execute(
+            TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})]),
+            allow_recovery=False,
+        )
+        self.assert_stop_attempted_once(backend, report)
+        self.assertEqual(report.message, "head command failed")
+
+    def test_recovery_exhaustion_stop_attempts_stop_once(self):
+        backend = SpyBackend(ready_state())
+        backend.inject("set_head", FaultEvent("command_failure", "head command failed"))
+        report = executor_for(backend, retries=0).execute(
+            TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})])
+        )
+        self.assert_stop_attempted_once(backend, report)
+        self.assertEqual(report.message, "no recovery path remains")
+
+    def test_failed_replan_stop_attempts_stop_once(self):
+        backend = SpyBackend(ready_state())
+        backend.inject("set_head", FaultEvent("command_failure", "head command failed"))
+        report = executor_for(
+            backend, retries=0, replans=1, replanner=lambda _plan, _state: None
+        ).execute(TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})]))
+        self.assert_stop_attempted_once(backend, report)
+        self.assertEqual(report.message, "retry budget exhausted")
+
+    def test_rejected_stop_preserves_original_failure(self):
+        backend = SpyBackend(ready_state(), stop_mode="rejected")
+        backend.inject("set_head", FaultEvent("command_failure", "original command failure"))
+        report = executor_for(backend, retries=0).execute(
+            TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})])
+        )
+        self.assertEqual(backend.stop_calls, 1)
+        self.assertEqual(report.decision, "STOP")
+        self.assertEqual(report.message, "no recovery path remains")
+        self.assertTrue(report.stop_attempted)
+        self.assertFalse(report.stop_accepted)
+        self.assertEqual(report.stop_message, "safe-stop request rejected")
+
+    def test_stop_exception_preserves_original_failure(self):
+        backend = SpyBackend(ready_state(), stop_mode="raises")
+        backend.inject("set_head", FaultEvent("command_failure", "original command failure"))
+        report = executor_for(backend, retries=0).execute(
+            TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})])
+        )
+        self.assertEqual(backend.stop_calls, 1)
+        self.assertEqual(report.decision, "STOP")
+        self.assertEqual(report.message, "no recovery path remains")
+        self.assertTrue(report.stop_attempted)
+        self.assertFalse(report.stop_accepted)
+        self.assertIn("safe-stop transport unavailable", report.stop_message)
 
     def test_robot_state_last_result_is_persisted(self):
         backend = MockRobotBackend(ready_state())
