@@ -62,6 +62,37 @@ class ModelsAndRegistryTests(unittest.TestCase):
         with self.assertRaisesRegex(ParameterError, "above maximum"):
             MoveAgvSkill().validate_arguments({"distance_m": 8.0})
 
+    def test_all_numeric_parameters_reject_non_finite_values(self):
+        registry = build_default_registry()
+        cases = (
+            ("move_agv", "distance_m", {"distance_m": 1.0}),
+            ("move_agv", "speed_mps", {"distance_m": 1.0, "speed_mps": 0.2}),
+            ("set_lift", "height_mm", {"height_mm": 100.0}),
+            ("set_head", "yaw_deg", {"yaw_deg": 0.0}),
+            ("set_head", "pitch_deg", {"pitch_deg": 0.0}),
+        )
+        for skill_name, parameter, valid_arguments in cases:
+            for value in (float("nan"), float("inf"), float("-inf")):
+                with self.subTest(skill=skill_name, parameter=parameter, value=value):
+                    arguments = dict(valid_arguments)
+                    arguments[parameter] = value
+                    with self.assertRaisesRegex(ParameterError, "finite"):
+                        registry.get(skill_name).validate_arguments(arguments)
+
+    def test_normal_numeric_boundary_values_are_valid(self):
+        registry = build_default_registry()
+        valid = (
+            ("move_agv", {"distance_m": -5.0, "speed_mps": 0.01}),
+            ("move_agv", {"distance_m": 5.0, "speed_mps": 0.5}),
+            ("set_lift", {"height_mm": 0.0}),
+            ("set_lift", {"height_mm": 780.0}),
+            ("set_head", {"yaw_deg": -90.0, "pitch_deg": -45.0}),
+            ("set_head", {"yaw_deg": 90.0, "pitch_deg": 20.0}),
+        )
+        for skill_name, arguments in valid:
+            with self.subTest(skill=skill_name, arguments=arguments):
+                registry.get(skill_name).validate_arguments(arguments)
+
     def test_unknown_parameter_fails(self):
         with self.assertRaisesRegex(ParameterError, "unknown parameters"):
             MoveAgvSkill().validate_arguments({"distance_m": 1.0, "magic": 1})
@@ -95,6 +126,18 @@ class ModelsAndRegistryTests(unittest.TestCase):
         adapter = LLMPlannerAdapter(lambda _prompt, _skills: payload, build_default_registry())
         with self.assertRaisesRegex(ValueError, "unregistered"):
             adapter.plan("bad")
+
+    def test_llm_adapter_rejects_non_finite_json_constants(self):
+        registry = build_default_registry()
+        for constant in ("NaN", "Infinity", "-Infinity"):
+            with self.subTest(constant=constant):
+                payload = (
+                    '{"goal":"bad","steps":[{"id":"s1","skill":"set_head",'
+                    f'"arguments":{{"yaw_deg":{constant}}}}}]}}'
+                )
+                adapter = LLMPlannerAdapter(lambda _prompt, _skills: payload, registry)
+                with self.assertRaisesRegex(ValueError, "non-finite"):
+                    adapter.plan("bad")
 
 
 if __name__ == "__main__":

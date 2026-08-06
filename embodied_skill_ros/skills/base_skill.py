@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from abc import ABC
 from dataclasses import dataclass, field
+import math
 from typing import Any, Callable
 
 from ..backends.base_backend import RobotBackend
@@ -48,6 +49,8 @@ class RobotSkill(ABC):
                 raise ParameterError(f"{name} has wrong type")
             if not isinstance(value, spec.python_type):
                 raise ParameterError(f"{name} has wrong type")
+            if isinstance(value, (int, float)) and not math.isfinite(float(value)):
+                raise ParameterError(f"{name} must be finite")
             if spec.minimum is not None and value < spec.minimum:
                 raise ParameterError(f"{name} below minimum {spec.minimum}")
             if spec.maximum is not None and value > spec.maximum:
@@ -76,7 +79,11 @@ class RobotSkill(ABC):
         failures = []
         for key, target in expected.items():
             actual = observed[key]
-            if actual is None:
+            if isinstance(target, (int, float)) and not math.isfinite(float(target)):
+                failures.append(f"expected {key} is non-finite: {target!r}")
+            elif isinstance(actual, (int, float)) and not math.isfinite(float(actual)):
+                failures.append(f"observed {key} is non-finite: {actual!r}")
+            elif actual is None:
                 failures.append(f"{key}=UNKNOWN")
             elif isinstance(target, float):
                 if not isinstance(actual, (int, float)) or abs(float(actual) - target) > tolerance:

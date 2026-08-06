@@ -82,6 +82,34 @@ class ExecutionTests(unittest.TestCase):
         self.assertTrue(report.results[0].command_accepted)
         self.assertFalse(report.results[0].physical_outcome_achieved)
 
+    def test_non_finite_parameter_never_reaches_backend_command(self):
+        for value in (float("nan"), float("inf"), float("-inf")):
+            with self.subTest(value=value):
+                backend = SpyBackend(ready_state())
+                report = executor_for(backend).execute(
+                    TaskPlan("bad", [PlanStep("s1", "move_agv", {"distance_m": value})])
+                )
+                self.assertFalse(report.success)
+                self.assertNotIn("move_agv", [name for name, _ in backend.command_log])
+                self.assertEqual(backend.stop_calls, 1)
+
+    def test_non_finite_observation_never_verifies_as_achieved(self):
+        skill = build_default_registry().get("set_head")
+        before = ready_state(head_yaw_deg=0.0)
+        for value in (float("nan"), float("inf"), float("-inf")):
+            with self.subTest(value=value):
+                after = ready_state(head_yaw_deg=value)
+                verification = skill.verify_outcome({"yaw_deg": 5.0}, before, after)
+                self.assertFalse(verification.achieved)
+                self.assertIn("non-finite", verification.message)
+
+    def test_non_finite_expected_value_never_verifies_as_achieved(self):
+        skill = build_default_registry().get("set_head")
+        state = ready_state(head_yaw_deg=float("nan"))
+        verification = skill.verify_outcome({"yaw_deg": float("nan")}, state, state)
+        self.assertFalse(verification.achieved)
+        self.assertIn("non-finite", verification.message)
+
     def test_local_retry_can_recover(self):
         backend = MockRobotBackend(ready_state())
         backend.inject("set_head", FaultEvent("physical_failure"))
