@@ -4,6 +4,7 @@ from embodied_skill_ros.backends.mock_backend import FaultEvent, MockRobotBacken
 from embodied_skill_ros.execution.skill_executor import SkillExecutor
 from embodied_skill_ros.models.skill_result import CommandReceipt
 from embodied_skill_ros.models.task_plan import PlanStep, TaskPlan
+from embodied_skill_ros.skills.base_skill import RobotSkill
 from embodied_skill_ros.skills.registry import build_default_registry
 
 from test_models_and_registry import ready_state
@@ -29,6 +30,25 @@ class SpyBackend(MockRobotBackend):
         if self.stop_mode == "raises":
             raise RuntimeError("safe-stop transport unavailable")
         return super().stop()
+
+
+class CounterBackend(SpyBackend):
+    def __init__(self, initial_state):
+        super().__init__(initial_state)
+        self.counter = 0
+
+    def command(self, skill_name, arguments):
+        if skill_name == "increment_counter":
+            self.command_log.append((skill_name, dict(arguments)))
+            self.counter += 1
+            return CommandReceipt(True, "counter incremented")
+        return super().command(skill_name, arguments)
+
+
+class IncrementCounterSkill(RobotSkill):
+    def __init__(self):
+        super().__init__("increment_counter", "Increment a non-idempotent counter.",
+                         {}, {"counter"}, {}, 1.0)
 
 
 class ExecutionTests(unittest.TestCase):
@@ -140,6 +160,112 @@ class ExecutionTests(unittest.TestCase):
         self.assertTrue(report.success)
         self.assertEqual(report.decision, "REPLAN")
         self.assertIn("REPLAN", report.trace.decisions)
+
+    def test_replan_does_not_replay_completed_agv_motion(self):
+        backend = SpyBackend(ready_state())
+        backend.inject("set_head", FaultEvent("physical_failure"))
+        contexts = []
+
+        def replan(continuation, _state, completed_steps):
+            contexts.append((continuation, completed_steps))
+            return continuation
+
+        report = executor_for(backend, retries=0, replans=1, replanner=replan).execute(
+            TaskPlan("move then head", [
+                PlanStep("move", "move_agv", {"distance_m": 1.0}),
+                PlanStep("head", "set_head", {"yaw_deg": 5}),
+            ])
+        )
+        self.assertTrue(report.success)
+        self.assertEqual(backend.observe().agv_position_m, 1.0)
+        self.assertEqual([step.skill for step in contexts[0][0].steps], ["set_head"])
+        self.assertEqual([step.skill for step in contexts[0][1]], ["move_agv"])
+
+    def test_legacy_two_argument_replanner_receives_continuation(self):
+        backend = SpyBackend(ready_state())
+        backend.inject("set_head", FaultEvent("physical_failure"))
+        seen = []
+
+        def replan(continuation, _state):
+            seen.extend(step.skill for step in continuation.steps)
+            return continuation
+
+        report = executor_for(backend, retries=0, replans=1, replanner=replan).execute(
+            TaskPlan("move then head", [
+                PlanStep("move", "move_agv", {"distance_m": 1.0}),
+                PlanStep("head", "set_head", {"yaw_deg": 5}),
+            ])
+        )
+        self.assertTrue(report.success)
+        self.assertEqual(seen, ["set_head"])
+        self.assertEqual(backend.observe().agv_position_m, 1.0)
+
+    def test_replan_does_not_replay_non_idempotent_counter(self):
+        backend = CounterBackend(ready_state())
+        backend.inject("set_head", FaultEvent("physical_failure"))
+        registry = build_default_registry()
+        registry.register(IncrementCounterSkill())
+
+        def replan(continuation, _state, completed_steps):
+            self.assertEqual([step.skill for step in completed_steps], ["increment_counter"])
+            return continuation
+
+        report = SkillExecutor(
+            registry, backend, max_retries=0, max_replans=1, replanner=replan
+        ).execute(TaskPlan("counter then head", [
+            PlanStep("counter", "increment_counter", {}),
+            PlanStep("head", "set_head", {"yaw_deg": 5}),
+        ]))
+        self.assertTrue(report.success)
+        self.assertEqual(backend.counter, 1)
+
+    def test_replanned_unknown_skill_is_grounded_before_command(self):
+        backend = SpyBackend(ready_state())
+        backend.inject("set_head", FaultEvent("command_failure"))
+        replanned = TaskPlan("bad", [PlanStep("new", "unknown_skill", {})])
+        report = executor_for(
+            backend, retries=0, replans=1, replanner=lambda _plan, _state: replanned
+        ).execute(TaskPlan("head", [PlanStep("head", "set_head", {"yaw_deg": 5})]))
+        self.assertFalse(report.success)
+        self.assertNotIn("unknown_skill", [name for name, _ in backend.command_log])
+        self.assertIn("unknown skill", report.message)
+
+    def test_replanned_invalid_arguments_are_grounded_before_command(self):
+        backend = SpyBackend(ready_state())
+        backend.inject("set_head", FaultEvent("command_failure"))
+        replanned = TaskPlan("bad", [PlanStep("new", "move_agv", {"distance_m": 8.0})])
+        report = executor_for(
+            backend, retries=0, replans=1, replanner=lambda _plan, _state: replanned
+        ).execute(TaskPlan("head", [PlanStep("head", "set_head", {"yaw_deg": 5})]))
+        self.assertFalse(report.success)
+        self.assertNotIn("move_agv", [name for name, _ in backend.command_log])
+        self.assertIn("above maximum", report.message)
+
+    def test_replanned_duplicate_ids_are_rejected_before_command(self):
+        backend = SpyBackend(ready_state())
+        backend.inject("set_head", FaultEvent("command_failure"))
+        replanned = TaskPlan("bad", [
+            PlanStep("duplicate", "set_head", {"yaw_deg": 10}),
+            PlanStep("duplicate", "set_head", {"yaw_deg": 15}),
+        ])
+        report = executor_for(
+            backend, retries=0, replans=1, replanner=lambda _plan, _state: replanned
+        ).execute(TaskPlan("head", [PlanStep("head", "set_head", {"yaw_deg": 5})]))
+        self.assertFalse(report.success)
+        self.assertEqual([name for name, _ in backend.command_log].count("set_head"), 1)
+        self.assertIn("duplicated", report.message)
+
+    def test_empty_replanned_continuation_does_not_complete_task(self):
+        backend = SpyBackend(ready_state())
+        backend.inject("set_head", FaultEvent("command_failure"))
+        empty = TaskPlan("head", [])
+        report = executor_for(
+            backend, retries=0, replans=1, replanner=lambda _plan, _state: empty
+        ).execute(TaskPlan("head", [PlanStep("head", "set_head", {"yaw_deg": 5})]))
+        self.assertFalse(report.success)
+        self.assertEqual(report.decision, "STOP")
+        self.assertIn("empty continuation", report.message)
+        self.assertEqual(backend.stop_calls, 1)
 
     def test_replan_budget_prevents_infinite_loop(self):
         backend = MockRobotBackend(ready_state())

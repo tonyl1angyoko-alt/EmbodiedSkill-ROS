@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 
 from .backends.base_backend import RobotBackend
 from .backends.mock_backend import MockRobotBackend
@@ -33,11 +34,25 @@ def build_mock_system(initial_state: RobotState | None = None, max_retries: int 
     registry = build_default_registry()
     planner = StructuredPlanner()
 
-    def replan(previous: TaskPlan, state: RobotState) -> TaskPlan | None:
+    def replan(previous: TaskPlan, state: RobotState,
+               completed_steps: tuple = ()) -> TaskPlan | None:
         try:
-            return planner.plan(previous.goal, state)
+            generated = planner.plan(previous.goal, state)
         except ValueError:
             return None
+        completed_signatures: dict[tuple[str, str], int] = {}
+        for step in completed_steps:
+            signature = (step.skill, json.dumps(step.arguments, sort_keys=True))
+            completed_signatures[signature] = completed_signatures.get(signature, 0) + 1
+        continuation = []
+        for step in generated.steps:
+            signature = (step.skill, json.dumps(step.arguments, sort_keys=True))
+            if completed_signatures.get(signature, 0):
+                completed_signatures[signature] -= 1
+            else:
+                continuation.append(step)
+        return TaskPlan(generated.goal, continuation, generated.plan_id,
+                        generated.revision + 1, {**generated.metadata, "continuation": True})
 
     return EmbodiedSkillSystem(
         backend,

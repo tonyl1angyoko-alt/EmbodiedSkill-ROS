@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import inspect
 import time
 from typing import Callable
 
@@ -10,8 +11,9 @@ from .runtime_guard import RuntimeGuard
 from ..backends.base_backend import RobotBackend
 from ..grounding.plan_grounder import EmbodiedPlanGrounder
 from ..grounding.plan_repairer import PlanRepairer
+from ..models.robot_state import RobotState
 from ..models.skill_result import SkillResult
-from ..models.task_plan import TaskPlan
+from ..models.task_plan import PlanStep, TaskPlan
 from ..skills.registry import SkillRegistry
 from ..state.state_manager import StateManager
 from ..tracing.execution_trace import ExecutionTrace, TraceRecord, utc_now
@@ -34,7 +36,7 @@ class SkillExecutor:
     def __init__(self, registry: SkillRegistry, backend: RobotBackend,
                  max_retries: int = 1,
                  max_replans: int = 1,
-                 replanner: Callable[[TaskPlan, object], TaskPlan | None] | None = None):
+                 replanner: Callable[..., TaskPlan | None] | None = None):
         self.registry = registry
         self.backend = backend
         self.state_manager = StateManager(backend)
@@ -72,6 +74,25 @@ class SkillExecutor:
             stop_message=stop_message,
         )
 
+    def _invoke_replanner(self, continuation: TaskPlan, state: RobotState,
+                          completed_steps: tuple[PlanStep, ...]) -> TaskPlan | None:
+        if self.replanner is None:
+            return None
+        try:
+            parameters = inspect.signature(self.replanner).parameters.values()
+            positional = [
+                item for item in parameters
+                if item.kind in (item.POSITIONAL_ONLY, item.POSITIONAL_OR_KEYWORD)
+            ]
+            accepts_completed = (
+                len(positional) >= 3 or any(item.kind is item.VAR_POSITIONAL for item in parameters)
+            )
+        except (TypeError, ValueError):
+            accepts_completed = False
+        if accepts_completed:
+            return self.replanner(continuation, state, completed_steps)
+        return self.replanner(continuation, state)
+
     def execute(self, plan: TaskPlan, allow_repair: bool = True,
                 verify_outcomes: bool = True, allow_recovery: bool = True,
                 ground_plan: bool = True, runtime_guard: bool = True) -> ExecutionReport:
@@ -100,6 +121,7 @@ class SkillExecutor:
         index = 0
         replan_count = 0
         runtime_repair_count = 0
+        completed_steps: list[PlanStep] = []
         while index < len(plan.steps):
             step = plan.steps[index]
             try:
@@ -192,15 +214,64 @@ class SkillExecutor:
                             break
                     continue
                 if recovery.action is RecoveryAction.REPLAN and self.replanner:
-                    replanned = self.replanner(plan, self.state_manager.refresh())
+                    continuation = TaskPlan(
+                        plan.goal,
+                        plan.steps[index:],
+                        plan.plan_id,
+                        plan.revision,
+                        {**plan.metadata, "continuation": True},
+                    )
+                    replan_state = self.state_manager.refresh()
+                    replanned = self._invoke_replanner(
+                        continuation, replan_state, tuple(completed_steps)
+                    )
                     if replanned is not None:
-                        plan = replanned
+                        if not replanned.steps:
+                            return self._stop_and_report(
+                                plan, "replanner returned an empty continuation", results, trace
+                            )
+                        grounding = self.grounder.ground(replanned, replan_state)
+                        if not grounding.valid:
+                            if grounding.requires_stop:
+                                return self._stop_and_report(
+                                    plan,
+                                    "; ".join(issue.message for issue in grounding.issues),
+                                    results,
+                                    trace,
+                                )
+                            if not allow_repair:
+                                return self._stop_and_report(
+                                    plan, "replanned continuation is not grounded", results, trace
+                                )
+                            repaired = self.repairer.repair(replanned, replan_state, grounding)
+                            if repaired is None:
+                                return self._stop_and_report(
+                                    plan, "replanned continuation repair failed", results, trace
+                                )
+                            replanned = repaired
+                            grounding = self.grounder.ground(replanned, replan_state)
+                            if not grounding.valid:
+                                return self._stop_and_report(
+                                    plan,
+                                    "repaired replanned continuation remains invalid: "
+                                    + "; ".join(issue.message for issue in grounding.issues),
+                                    results,
+                                    trace,
+                                )
+                        plan = TaskPlan(
+                            replanned.goal,
+                            list(completed_steps) + replanned.steps,
+                            replanned.plan_id,
+                            replanned.revision,
+                            {**replanned.metadata, "completed_prefix_preserved": True},
+                        )
                         replan_count += 1
                         decision = "REPLAN"
-                        index = 0
+                        index = len(completed_steps)
                         restart_from_replan = True
                         break
                 return self._stop_and_report(plan, recovery.reason, results, trace)
             if not restart_from_replan and not restart_current_step:
+                completed_steps.append(step)
                 index += 1
         return ExecutionReport(True, decision, plan, results, trace, "task completed")
