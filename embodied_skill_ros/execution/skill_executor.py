@@ -261,6 +261,12 @@ class SkillExecutor:
                 return self._stop_and_report(
                     plan, contract_violation[1], results, trace
                 )
+            attempt = 1
+            admitted_transaction = self._new_transaction(plan, step, attempt, trace)
+            admitted_transaction.transition(
+                TransactionState.ADMITTED,
+                "initial grounding and safety contract admission passed",
+            )
             before = self.state_manager.refresh()
             if runtime_guard:
                 guard = self.guard.check(step, skill, before)
@@ -275,6 +281,10 @@ class SkillExecutor:
                     if allow_repair and not suffix_report.requires_stop and runtime_repair_count < 2:
                         repaired = self.repairer.repair(remaining, before, suffix_report)
                     if repaired is not None and repaired.steps != remaining.steps:
+                        admitted_transaction.transition(
+                            TransactionState.REJECTED,
+                            "runtime revalidation requires a repaired continuation",
+                        )
                         plan = TaskPlan(
                             plan.goal,
                             plan.steps[:index] + repaired.steps,
@@ -286,8 +296,7 @@ class SkillExecutor:
                         decision = "REPAIR" if decision == "EXECUTE" else decision
                         trace.decisions.append("REPAIR")
                         continue
-                    rejected = self._new_transaction(plan, step, 1, trace)
-                    rejected.transition(
+                    admitted_transaction.transition(
                         TransactionState.REJECTED,
                         "runtime guard: " + "; ".join(guard.reasons),
                     )
@@ -297,32 +306,26 @@ class SkillExecutor:
                         results,
                         trace,
                     )
-            attempt = 1
             restart_from_replan = False
             restart_current_step = False
             completed_transaction_state: TransactionState | None = None
             while True:
+                transaction = admitted_transaction
                 freshness = self.grounder.checker.evaluate_state_freshness(
                     skill, before
                 )
                 if freshness is not None and not freshness.valid:
-                    rejected = self._new_transaction(plan, step, attempt, trace)
                     message = (
                         f"state freshness invalid for skill {skill.name}: "
                         f"{freshness.reason}"
                     )
-                    rejected.transition(TransactionState.REJECTED, message)
+                    transaction.transition(TransactionState.REJECTED, message)
                     return self._stop_and_report(plan, message, results, trace)
-                transaction = self._new_transaction(plan, step, attempt, trace)
-                transaction.transition(
-                    TransactionState.ADMITTED,
-                    "grounding, contract, and runtime admission checks passed",
-                )
                 started = utc_now()
                 monotonic_start = time.monotonic()
                 transaction.transition(
                     TransactionState.DISPATCHED,
-                    "backend command side-effect boundary entered",
+                    "runtime revalidation passed; backend command side-effect boundary entered",
                 )
                 dispatch_exception = None
                 try:
@@ -477,9 +480,21 @@ class SkillExecutor:
                 if recovery.action is RecoveryAction.RETRY:
                     attempt += 1
                     before = self.state_manager.refresh()
+                    admitted_transaction = self._new_transaction(
+                        plan, step, attempt, trace
+                    )
+                    admitted_transaction.transition(
+                        TransactionState.ADMITTED,
+                        "bounded retry passed contract admission",
+                    )
                     if runtime_guard:
                         retry_guard = self.guard.check(step, skill, before)
                         if not retry_guard.allowed:
+                            admitted_transaction.transition(
+                                TransactionState.REJECTED,
+                                "retry runtime guard: "
+                                + "; ".join(retry_guard.reasons),
+                            )
                             # Return to the outer loop so the changed state is
                             # re-grounded and, when possible, repaired before
                             # another physical command is sent.

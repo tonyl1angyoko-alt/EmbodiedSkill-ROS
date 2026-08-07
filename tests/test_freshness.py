@@ -214,6 +214,18 @@ class AdmissionFreshnessTests(unittest.TestCase):
         self.assertFalse(report.success)
         self.assertNotIn("move_agv", [name for name, _ in backend.command_log])
         self.assertIn("stale", report.message)
+        transition_states = [
+            item.to_state for item in report.trace.transactions[0].transitions
+        ]
+        self.assertEqual(
+            transition_states,
+            [
+                TransactionState.PROPOSED,
+                TransactionState.ADMITTED,
+                TransactionState.REJECTED,
+            ],
+        )
+        self.assertNotIn(TransactionState.DISPATCHED, transition_states)
         self.assertIs(
             executor.grounder.checker.freshness_policy,
             executor.guard.checker.freshness_policy,
