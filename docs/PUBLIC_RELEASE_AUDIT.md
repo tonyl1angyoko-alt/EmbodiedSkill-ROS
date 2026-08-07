@@ -1,6 +1,6 @@
 # Public Release Audit
 
-Audit date: 2026-08-06
+Audit date: 2026-08-08
 
 Target: the standalone `EmbodiedSkill-ROS` repository only. The separately delivered reference workspace is excluded from version control and distribution.
 
@@ -37,22 +37,27 @@ The only repository email-like value is `zhengqingfu@localhost` in `package.xml`
 
 ## Original-project independence
 
-- No original reference source, SDK binary, robot configuration, launch configuration, or network address is included.
+- No original reference source, SDK binary, robot configuration, vendor launch
+  configuration, or network address is included. The repository contains only its new
+  ROS2 Mock validation launch file.
 - Documentation contains file-and-line citations from the static migration analysis. Those citations are provenance notes, not imports or runtime dependencies.
 - `JakaRobotBackend` uses dependency injection and imports no ROS2/JAKA package at module import time.
 
 ## Claims that may be made
 
-- `MOCK-VERIFIED`: core state models, skill registry, grounding, deterministic repair, execute-observe-verify-recover loop, fault injection, demos, 48 tests, and the predefined 30-scenario benchmark.
+- `UNIT-VERIFIED` / `MOCK-VERIFIED`: epistemic state, declarative registry,
+  effect-driven grounding/repair, execute-observe-verify-recover loop, fault injection,
+  demos, and 100 passing platform-independent tests.
+- `BENCHMARK-VERIFIED`: the predefined 30-scenario benchmark and 200 seeded procedural trials.
 - `STATICALLY-INSPECTED`: mapping boundary for legacy ROS2/JAKA skill objects.
-- The full Mock configuration achieved 96.67% task success on the checked-in 30 predefined deterministic scenarios.
+- The full Mock configuration achieved 93.33% task success on the checked-in 30 predefined deterministic scenarios after equivalent-plan "replan" was rejected.
 
 ## Claims that must not be made
 
 - ROS2 Humble or Ubuntu 22.04 build success;
 - Gazebo, MoveIt2, RViz, or ROS2 integration success;
 - JAKA hardware execution or safety validation;
-- a hardware task-success rate of 96.67%;
+- a hardware task-success rate of 93.33% (or the superseded 96.67% Mock figure);
 - suitability for unattended real-robot deployment;
 - independent hold-out generalization or statistical confidence intervals.
 

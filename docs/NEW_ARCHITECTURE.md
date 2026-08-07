@@ -11,6 +11,8 @@ flowchart TB
     SR["SkillRegistry"] --> G["EmbodiedPlanGrounder"]
     SM["StateManager"] --> G
     TP --> G
+    BC["BackendCapabilities"] --> G
+    SC["Declarative SkillContract"] --> G
     G -->|valid| E["SkillExecutor"]
     G -->|repairable| PR["PlanRepairer"]
     PR --> G
@@ -23,6 +25,8 @@ flowchart TB
     B --> J["JakaRobotBackend"]
     J --> L["Existing ROS2 / SDK skill objects"]
     B --> O["Observed RobotState"]
+    B --> HW["Hidden Mock physical world"]
+    HW --> BO["Independent benchmark oracle"]
     O --> V["OutcomeVerifier"]
     V --> E
     E --> R["RecoveryManager"]
@@ -79,18 +83,30 @@ sequenceDiagram
 The executor implements `EXECUTE → REPAIR → REPLAN → STOP` as an escalation order:
 
 1. Execute a grounded plan.
-2. Repair unsafe/UNKNOWN arm state before AGV or lift motion and serialize conflicting parallel groups.
-3. Replan once bounded local retry is exhausted, if a replanner is configured.
+2. Repair false/UNKNOWN/STALE predicates by finding registered effects that can
+   establish the missing fact; serialize incompatible parallel resources.
+3. Re-synthesize unsatisfied goal facts from current observations after bounded retry.
 4. Stop when emergency/fault state is explicit, a repair remains invalid, or retry/replan budgets are exhausted.
 
 `STOP` is therefore a terminal mitigation, not the default response to every mismatch.
 
 ## Backend boundary
 
-- `MockRobotBackend` provides deterministic state transitions, command failure, timeout, physical failure, and state-drift injection.
+- `MockRobotBackend` keeps physical world truth private from its observation model,
+  provides deterministic transitions and fault injection, and exposes truth only to
+  the benchmark oracle.
 - `JakaRobotBackend` imports no ROS2 module itself. It calls legacy skill objects that are constructed by the original ROS2 application.
 - Unobservable fields are `None` (`UNKNOWN`). A callback-based `state_provider` and `agv_position_provider` allow an integrator to add verified observations without changing core code.
+- Every backend declares supported skills, observable effects, safe-stop support, and
+  runtime identity. Unsupported execution stops before command dispatch.
+- The optional `mock_bridge` node imports `rclpy` only when invoked and is reserved for
+  Ubuntu/Humble runtime validation.
 
 ## Minimum implemented scope
 
-Five executable skills cover four components: arm retract/extend, AGV move, lift position, and head pose. The deterministic planner intentionally handles only the documented demo language. Arbitrary natural language belongs behind `LLMPlannerAdapter`, whose output is still registry-constrained and grounded before execution.
+Five executable skills cover four components: arm retract/extend, AGV move, lift
+position, and head pose. New declarative skills can be registered without core edits;
+the test suite demonstrates this with a tool-preparation/docking pair. The deterministic
+planner intentionally handles only the documented demo language. Arbitrary natural
+language belongs behind `LLMPlannerAdapter`, whose output is still registry-constrained
+and grounded before execution.

@@ -6,22 +6,27 @@ The original project is a Qwen function-calling chat agent connected to JAKA mob
 
 ## 2. What the new project adds
 
-Evidence label: `MOCK-VERIFIED` for the capabilities and results in this section.
+Evidence labels: `UNIT-VERIFIED`, `MOCK-VERIFIED`, and `BENCHMARK-VERIFIED` as
+itemized in `docs/VALIDATION_EVIDENCE.md`.
 
 EmbodiedSkill-ROS adds:
 
-- typed `RobotState`, `TaskPlan`, `PlanStep`, command, verification, and result models;
-- a registry-limited skill representation with schemas, resources, preconditions, expected effects, timeout, and recovery policy;
-- state projection, body/resource constraints, and deterministic plan repair;
+- typed epistemic `RobotState` with KNOWN/UNKNOWN/STALE evidence;
+- declarative skill contracts with schemas, resources, preconditions, invertible effects, timeout, and enforced recovery policy;
+- state projection, backend capability checks, generic effect-driven repair, and goal-directed replanning;
 - closed-loop `execute → observe → verify → update` execution;
 - bounded retry, re-grounding, one bounded replan, and safe stop;
 - full per-attempt execution traces;
-- deterministic Mock fault injection;
-- four demos, 48 automated tests, and a 30-scenario A/B/C/D benchmark.
+- a hidden Mock physical world, configurable observations, and deterministic fault injection;
+- an independent physical oracle, four demos, 102 automated tests, a fixed 30-scenario
+  A/B/C/D benchmark, 200 seeded transient-fault trials, and frozen-core V2 adversarial,
+  ablation, and post-freeze holdout evaluations.
 
 ## 3. What was genuinely reimplemented
 
-All core logic under `embodied_skill_ros/` is independent of the original SDK: models, registry, skills, state manager, planner adapters, grounder, constraint checker, repairer, guard, verifier, recovery manager, executor, tracing, metrics, Mock backend, scenarios, and evaluation.
+All research-core logic under `embodied_skill_ros/` is independent of ROS2 and the
+original SDK. The only `rclpy` import is lazy and confined to the optional ROS2 Mock
+bridge entry point.
 
 ## 4. What reuses original adapters
 
@@ -39,23 +44,45 @@ Evidence label: `STATICALLY-INSPECTED`; ROS2 build and hardware execution are `U
 
 ## 6. Tests actually run
 
-The final standard-library suite was run from the standalone repository root with:
+The current standard-library suite was run on macOS from the repository root with:
 
 ```bash
 PYTHONPATH=. python3 -m unittest discover -s tests -v
 ```
 
-Final result: **48 tests passed**. The suite covers registry behavior, invalid arguments, preconditions, UNKNOWN state, resource/body conflicts, unverifiable declared effects, repair, sequential stop behavior, timeout, command/physical distinction, local retry, retry exhaustion, bounded replan, state drift, safe stop, state updates, trace completeness, planner behavior, and ROS-free JAKA adapter import/UNKNOWN semantics.
+Final result: **102 tests discovered: 100 passed and 2 ROS2 tests skipped with the stated
+Humble-unavailable reason**. Coverage adds stale evidence, capability rejection,
+contradictory evidence, non-finite/adversarial parameters, structural oracle isolation,
+real sensor-spoof false positives, multi-level generic new-skill repair, three persistent
+replanning counterfactuals, recovery-policy enforcement, 128 randomized arm-state trials,
+benchmark integrity, and optional ROS import isolation.
 
 `colcon` was not installed in the execution environment, so a ROS2 build was not claimed. Python compilation/import, four demos, the test suite, and benchmark were executed in the Mock environment.
 
-`python3 -m pytest` was also attempted, but the system Python reported `No module named pytest`. The same pytest-compatible tests were therefore executed with `unittest` without installing or downloading dependencies.
+`ruff`, `mypy`, `pytest`, and `pyright` were not installed on the Mac and were not added
+to the host. Bytecode compilation passed with its cache redirected to `/tmp`.
 
 ## 7. Benchmark design and result
 
 The checked-in benchmark contains exactly 30 required scenarios and reports all nine requested metrics. Task success is independently scored from final physical state.
 
-Evidence label: `MOCK-VERIFIED` on 30 predefined deterministic scenarios. Direct and structured-only configurations reached 60.00% task success and 0.00% state-change success. State grounding raised task success to 83.33% and state-change success to 100.00%. Adding runtime recovery raised overall success to 96.67%, with 0 invalid calls in the full configuration and 100% verification accuracy in this deterministic Mock dataset. These figures are not ROS2 or hardware results.
+Evidence label: `BENCHMARK-VERIFIED`. The fixed 30-scenario results are 60.00%
+direct/structured, 83.33% grounded, and 93.33% grounded plus recovery. The previously
+reported 96.67% counted an equivalent-plan retry as a replan; structural replan
+validation correctly turns that scenario into a stop. The independent
+oracle reads hidden physical truth rather than observed state. The separate 200-trial
+procedural experiment reports 24.00% direct success with a 23.00% false-positive rate,
+versus 100.00% for grounded recovery, but every fault is a one-shot transient matched
+by one allowed retry. It is not evidence for unrecoverable cases.
+
+The 65-trial frozen-core V2 design suite reports 38.46% overall task completion,
+100% feasible-task completion, 87.50% correct safe stops, 92.31% overall correct
+decisions, and 7.69% unsafe executions. The 78-trial post-freeze holdout has the same
+balanced-family rates. The remaining failure is deliberate evidence, not hidden noise:
+a fresh target-valued sensor spoof fools both runtime verification and the final goal
+check while the independent hidden-world oracle remains false. Exact definitions,
+family results, A-F ablations, and coupling analysis are in
+`docs/BENCHMARK_V2_METHODOLOGY.md`.
 
 ## 8. Hardware functions still incomplete
 

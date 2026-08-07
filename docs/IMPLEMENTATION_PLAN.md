@@ -14,6 +14,12 @@
 | 10 | Required demos and automated tests | Complete in Mock |
 | 11 | 30-scenario A/B/C/D benchmark | Complete and reproducible |
 | 12 | Hardware integration and calibration | TODO; requires ROS2/JAKA runtime and robot access |
+| 13 | Declarative contracts and freshness-aware epistemic state | Complete; unit verified |
+| 14 | Effect-driven generic repair and goal-directed replanning | Complete; Mock verified |
+| 15 | Hidden physical world and independent benchmark oracle | Complete; integrity tested |
+| 16 | Backend capabilities and recovery-policy enforcement | Complete; unit verified |
+| 17 | Seeded procedural fault benchmark and adversarial/property tests | Complete; benchmark verified |
+| 18 | Optional ROS2 Mock bridge and Ubuntu/Humble validation plan | Source complete; runtime unverified |
 
 ## Hardware follow-up order
 
@@ -26,3 +32,6 @@
 ## Research follow-up
 
 The most valuable next experiment is not a larger language model. It is an ablation over observation quality: progressively replace UNKNOWN state with measured feedback and quantify how grounding accuracy, repair success, and unnecessary stops change.
+
+See `docs/VALIDATION_EVIDENCE.md` for evidence categories and
+`docs/LITERATURE_AND_NOVELTY.md` for claim boundaries.

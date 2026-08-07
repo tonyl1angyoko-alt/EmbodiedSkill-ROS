@@ -2,7 +2,10 @@
 
 ## `RobotState`
 
-`RobotState` is a timestamped snapshot. `None` always means UNKNOWN; it never means safe or ready.
+`RobotState` is a timestamped epistemic snapshot. `None` means `UNKNOWN`;
+`stale_fields` or an expired per-field `observed_at` timestamp means `STALE`.
+Only `KNOWN` and fresh evidence may satisfy a precondition. Dynamic deployment facts
+live in the `facts` map, allowing new skills without editing the core dataclass.
 
 | Field group | Fields | Mock | Default JAKA adapter |
 |---|---|---|---|
@@ -34,17 +37,23 @@
 
 The parser validates shape and identity fields. The registry validates skill names and parameter schemas. `parallel_group` expresses a planner request, not permission: the first executor serializes it after conflict analysis.
 
-## `RobotSkill`
+## `SkillContract` and `RobotSkill`
 
-Every skill has:
+Every skill has a declarative contract containing:
 
 - `name` and `description`;
 - executable `parameter_schema`;
 - `required_resources`;
-- state-aware `preconditions`;
+- equality predicates with diagnostic codes and optional freshness bounds;
+- assign/increment effects, including parameterized field templates;
 - a timeout and bounded recovery policy;
 - `execute()` returning only a `CommandReceipt`;
-- `expected_effects()` and `verify_outcome()` for physical validation.
+- incompatible resource declarations used for generic conflict detection;
+- `expected_effects()` and `verify_outcome()` derived from the same effects.
+
+`SkillRegistry.synthesize_step()` can invert supported effects to establish a failed
+predicate or goal fact. The zero-core-code test registers `prepare_tool` and `dock_tool`
+entirely through contracts and Mock handlers.
 
 `ParameterSpec` rejects missing, unknown, incorrectly typed, and out-of-range arguments. Boolean values are not accepted as numbers.
 
