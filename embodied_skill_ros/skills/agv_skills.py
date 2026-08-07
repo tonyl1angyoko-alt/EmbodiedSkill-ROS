@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from .base_skill import ParameterSpec, RobotSkill
+from ..models.evidence import EvidenceRequirement
 from ..models.robot_state import RobotState
 from ..models.safety_contract import Idempotency, RiskClass, Rollbackability, SkillSafetyContract
 
@@ -20,6 +21,10 @@ class MoveAgvSkill(RobotSkill):
                              risk_class=RiskClass.HIGH,
                              idempotency=Idempotency.NON_IDEMPOTENT,
                              rollbackability=Rollbackability.NOT_AUTOMATIC,
+                             evidence_requirements=(
+                                 EvidenceRequirement("agv_moving", tolerance=None),
+                                 EvidenceRequirement("agv_position_m"),
+                             ),
                          ))
 
     def canonical_arguments(self, arguments: dict[str, Any]) -> dict[str, Any]:

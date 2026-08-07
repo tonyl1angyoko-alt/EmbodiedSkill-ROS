@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from .base_skill import ParameterSpec, RobotSkill
+from ..models.evidence import EvidenceRequirement
 from ..models.robot_state import RobotState
 from ..models.safety_contract import Idempotency, RiskClass, Rollbackability, SkillSafetyContract
 
@@ -16,6 +17,10 @@ class RetractArmSkill(RobotSkill):
                              risk_class=RiskClass.MEDIUM,
                              idempotency=Idempotency.IDEMPOTENT,
                              rollbackability=Rollbackability.NOT_AUTOMATIC,
+                             evidence_requirements=(
+                                 EvidenceRequirement("{arm}_arm_safe", tolerance=None),
+                                 EvidenceRequirement("{arm}_arm_ready", tolerance=None),
+                             ),
                          ))
 
     def expected_effects(self, arguments: dict[str, Any], before: RobotState) -> dict[str, Any]:
@@ -32,6 +37,9 @@ class ExtendArmSkill(RobotSkill):
                              risk_class=RiskClass.HIGH,
                              idempotency=Idempotency.IDEMPOTENT,
                              rollbackability=Rollbackability.NOT_AUTOMATIC,
+                             evidence_requirements=(
+                                 EvidenceRequirement("{arm}_arm_safe", tolerance=None),
+                             ),
                          ))
 
     def expected_effects(self, arguments: dict[str, Any], before: RobotState) -> dict[str, Any]:

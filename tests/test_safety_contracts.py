@@ -65,6 +65,7 @@ class SafetyContractTests(unittest.TestCase):
             "maximum_state_age_ms": 750,
             "requires_human_approval": True,
             "compensation_skill": "recover_pose",
+            "evidence_requirements": [],
         })
 
     def test_missing_contract_fails_closed_before_dispatch(self):

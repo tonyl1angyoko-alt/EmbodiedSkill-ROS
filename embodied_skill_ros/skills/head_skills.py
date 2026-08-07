@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from .base_skill import ParameterSpec, RobotSkill
+from ..models.evidence import EvidenceRequirement
 from ..models.robot_state import RobotState
 from ..models.safety_contract import Idempotency, RiskClass, Rollbackability, SkillSafetyContract
 
@@ -17,6 +18,10 @@ class SetHeadSkill(RobotSkill):
                              risk_class=RiskClass.LOW,
                              idempotency=Idempotency.IDEMPOTENT,
                              rollbackability=Rollbackability.NOT_AUTOMATIC,
+                             evidence_requirements=(
+                                 EvidenceRequirement("head_yaw_deg"),
+                                 EvidenceRequirement("head_pitch_deg"),
+                             ),
                          ))
 
     def validate_arguments(self, arguments: dict[str, Any]) -> None:

@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from .evidence import PhysicalEvidence
 from .robot_state import RobotState
 
 
@@ -19,6 +20,9 @@ class VerificationResult:
     achieved: bool
     message: str
     observed: dict[str, Any] = field(default_factory=dict)
+    evidence: tuple[PhysicalEvidence, ...] = ()
+    evidence_complete: bool = False
+    commit_ready: bool = False
 
 
 @dataclass

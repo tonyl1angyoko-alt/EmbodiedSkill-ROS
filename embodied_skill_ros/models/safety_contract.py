@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
+from .evidence import EvidenceRequirement
+
 
 class RiskClass(str, Enum):
     """Provisional policy input, not a certified or hardware-validated risk level."""
@@ -46,6 +48,7 @@ class SkillSafetyContract:
     requires_human_approval: bool = False
     compensation_skill: str | None = None
     risk_class_is_provisional: bool = True
+    evidence_requirements: tuple[EvidenceRequirement, ...] = ()
 
     def __post_init__(self) -> None:
         if (self.maximum_state_age_ms is not None
@@ -55,6 +58,8 @@ class SkillSafetyContract:
             raise ValueError("maximum_state_age_ms must be a non-negative integer or None")
         if self.compensation_skill is not None and not self.compensation_skill:
             raise ValueError("compensation_skill must be a non-empty string or None")
+        if not all(isinstance(item, EvidenceRequirement) for item in self.evidence_requirements):
+            raise TypeError("evidence_requirements must contain EvidenceRequirement values")
 
     @property
     def completeness_issues(self) -> tuple[str, ...]:
@@ -80,4 +85,7 @@ class SkillSafetyContract:
             "maximum_state_age_ms": self.maximum_state_age_ms,
             "requires_human_approval": self.requires_human_approval,
             "compensation_skill": self.compensation_skill,
+            "evidence_requirements": [
+                requirement.to_dict() for requirement in self.evidence_requirements
+            ],
         }
