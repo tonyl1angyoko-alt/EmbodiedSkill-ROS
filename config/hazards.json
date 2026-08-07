@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "catalog_scope": "Lightweight hazard-based traceability for existing deterministic runtime mechanisms; not runtime authorization or certification.",
+  "hazards": [
+    {
+      "hazard_id": "H-001",
+      "title": "Unsafe Base Motion with Unsafe Manipulator State",
+      "description": "AGV motion is dispatched while an arm is not explicitly known to be in its transport-safe state.",
+      "unsafe_control_action": "Dispatch move_agv when either required arm transport-safety precondition is false or unknown.",
+      "safety_property": "Base motion MUST NOT be dispatched unless every required arm transport state is explicitly safe.",
+      "related_skills": ["move_agv", "retract_arm"],
+      "contract_refs": [
+        "embodied_skill_ros.skills.base_skill:RobotSkill.preconditions"
+      ],
+      "enforced_by": [
+        "embodied_skill_ros.skills.base_skill:RobotSkill.check_preconditions",
+        "embodied_skill_ros.grounding.constraint_checker:ConstraintChecker.check_step",
+        "embodied_skill_ros.grounding.plan_repairer:PlanRepairer.repair",
+        "embodied_skill_ros.execution.runtime_guard:RuntimeGuard.check"
+      ],
+      "regression_tests": [
+        "tests/test_grounding_and_repair.py::GroundingAndRepairTests.test_precondition_not_satisfied",
+        "tests/test_grounding_and_repair.py::GroundingAndRepairTests.test_unknown_precondition_is_not_assumed_safe",
+        "tests/test_execution.py::ExecutionTests.test_runtime_state_drift_is_repaired_before_motion"
+      ],
+      "assumptions": [
+        "The current unified RobotState arm-safe fields represent the available transport-state observation."
+      ]
+    },
+    {
+      "hazard_id": "H-002",
+      "title": "Motion Authorized from Unknown or Stale Safety State",
+      "description": "Motion is admitted from an unknown emergency-stop value or from a state snapshot older than the active skill contract permits.",
+      "unsafe_control_action": "Admit or dispatch a motion skill using unknown or contract-stale safety state.",
+      "safety_property": "Motion admission and dispatch MUST require explicitly safe state values and MUST satisfy every configured state-freshness limit.",
+      "related_skills": ["move_agv", "set_lift", "set_head", "extend_arm", "retract_arm"],
+      "contract_refs": [
+        "embodied_skill_ros.models.safety_contract:SkillSafetyContract.maximum_state_age_ms"
+      ],
+      "enforced_by": [
+        "embodied_skill_ros.grounding.constraint_checker:ConstraintChecker.check_step",
+        "embodied_skill_ros.models.freshness:StateFreshnessPolicy.evaluate",
+        "embodied_skill_ros.grounding.plan_grounder:EmbodiedPlanGrounder.ground",
+        "embodied_skill_ros.execution.runtime_guard:RuntimeGuard.check",
+        "embodied_skill_ros.execution.skill_executor:SkillExecutor.execute"
+      ],
+      "regression_tests": [
+        "tests/test_execution.py::ExecutionTests.test_unknown_emergency_stop_blocks_agv_and_head_motion",
+        "tests/test_freshness.py::AdmissionFreshnessTests.test_clear_emergency_stop_in_stale_snapshot_still_blocks_motion",
+        "tests/test_freshness.py::AdmissionFreshnessTests.test_grounding_fresh_but_runtime_state_stale_blocks_dispatch"
+      ],
+      "assumptions": [
+        "RobotState.timestamp is a snapshot-level timestamp; per-signal emergency-stop timestamps remain future work."
+      ]
+    },
+    {
+      "hazard_id": "H-003",
+      "title": "False Physical Commit",
+      "description": "A command receipt or incomplete, invalid, stale, or mismatching evidence is treated as proof of physical completion.",
+      "unsafe_control_action": "Enter COMMITTED without satisfying every required physical-evidence condition.",
+      "safety_property": "Transactions MUST NOT enter COMMITTED without complete, valid, sufficiently fresh required physical evidence that matches expected effects.",
+      "related_skills": ["__system__", "move_agv", "set_lift", "set_head", "extend_arm", "retract_arm"],
+      "contract_refs": [
+        "embodied_skill_ros.models.safety_contract:SkillSafetyContract.evidence_requirements",
+        "embodied_skill_ros.models.evidence:EvidenceRequirement",
+        "embodied_skill_ros.models.evidence:EvidenceRequirement.maximum_age_ms"
+      ],
+      "enforced_by": [
+        "embodied_skill_ros.execution.outcome_verifier:OutcomeVerifier.verify",
+        "embodied_skill_ros.models.transaction:SkillTransaction.apply_verification"
+      ],
+      "regression_tests": [
+        "tests/test_execution.py::ExecutionTests.test_command_acceptance_is_distinct_from_physical_failure",
+        "tests/test_freshness.py::FreshnessExecutorAndRecoveryTests.test_correct_stale_value_never_commits_in_executor",
+        "tests/test_freshness.py::EvidenceFreshnessTests.test_missing_evidence_timestamp_is_unverified",
+        "tests/test_freshness.py::EvidenceFreshnessTests.test_non_finite_evidence_remains_invalid",
+        "tests/test_transactions.py::TransactionLifecycleTests.test_acknowledged_cannot_directly_transition_to_committed"
+      ]
+    },
+    {
+      "hazard_id": "H-004",
+      "title": "Duplicate Non-Idempotent Physical Side Effect",
+      "description": "A dispatched or committed non-idempotent action is sent again by retry or continuation replanning.",
+      "unsafe_control_action": "Redispatch a non-idempotent or unknown-idempotency action after the dispatch boundary without a committed outcome, or replay a committed action.",
+      "safety_property": "Non-idempotent or UNKNOWN-idempotency transactions that crossed DISPATCHED MUST NOT be blindly redispatched when uncommitted, and COMMITTED actions MUST NOT be replayed.",
+      "related_skills": ["move_agv", "__system__"],
+      "contract_refs": [
+        "embodied_skill_ros.models.safety_contract:SkillSafetyContract.idempotency",
+        "embodied_skill_ros.models.safety_contract:SkillSafetyContract.rollbackability"
+      ],
+      "enforced_by": [
+        "embodied_skill_ros.execution.recovery_manager:RecoveryManager.decide",
+        "embodied_skill_ros.execution.skill_executor:SkillExecutor._protected_replan_replay",
+        "embodied_skill_ros.execution.skill_executor:SkillExecutor.execute"
+      ],
+      "regression_tests": [
+        "tests/test_execution.py::ExecutionTests.test_replan_does_not_replay_completed_agv_motion",
+        "tests/test_recovery_policy.py::RecoveryPolicyTests.test_non_idempotent_unverified_dispatch_reobserves_then_escalates",
+        "tests/test_recovery_policy.py::RecoveryPolicyTests.test_replan_cannot_reintroduce_committed_non_idempotent_action"
+      ]
+    },
+    {
+      "hazard_id": "H-005",
+      "title": "Unsupported Capability Dispatch",
+      "description": "A planner-requested skill absent from the active backend capability set reaches backend dispatch.",
+      "unsafe_control_action": "Admit or dispatch a skill not supported by the active backend and runtime registry.",
+      "safety_property": "Only skills explicitly supported by the active backend and present in the active registry MUST be eligible for admission.",
+      "related_skills": ["extend_arm", "__system__"],
+      "contract_refs": [
+        "embodied_skill_ros.backends.base_backend:RobotBackend.supported_skills"
+      ],
+      "enforced_by": [
+        "embodied_skill_ros.skills.registry:build_registry_for_backend",
+        "embodied_skill_ros.skills.registry:SkillRegistry.get",
+        "embodied_skill_ros.grounding.plan_grounder:EmbodiedPlanGrounder.ground"
+      ],
+      "regression_tests": [
+        "tests/test_jaka_backend.py::JakaBackendTests.test_registry_is_filtered_by_jaka_capabilities",
+        "tests/test_models_and_registry.py::ModelsAndRegistryTests.test_llm_adapter_rejects_unregistered_skill",
+        "tests/test_execution.py::ExecutionTests.test_replanned_unknown_skill_is_grounded_before_command"
+      ]
+    },
+    {
+      "hazard_id": "H-006",
+      "title": "Logical STOP Without Safe-stop Attempt",
+      "description": "Execution reports STOP without attempting the backend safe-stop operation or loses its independent result.",
+      "unsafe_control_action": "Return a STOP decision while omitting or duplicating the backend safe-stop attempt.",
+      "safety_property": "Every STOP report MUST attempt backend safe-stop exactly once and MUST preserve both the original failure and the independent stop result.",
+      "related_skills": ["__system__"],
+      "contract_refs": [
+        "embodied_skill_ros.execution.skill_executor:ExecutionReport.stop_attempted"
+      ],
+      "enforced_by": [
+        "embodied_skill_ros.execution.skill_executor:SkillExecutor._stop_and_report"
+      ],
+      "regression_tests": [
+        "tests/test_execution.py::ExecutionTests.test_directly_constructed_empty_plan_stops_once_without_motion",
+        "tests/test_execution.py::ExecutionTests.test_nonrepairable_grounding_stop_attempts_stop_once",
+        "tests/test_execution.py::ExecutionTests.test_repair_disabled_stop_attempts_stop_once",
+        "tests/test_execution.py::ExecutionTests.test_repair_failure_stop_attempts_stop_once",
+        "tests/test_execution.py::ExecutionTests.test_invalid_repaired_plan_stop_attempts_stop_once",
+        "tests/test_execution.py::ExecutionTests.test_runtime_validation_stop_attempts_stop_once",
+        "tests/test_execution.py::ExecutionTests.test_runtime_guard_stop_attempts_stop_once",
+        "tests/test_execution.py::ExecutionTests.test_recovery_disabled_stop_attempts_stop_once",
+        "tests/test_execution.py::ExecutionTests.test_recovery_exhaustion_stop_attempts_stop_once",
+        "tests/test_execution.py::ExecutionTests.test_failed_replan_stop_attempts_stop_once",
+        "tests/test_execution.py::ExecutionTests.test_rejected_stop_preserves_original_failure",
+        "tests/test_execution.py::ExecutionTests.test_stop_exception_preserves_original_failure"
+      ]
+    },
+    {
+      "hazard_id": "H-007",
+      "title": "Invalid Numeric Command or Evidence",
+      "description": "NaN or infinite numeric values cross command validation or are accepted as physical evidence.",
+      "unsafe_control_action": "Dispatch a command with non-finite numeric parameters or commit using non-finite required evidence.",
+      "safety_property": "Numeric command parameters and required numeric physical evidence MUST be finite before dispatch or COMMITTED.",
+      "related_skills": ["move_agv", "set_lift", "set_head"],
+      "contract_refs": [
+        "embodied_skill_ros.skills.base_skill:RobotSkill.parameter_schema"
+      ],
+      "enforced_by": [
+        "embodied_skill_ros.skills.base_skill:RobotSkill.validate_arguments",
+        "embodied_skill_ros.planner.llm_adapter:_reject_non_finite_constant",
+        "embodied_skill_ros.execution.outcome_verifier:OutcomeVerifier.verify"
+      ],
+      "regression_tests": [
+        "tests/test_execution.py::ExecutionTests.test_non_finite_parameter_never_reaches_backend_command",
+        "tests/test_models_and_registry.py::ModelsAndRegistryTests.test_llm_adapter_rejects_non_finite_json_constants",
+        "tests/test_freshness.py::EvidenceFreshnessTests.test_non_finite_evidence_remains_invalid"
+      ]
+    },
+    {
+      "hazard_id": "H-008",
+      "title": "Missing Safety Contract",
+      "description": "A newly registered skill without an explicit complete safety contract is treated as executable.",
+      "unsafe_control_action": "Admit a skill whose safety contract is absent or incomplete.",
+      "safety_property": "Skills without an explicit complete safety contract MUST NOT enter ADMITTED or DISPATCHED.",
+      "related_skills": ["__system__"],
+      "contract_refs": [
+        "embodied_skill_ros.skills.base_skill:RobotSkill.safety_contract",
+        "embodied_skill_ros.models.safety_contract:SkillSafetyContract.completeness_issues"
+      ],
+      "enforced_by": [
+        "embodied_skill_ros.skills.base_skill:RobotSkill.safety_contract_violation",
+        "embodied_skill_ros.grounding.constraint_checker:ConstraintChecker.check_step",
+        "embodied_skill_ros.execution.skill_executor:SkillExecutor.execute"
+      ],
+      "regression_tests": [
+        "tests/test_safety_contracts.py::SafetyContractTests.test_missing_contract_fails_closed_before_dispatch",
+        "tests/test_safety_contracts.py::SafetyContractTests.test_explicit_unknown_contract_is_distinct_and_fails_closed",
+        "tests/test_safety_contracts.py::SafetyContractTests.test_planner_metadata_cannot_override_registry_contract"
+      ]
+    }
+  ]
+}
