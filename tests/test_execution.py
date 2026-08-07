@@ -5,6 +5,12 @@ from embodied_skill_ros.backends.mock_backend import FaultEvent, MockRobotBacken
 from embodied_skill_ros.execution.skill_executor import SkillExecutor
 from embodied_skill_ros.models.skill_result import CommandReceipt
 from embodied_skill_ros.models.task_plan import PlanStep, TaskPlan
+from embodied_skill_ros.models.safety_contract import (
+    Idempotency,
+    RiskClass,
+    Rollbackability,
+    SkillSafetyContract,
+)
 from embodied_skill_ros.skills.base_skill import RobotSkill
 from embodied_skill_ros.skills.registry import build_default_registry
 
@@ -49,7 +55,12 @@ class CounterBackend(SpyBackend):
 class IncrementCounterSkill(RobotSkill):
     def __init__(self):
         super().__init__("increment_counter", "Increment a non-idempotent counter.",
-                         {}, {"counter"}, {}, 1.0)
+                         {}, {"counter"}, {}, 1.0,
+                         safety_contract=SkillSafetyContract(
+                             risk_class=RiskClass.MEDIUM,
+                             idempotency=Idempotency.NON_IDEMPOTENT,
+                             rollbackability=Rollbackability.NOT_AUTOMATIC,
+                         ))
 
 
 class ExecutionTests(unittest.TestCase):

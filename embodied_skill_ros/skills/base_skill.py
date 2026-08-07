@@ -7,6 +7,7 @@ from typing import Any, Callable
 
 from ..backends.base_backend import RobotBackend
 from ..models.robot_state import RobotState
+from ..models.safety_contract import SkillSafetyContract
 from ..models.skill_result import CommandReceipt, VerificationResult
 
 
@@ -32,6 +33,26 @@ class RobotSkill(ABC):
     preconditions: dict[str, Callable[[RobotState, dict[str, Any]], bool | None]]
     timeout: float
     recovery_policy: tuple[str, ...] = ("local_retry", "replan", "safe_stop")
+    safety_contract: SkillSafetyContract | None = None
+
+    def safety_contract_violation(self) -> tuple[str, str] | None:
+        contract = self.safety_contract
+        if contract is None:
+            return (
+                "MISSING_SAFETY_CONTRACT",
+                f"MISSING_SAFETY_CONTRACT: skill {self.name} has no safety contract",
+            )
+        if not contract.is_complete:
+            return (
+                "INCOMPLETE_SAFETY_CONTRACT",
+                "INCOMPLETE_SAFETY_CONTRACT: " + "; ".join(contract.completeness_issues),
+            )
+        if contract.requires_human_approval:
+            return (
+                "HUMAN_APPROVAL_REQUIRED",
+                f"HUMAN_APPROVAL_REQUIRED: skill {self.name} requires human approval",
+            )
+        return None
 
     def validate_arguments(self, arguments: dict[str, Any]) -> None:
         if not isinstance(arguments, dict):

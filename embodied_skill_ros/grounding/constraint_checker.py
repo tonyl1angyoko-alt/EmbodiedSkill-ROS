@@ -18,6 +18,10 @@ class ConstraintViolation:
 class ConstraintChecker:
     def check_step(self, step: PlanStep, skill: RobotSkill, state: RobotState) -> list[ConstraintViolation]:
         out: list[ConstraintViolation] = []
+        contract_violation = skill.safety_contract_violation()
+        if contract_violation is not None:
+            code, message = contract_violation
+            out.append(ConstraintViolation(code, step.id, message, False))
         if state.emergency_stop is True:
             out.append(ConstraintViolation("EMERGENCY_STOP_ACTIVE", step.id,
                                            "emergency stop is active", False))

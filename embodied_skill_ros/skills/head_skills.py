@@ -4,6 +4,7 @@ from typing import Any
 
 from .base_skill import ParameterSpec, RobotSkill
 from ..models.robot_state import RobotState
+from ..models.safety_contract import Idempotency, RiskClass, Rollbackability, SkillSafetyContract
 
 
 class SetHeadSkill(RobotSkill):
@@ -11,7 +12,12 @@ class SetHeadSkill(RobotSkill):
         super().__init__("set_head", "Set head yaw and/or pitch.",
                          {"yaw_deg": ParameterSpec((int, float), required=False, minimum=-90.0, maximum=90.0),
                           "pitch_deg": ParameterSpec((int, float), required=False, minimum=-45.0, maximum=20.0)},
-                         {"head"}, {"head_ready": lambda s, a: s.head_ready}, 10.0)
+                         {"head"}, {"head_ready": lambda s, a: s.head_ready}, 10.0,
+                         safety_contract=SkillSafetyContract(
+                             risk_class=RiskClass.LOW,
+                             idempotency=Idempotency.IDEMPOTENT,
+                             rollbackability=Rollbackability.NOT_AUTOMATIC,
+                         ))
 
     def validate_arguments(self, arguments: dict[str, Any]) -> None:
         super().validate_arguments(arguments)

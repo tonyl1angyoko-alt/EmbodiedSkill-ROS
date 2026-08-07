@@ -4,6 +4,7 @@ from typing import Any
 
 from .base_skill import ParameterSpec, RobotSkill
 from ..models.robot_state import RobotState
+from ..models.safety_contract import Idempotency, RiskClass, Rollbackability, SkillSafetyContract
 
 
 class SetLiftSkill(RobotSkill):
@@ -13,7 +14,12 @@ class SetLiftSkill(RobotSkill):
                          {"lift"}, {"lift_ready": lambda s, a: s.lift_ready,
                                     "arms_transport_safe": lambda s, a: (
                                         None if s.left_arm_safe is None or s.right_arm_safe is None
-                                        else s.left_arm_safe and s.right_arm_safe)}, 20.0)
+                                        else s.left_arm_safe and s.right_arm_safe)}, 20.0,
+                         safety_contract=SkillSafetyContract(
+                             risk_class=RiskClass.MEDIUM,
+                             idempotency=Idempotency.IDEMPOTENT,
+                             rollbackability=Rollbackability.NOT_AUTOMATIC,
+                         ))
 
     def expected_effects(self, arguments: dict[str, Any], before: RobotState) -> dict[str, Any]:
         return {"lift_height_mm": float(arguments["height_mm"])}

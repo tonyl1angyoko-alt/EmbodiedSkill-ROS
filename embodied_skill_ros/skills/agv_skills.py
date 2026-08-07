@@ -4,6 +4,7 @@ from typing import Any
 
 from .base_skill import ParameterSpec, RobotSkill
 from ..models.robot_state import RobotState
+from ..models.safety_contract import Idempotency, RiskClass, Rollbackability, SkillSafetyContract
 
 
 class MoveAgvSkill(RobotSkill):
@@ -14,7 +15,12 @@ class MoveAgvSkill(RobotSkill):
                          {"agv"},
                          {"agv_ready": lambda s, a: s.agv_ready,
                           "left_arm_transport_safe": lambda s, a: s.left_arm_safe,
-                          "right_arm_transport_safe": lambda s, a: s.right_arm_safe}, 30.0)
+                          "right_arm_transport_safe": lambda s, a: s.right_arm_safe}, 30.0,
+                         safety_contract=SkillSafetyContract(
+                             risk_class=RiskClass.HIGH,
+                             idempotency=Idempotency.NON_IDEMPOTENT,
+                             rollbackability=Rollbackability.NOT_AUTOMATIC,
+                         ))
 
     def canonical_arguments(self, arguments: dict[str, Any]) -> dict[str, Any]:
         normalized = dict(arguments)

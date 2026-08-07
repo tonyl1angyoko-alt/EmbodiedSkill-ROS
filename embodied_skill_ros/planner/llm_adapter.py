@@ -56,6 +56,9 @@ def _skill_schema(registry: SkillRegistry) -> tuple[dict[str, Any], ...]:
             "parameters": parameters,
             "required_resources": sorted(skill.required_resources),
             "timeout_s": skill.timeout,
+            "safety_contract": (
+                skill.safety_contract.to_dict() if skill.safety_contract is not None else None
+            ),
         })
     return tuple(schema)
 

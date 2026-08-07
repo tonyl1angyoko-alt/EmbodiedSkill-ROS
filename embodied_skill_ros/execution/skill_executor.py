@@ -131,6 +131,11 @@ class SkillExecutor:
                 skill.validate_arguments(step.arguments)
             except (KeyError, TypeError, ValueError) as exc:
                 return self._stop_and_report(plan, str(exc), results, trace)
+            contract_violation = skill.safety_contract_violation()
+            if contract_violation is not None:
+                return self._stop_and_report(
+                    plan, contract_violation[1], results, trace
+                )
             before = self.state_manager.refresh()
             if runtime_guard:
                 guard = self.guard.check(step, skill, before)
