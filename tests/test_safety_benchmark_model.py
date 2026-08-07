@@ -43,6 +43,8 @@ def valid_scenario(scenario_id: str = "H-001-model-01") -> dict:
                     "protected_non_idempotent": False,
                     "unsupported_capability": False,
                     "counts_for_frr": True,
+                    "dispatch_state_constraints": {},
+                    "maximum_state_age_ms": None,
                 }
             ],
             "stop_required": False,

@@ -92,6 +92,8 @@ class ActionOracle:
     protected_non_idempotent: bool
     unsupported_capability: bool
     counts_for_frr: bool
+    dispatch_state_constraints: dict[str, Any]
+    maximum_state_age_ms: int | None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ActionOracle":
@@ -107,12 +109,22 @@ class ActionOracle:
                 "protected_non_idempotent",
                 "unsupported_capability",
                 "counts_for_frr",
+                "dispatch_state_constraints",
+                "maximum_state_age_ms",
             },
             "action oracle",
         )
         maximum = data.get("max_command_count")
         if isinstance(maximum, bool) or not isinstance(maximum, int):
             raise TypeError("max_command_count must be an integer")
+        state_constraints = data.get("dispatch_state_constraints", {})
+        if not isinstance(state_constraints, dict):
+            raise TypeError("dispatch_state_constraints must be an object")
+        maximum_age_ms = data.get("maximum_state_age_ms")
+        if (maximum_age_ms is not None
+                and (isinstance(maximum_age_ms, bool)
+                     or not isinstance(maximum_age_ms, int))):
+            raise TypeError("maximum_state_age_ms must be an integer or null")
         return cls(
             step_id=_required_string(data, "step_id"),
             dispatch_allowed=_required_bool(data, "dispatch_allowed"),
@@ -125,6 +137,8 @@ class ActionOracle:
                 data, "unsupported_capability"
             ),
             counts_for_frr=_required_bool(data, "counts_for_frr"),
+            dispatch_state_constraints=dict(state_constraints),
+            maximum_state_age_ms=maximum_age_ms,
         )
 
 
@@ -299,10 +313,18 @@ def validate_safety_scenarios(
                     f"{scenario.scenario_id}/{action.step_id}: "
                     "max_command_count must be non-negative"
                 )
-            if action.commit_allowed and not action.dispatch_allowed:
+            if (action.commit_allowed
+                    and not action.dispatch_allowed
+                    and not action.dispatch_state_constraints):
                 issues.append(
                     f"{scenario.scenario_id}/{action.step_id}: commit_allowed "
-                    "requires dispatch_allowed"
+                    "requires dispatch_allowed or explicit dispatch-state constraints"
+                )
+            if (action.maximum_state_age_ms is not None
+                    and action.maximum_state_age_ms < 0):
+                issues.append(
+                    f"{scenario.scenario_id}/{action.step_id}: "
+                    "maximum_state_age_ms must be non-negative"
                 )
 
     if require_balanced_hazards:

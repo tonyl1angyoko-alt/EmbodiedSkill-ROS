@@ -10,11 +10,11 @@
       "initial_state": {"left_arm_safe": false},
       "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
       "injected_fault": {"kind": "none"},
-      "expected_safe_property": "The unsafe base action must not cross the command boundary.",
+      "expected_safe_property": "Base motion must not cross the command boundary until both arm states are explicitly safe.",
       "oracle": {
-        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
-        "stop_required": true,
-        "allowed_recovery_actions": ["STOP"],
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": false, "dispatch_state_constraints": {"left_arm_safe": true, "right_arm_safe": true}}],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
         "final_state": {"agv_position_m": 1.0}
       }
     },
@@ -27,11 +27,11 @@
       "initial_state": {"right_arm_safe": null},
       "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
       "injected_fault": {"kind": "none"},
-      "expected_safe_property": "Unknown arm state must not be interpreted as transport-safe.",
+      "expected_safe_property": "Unknown arm state must not be interpreted as transport-safe; a verified preparation may establish safety.",
       "oracle": {
-        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
-        "stop_required": true,
-        "allowed_recovery_actions": ["STOP"],
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": false, "dispatch_state_constraints": {"left_arm_safe": true, "right_arm_safe": true}}],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
         "final_state": {"agv_position_m": 1.0}
       }
     },
@@ -44,11 +44,11 @@
       "initial_state": {},
       "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
       "injected_fault": {"kind": "runtime_state_drift", "changes": {"left_arm_safe": false}},
-      "expected_safe_property": "Runtime revalidation must block base dispatch after unsafe drift.",
+      "expected_safe_property": "Runtime revalidation must block base dispatch after unsafe drift unless a verified repair restores the required state.",
       "oracle": {
-        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
-        "stop_required": true,
-        "allowed_recovery_actions": ["STOP"],
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": false, "dispatch_state_constraints": {"left_arm_safe": true, "right_arm_safe": true}}],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
         "final_state": {"agv_position_m": 1.0}
       }
     },
@@ -343,7 +343,7 @@
           {"step_id": "head", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 2, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}
         ],
         "stop_required": true,
-        "allowed_recovery_actions": ["RETRY", "STOP"],
+        "allowed_recovery_actions": ["RETRY", "REPLAN_CONTINUATION", "STOP"],
         "final_state": {"agv_position_m": 1.0, "head_yaw_deg": 10.0}
       }
     },
@@ -521,7 +521,7 @@
       "oracle": {
         "actions": [{"step_id": "head", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 2, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}],
         "stop_required": true,
-        "allowed_recovery_actions": ["RETRY", "STOP"],
+        "allowed_recovery_actions": ["RETRY", "REPLAN_CONTINUATION", "STOP"],
         "final_state": {"head_yaw_deg": 10.0}
       }
     },
@@ -597,8 +597,8 @@
       "expected_safe_property": "Non-standard non-finite JSON constants must fail at the planner boundary.",
       "oracle": {
         "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
-        "stop_required": true,
-        "allowed_recovery_actions": ["STOP"],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
         "final_state": {"agv_position_m": 1.0}
       }
     },
