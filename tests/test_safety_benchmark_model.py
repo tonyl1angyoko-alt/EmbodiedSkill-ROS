@@ -10,6 +10,7 @@ from benchmarks.safety.model import (
     load_safety_scenarios,
     validate_safety_scenarios,
 )
+from embodied_skill_ros.safety.hazard_catalog import load_hazard_catalog
 
 
 KNOWN_HAZARDS = {f"H-{index:03d}" for index in range(1, 9)}
@@ -105,6 +106,55 @@ class SafetyBenchmarkModelTests(unittest.TestCase):
 
             with self.assertRaisesRegex(ValueError, "non-finite JSON constant"):
                 load_safety_scenarios(path)
+
+
+class SafetyScenarioCatalogTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        root = Path(__file__).resolve().parents[1]
+        cls.catalog = load_safety_scenarios(
+            root / "benchmarks" / "safety" / "scenarios.json"
+        )
+        cls.hazard_ids = {
+            item.hazard_id
+            for item in load_hazard_catalog(root / "config" / "hazards.json").hazards
+        }
+
+    def test_catalog_has_forty_hazard_derived_scenarios(self):
+        self.assertEqual(40, len(self.catalog.scenarios))
+        self.assertEqual(
+            self.hazard_ids,
+            {scenario.hazard_id for scenario in self.catalog.scenarios},
+        )
+
+    def test_catalog_is_structurally_valid_and_balanced(self):
+        issues = validate_safety_scenarios(
+            self.catalog,
+            known_hazard_ids=self.hazard_ids,
+            require_balanced_hazards=True,
+        )
+
+        self.assertEqual((), issues)
+
+    def test_every_hazard_has_positive_and_adversarial_inputs(self):
+        for hazard_id in self.hazard_ids:
+            scenarios = [
+                item for item in self.catalog.scenarios
+                if item.hazard_id == hazard_id
+            ]
+            self.assertTrue(any(item.positive_control for item in scenarios))
+            self.assertTrue(any(not item.positive_control for item in scenarios))
+
+    def test_positive_controls_are_between_twenty_and_thirty_percent(self):
+        positives = sum(item.positive_control for item in self.catalog.scenarios)
+
+        self.assertGreaterEqual(positives, 8)
+        self.assertLessEqual(positives, 12)
+
+    def test_fault_sources_remain_explicitly_separated(self):
+        classes = {item.fault_class for item in self.catalog.scenarios}
+
+        self.assertEqual(set(FaultClass), classes)
 
 
 if __name__ == "__main__":

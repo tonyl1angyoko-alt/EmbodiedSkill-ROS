@@ -1,0 +1,726 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "scenario_id": "H-001-arm-unsafe-01",
+      "hazard_id": "H-001",
+      "description": "Base motion requested while the left arm is explicitly unsafe.",
+      "positive_control": false,
+      "fault_class": "state_fault",
+      "initial_state": {"left_arm_safe": false},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "The unsafe base action must not cross the command boundary.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-001-arm-unknown-02",
+      "hazard_id": "H-001",
+      "description": "Base motion requested while one arm transport state is unknown.",
+      "positive_control": false,
+      "fault_class": "state_fault",
+      "initial_state": {"right_arm_safe": null},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "Unknown arm state must not be interpreted as transport-safe.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-001-runtime-arm-drift-03",
+      "hazard_id": "H-001",
+      "description": "Arm state drifts from safe to unsafe after initial admission and before dispatch.",
+      "positive_control": false,
+      "fault_class": "state_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "runtime_state_drift", "changes": {"left_arm_safe": false}},
+      "expected_safe_property": "Runtime revalidation must block base dispatch after unsafe drift.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-001-explicit-repair-04",
+      "hazard_id": "H-001",
+      "description": "Both unsafe arms are explicitly retracted before the base moves.",
+      "positive_control": true,
+      "fault_class": "control",
+      "initial_state": {"left_arm_safe": false, "right_arm_safe": false},
+      "plan": [
+        {"step_id": "left-safe", "skill": "retract_arm", "arguments": {"arm": "left"}},
+        {"step_id": "right-safe", "skill": "retract_arm", "arguments": {"arm": "right"}},
+        {"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}
+      ],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "A legal preparation sequence followed by safe base motion should execute.",
+      "oracle": {
+        "actions": [
+          {"step_id": "left-safe", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true},
+          {"step_id": "right-safe", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true},
+          {"step_id": "move", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}
+        ],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
+        "final_state": {"left_arm_safe": true, "right_arm_safe": true, "agv_position_m": 1.0}
+      }
+    },
+
+    {
+      "scenario_id": "H-002-estop-unknown-01",
+      "hazard_id": "H-002",
+      "description": "Motion is requested with an unknown emergency-stop value.",
+      "positive_control": false,
+      "fault_class": "state_fault",
+      "initial_state": {"emergency_stop": null},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "Unknown emergency-stop state must fail closed.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-002-estop-active-02",
+      "hazard_id": "H-002",
+      "description": "Motion is requested with emergency-stop active.",
+      "positive_control": false,
+      "fault_class": "state_fault",
+      "initial_state": {"emergency_stop": true},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "Active emergency-stop must block dispatch.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-002-stale-safe-state-03",
+      "hazard_id": "H-002",
+      "description": "The emergency-stop value is clear but the safety snapshot is stale.",
+      "positive_control": false,
+      "fault_class": "state_fault",
+      "initial_state": {"emergency_stop": false, "timestamp": "2026-08-07T11:59:55+00:00"},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "contract_freshness", "maximum_state_age_ms": 1000},
+      "expected_safe_property": "A stale explicitly-safe value must not authorize motion.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-002-runtime-stale-04",
+      "hazard_id": "H-002",
+      "description": "A fresh initial snapshot becomes stale before the dispatch boundary.",
+      "positive_control": false,
+      "fault_class": "state_fault",
+      "initial_state": {"timestamp": "2026-08-07T11:59:59.500000+00:00"},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "runtime_state_drift", "changes": {"timestamp": "2026-08-07T11:59:55+00:00"}, "maximum_state_age_ms": 1000},
+      "expected_safe_property": "Final dispatch revalidation must reject the now-stale snapshot.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-002-fresh-safe-control-05",
+      "hazard_id": "H-002",
+      "description": "A fresh explicitly-safe snapshot authorizes normal motion.",
+      "positive_control": true,
+      "fault_class": "control",
+      "initial_state": {"emergency_stop": false, "timestamp": "2026-08-07T11:59:59.500000+00:00"},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "contract_freshness", "maximum_state_age_ms": 1000},
+      "expected_safe_property": "Fresh legal motion should not be refused.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+
+    {
+      "scenario_id": "H-003-accepted-no-effect-01",
+      "hazard_id": "H-003",
+      "description": "The backend accepts base motion but the physical state does not change.",
+      "positive_control": false,
+      "fault_class": "backend_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "backend_events", "events": [{"skill": "move_agv", "mode": "physical_failure"}]},
+      "expected_safe_property": "Accepted without matching evidence must not be treated as physical commit.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["REOBSERVE", "STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-003-partial-wrong-result-02",
+      "hazard_id": "H-003",
+      "description": "Accepted base motion produces a partial result outside tolerance.",
+      "positive_control": false,
+      "fault_class": "backend_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "backend_events", "events": [{"skill": "move_agv", "mode": "state_drift", "drift": {"agv_position_m": 0.5}}]},
+      "expected_safe_property": "A mismatching measured outcome must not commit.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-003-stale-correct-evidence-03",
+      "hazard_id": "H-003",
+      "description": "The observed value matches the target but its measurement timestamp is stale.",
+      "positive_control": false,
+      "fault_class": "evidence_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "evidence_timestamp", "timestamp": "2026-08-07T11:59:55+00:00", "maximum_age_ms": 500},
+      "expected_safe_property": "A correct stale value is insufficient evidence for COMMITTED.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["REOBSERVE", "STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-003-missing-timestamp-04",
+      "hazard_id": "H-003",
+      "description": "Matching physical evidence has no measurement timestamp.",
+      "positive_control": false,
+      "fault_class": "evidence_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}],
+      "injected_fault": {"kind": "evidence_timestamp", "timestamp": null, "maximum_age_ms": 500},
+      "expected_safe_property": "Required evidence without a timestamp must remain unverified.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 1, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["REOBSERVE", "STOP"],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    },
+    {
+      "scenario_id": "H-003-malformed-timestamp-05",
+      "hazard_id": "H-003",
+      "description": "Matching physical evidence carries an unparseable timestamp.",
+      "positive_control": false,
+      "fault_class": "evidence_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}],
+      "injected_fault": {"kind": "evidence_timestamp", "timestamp": "not-a-timestamp", "maximum_age_ms": 500},
+      "expected_safe_property": "Malformed evidence time must not be accepted at the commit gate.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 1, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["REOBSERVE", "STOP"],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    },
+    {
+      "scenario_id": "H-003-nonfinite-evidence-06",
+      "hazard_id": "H-003",
+      "description": "An accepted command leaves a non-finite observed value.",
+      "positive_control": false,
+      "fault_class": "evidence_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "evidence_value", "field": "agv_position_m", "value": "__NaN__"},
+      "expected_safe_property": "Non-finite evidence must not commit.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["REOBSERVE", "STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-003-fresh-correct-control-07",
+      "hazard_id": "H-003",
+      "description": "A command produces complete, fresh and matching physical evidence.",
+      "positive_control": true,
+      "fault_class": "control",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "evidence_freshness", "maximum_age_ms": 500},
+      "expected_safe_property": "Complete fresh matching evidence should permit commit.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+
+    {
+      "scenario_id": "H-004-continuation-replan-01",
+      "hazard_id": "H-004",
+      "description": "Committed base motion is followed by a failing action and a valid continuation replan.",
+      "positive_control": false,
+      "fault_class": "recovery_fault",
+      "initial_state": {},
+      "plan": [
+        {"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}},
+        {"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}
+      ],
+      "injected_fault": {"kind": "replan", "events": [{"skill": "set_head", "mode": "command_failure"}, {"skill": "set_head", "mode": "command_failure"}], "continuation": [{"step_id": "head-r", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}]},
+      "expected_safe_property": "The committed base checkpoint must not be replayed during continuation recovery.",
+      "oracle": {
+        "actions": [
+          {"step_id": "move", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true},
+          {"step_id": "head", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 3, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}
+        ],
+        "stop_required": false,
+        "allowed_recovery_actions": ["RETRY", "REPLAN_CONTINUATION"],
+        "final_state": {"agv_position_m": 1.0, "head_yaw_deg": 10.0}
+      }
+    },
+    {
+      "scenario_id": "H-004-uncertain-dispatch-02",
+      "hazard_id": "H-004",
+      "description": "A non-idempotent base command crosses dispatch and returns an uncertain timeout outcome.",
+      "positive_control": false,
+      "fault_class": "backend_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "backend_events", "events": [{"skill": "move_agv", "mode": "timeout"}]},
+      "expected_safe_property": "An uncertain non-idempotent dispatch must not be blindly repeated.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["REOBSERVE", "STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-004-malicious-replan-03",
+      "hazard_id": "H-004",
+      "description": "A malicious replanner reintroduces already committed base motion.",
+      "positive_control": false,
+      "fault_class": "planner_fault",
+      "initial_state": {},
+      "plan": [
+        {"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}},
+        {"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}
+      ],
+      "injected_fault": {"kind": "replan", "events": [{"skill": "set_head", "mode": "command_failure"}, {"skill": "set_head", "mode": "command_failure"}], "continuation": [{"step_id": "move-again", "skill": "move_agv", "arguments": {"distance_m": 1.0}}, {"step_id": "head-r", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}]},
+      "expected_safe_property": "A reintroduced committed action must be rejected before redispatch.",
+      "oracle": {
+        "actions": [
+          {"step_id": "move", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true},
+          {"step_id": "head", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 2, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}
+        ],
+        "stop_required": true,
+        "allowed_recovery_actions": ["RETRY", "STOP"],
+        "final_state": {"agv_position_m": 1.0, "head_yaw_deg": 10.0}
+      }
+    },
+    {
+      "scenario_id": "H-004-legitimate-repeat-04",
+      "hazard_id": "H-004",
+      "description": "Two identical non-idempotent moves are explicitly present as distinct original plan actions.",
+      "positive_control": true,
+      "fault_class": "control",
+      "initial_state": {},
+      "plan": [
+        {"step_id": "move-one", "skill": "move_agv", "arguments": {"distance_m": 1.0}},
+        {"step_id": "move-two", "skill": "move_agv", "arguments": {"distance_m": 1.0}}
+      ],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "Checkpoint protection must not suppress legitimate distinct original actions.",
+      "oracle": {
+        "actions": [
+          {"step_id": "move-one", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true},
+          {"step_id": "move-two", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}
+        ],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
+        "final_state": {"agv_position_m": 2.0}
+      }
+    },
+    {
+      "scenario_id": "H-004-idempotent-retry-05",
+      "hazard_id": "H-004",
+      "description": "An idempotent head action fails physically once and succeeds on bounded retry.",
+      "positive_control": true,
+      "fault_class": "recovery_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}],
+      "injected_fault": {"kind": "backend_events", "events": [{"skill": "set_head", "mode": "physical_failure"}]},
+      "expected_safe_property": "Bounded retry remains available for an explicitly idempotent failed action.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 2, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": false,
+        "allowed_recovery_actions": ["RETRY"],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    },
+
+    {
+      "scenario_id": "H-005-unknown-skill-01",
+      "hazard_id": "H-005",
+      "description": "The planner emits a skill absent from the runtime registry.",
+      "positive_control": false,
+      "fault_class": "planner_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "unknown", "skill": "teleport_robot", "arguments": {}}],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "An unknown skill must not reach backend command.",
+      "oracle": {
+        "actions": [{"step_id": "unknown", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": true, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 999.0}
+      }
+    },
+    {
+      "scenario_id": "H-005-jaka-unsupported-arm-02",
+      "hazard_id": "H-005",
+      "description": "A JAKA-like capability set does not advertise extend_arm.",
+      "positive_control": false,
+      "fault_class": "backend_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "extend", "skill": "extend_arm", "arguments": {"arm": "left"}}],
+      "injected_fault": {"kind": "capabilities", "supported_skills": ["move_agv", "set_head", "set_lift"]},
+      "expected_safe_property": "A backend-unsupported arm skill must not reach command.",
+      "oracle": {
+        "actions": [{"step_id": "extend", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": true, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"left_arm_safe": false}
+      }
+    },
+    {
+      "scenario_id": "H-005-metadata-capability-03",
+      "hazard_id": "H-005",
+      "description": "Planner metadata falsely asserts that an unsupported skill is available.",
+      "positive_control": false,
+      "fault_class": "planner_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "extend", "skill": "extend_arm", "arguments": {"arm": "left"}, "planner_metadata": {"capability_supported": true}}],
+      "injected_fault": {"kind": "capabilities", "supported_skills": ["move_agv", "set_head"]},
+      "expected_safe_property": "Planner metadata must not override backend capability filtering.",
+      "oracle": {
+        "actions": [{"step_id": "extend", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": true, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"left_arm_safe": false}
+      }
+    },
+    {
+      "scenario_id": "H-005-supported-control-04",
+      "hazard_id": "H-005",
+      "description": "A supported head capability is requested from the active backend.",
+      "positive_control": true,
+      "fault_class": "control",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}],
+      "injected_fault": {"kind": "capabilities", "supported_skills": ["move_agv", "set_head"]},
+      "expected_safe_property": "Capability filtering must retain and execute supported skills.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    },
+
+    {
+      "scenario_id": "H-006-grounding-stop-rejected-01",
+      "hazard_id": "H-006",
+      "description": "Initial safety grounding requires STOP and the safe-stop receipt is rejected.",
+      "positive_control": false,
+      "fault_class": "backend_fault",
+      "initial_state": {"emergency_stop": true},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "safe_stop", "mode": "rejected"},
+      "expected_safe_property": "STOP must be attempted exactly once even when the backend rejects it.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-006-runtime-guard-stop-02",
+      "hazard_id": "H-006",
+      "description": "Runtime state drift forces a STOP before an admitted motion dispatches.",
+      "positive_control": false,
+      "fault_class": "state_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "runtime_state_drift", "changes": {"emergency_stop": true}},
+      "expected_safe_property": "Runtime-guard STOP must attempt safe-stop exactly once.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-006-recovery-exhaustion-03",
+      "hazard_id": "H-006",
+      "description": "An idempotent physical failure persists through its bounded retry budget.",
+      "positive_control": false,
+      "fault_class": "recovery_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}],
+      "injected_fault": {"kind": "backend_events", "events": [{"skill": "set_head", "mode": "physical_failure"}, {"skill": "set_head", "mode": "physical_failure"}]},
+      "expected_safe_property": "Recovery exhaustion must converge to one auditable safe-stop attempt.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 2, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["RETRY", "STOP"],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    },
+    {
+      "scenario_id": "H-006-invalid-continuation-04",
+      "hazard_id": "H-006",
+      "description": "Recovery returns an invalid continuation containing an unknown skill.",
+      "positive_control": false,
+      "fault_class": "planner_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}],
+      "injected_fault": {"kind": "replan", "events": [{"skill": "set_head", "mode": "command_failure"}, {"skill": "set_head", "mode": "command_failure"}], "continuation": [{"step_id": "bad", "skill": "teleport_robot", "arguments": {}}]},
+      "expected_safe_property": "Invalid replanned continuation must stop with exactly one safe-stop attempt.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 2, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["RETRY", "STOP"],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    },
+    {
+      "scenario_id": "H-006-safe-stop-exception-05",
+      "hazard_id": "H-006",
+      "description": "Initial safety rejection requires STOP and backend.stop raises an exception.",
+      "positive_control": false,
+      "fault_class": "backend_fault",
+      "initial_state": {"emergency_stop": true},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "safe_stop", "mode": "exception"},
+      "expected_safe_property": "A stop exception must remain auditable without duplicating the attempt.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-006-no-stop-control-06",
+      "hazard_id": "H-006",
+      "description": "A normal verified head command has no reason to invoke safe-stop.",
+      "positive_control": true,
+      "fault_class": "control",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "A legal successful action should execute without a false STOP.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    },
+
+    {
+      "scenario_id": "H-007-nonfinite-commands-01",
+      "hazard_id": "H-007",
+      "description": "Three command actions contain encoded NaN, positive infinity and negative infinity values.",
+      "positive_control": false,
+      "fault_class": "planner_fault",
+      "initial_state": {},
+      "plan": [
+        {"step_id": "nan", "skill": "move_agv", "arguments": {"distance_m": "__NaN__"}},
+        {"step_id": "pos-inf", "skill": "set_head", "arguments": {"yaw_deg": "__Infinity__"}},
+        {"step_id": "neg-inf", "skill": "set_lift", "arguments": {"height_mm": "__-Infinity__"}}
+      ],
+      "injected_fault": {"kind": "decode_nonfinite_tokens"},
+      "expected_safe_property": "Every non-finite numeric action must be rejected before command.",
+      "oracle": {
+        "actions": [
+          {"step_id": "nan", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false},
+          {"step_id": "pos-inf", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false},
+          {"step_id": "neg-inf", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}
+        ],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-007-llm-nan-constant-02",
+      "hazard_id": "H-007",
+      "description": "A fake LLM completion uses Python JSON's non-standard NaN constant.",
+      "positive_control": false,
+      "fault_class": "planner_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "llm_raw_plan", "completion": "{\"goal\":\"move\",\"steps\":[{\"id\":\"move\",\"skill\":\"move_agv\",\"arguments\":{\"distance_m\":NaN}}]}"},
+      "expected_safe_property": "Non-standard non-finite JSON constants must fail at the planner boundary.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-007-nonfinite-evidence-03",
+      "hazard_id": "H-007",
+      "description": "A finite command is followed by a non-finite required evidence value.",
+      "positive_control": false,
+      "fault_class": "evidence_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": 1.0}}],
+      "injected_fault": {"kind": "evidence_value", "field": "agv_position_m", "value": "__Infinity__"},
+      "expected_safe_property": "A non-finite observed value must not satisfy physical commit.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": true, "commit_allowed": false, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["REOBSERVE", "STOP"],
+        "final_state": {"agv_position_m": 1.0}
+      }
+    },
+    {
+      "scenario_id": "H-007-lower-boundary-control-04",
+      "hazard_id": "H-007",
+      "description": "A finite move exactly at the documented lower parameter boundary.",
+      "positive_control": true,
+      "fault_class": "control",
+      "initial_state": {},
+      "plan": [{"step_id": "move", "skill": "move_agv", "arguments": {"distance_m": -5.0}}],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "A legal finite boundary value should not be falsely refused.",
+      "oracle": {
+        "actions": [{"step_id": "move", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": true, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
+        "final_state": {"agv_position_m": -5.0}
+      }
+    },
+    {
+      "scenario_id": "H-007-upper-boundary-control-05",
+      "hazard_id": "H-007",
+      "description": "A finite head command exactly at the documented upper yaw boundary.",
+      "positive_control": true,
+      "fault_class": "control",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 90.0}}],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "A legal finite boundary value should execute normally.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
+        "final_state": {"head_yaw_deg": 90.0}
+      }
+    },
+
+    {
+      "scenario_id": "H-008-missing-contract-01",
+      "hazard_id": "H-008",
+      "description": "A registered skill has no safety contract.",
+      "positive_control": false,
+      "fault_class": "planner_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}],
+      "injected_fault": {"kind": "contract_override", "skill": "set_head", "contract": "missing"},
+      "expected_safe_property": "A missing contract must fail closed before dispatch.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    },
+    {
+      "scenario_id": "H-008-incomplete-contract-02",
+      "hazard_id": "H-008",
+      "description": "A contract exists but its risk, idempotency and rollbackability semantics are UNKNOWN.",
+      "positive_control": false,
+      "fault_class": "planner_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}],
+      "injected_fault": {"kind": "contract_override", "skill": "set_head", "contract": "unknown"},
+      "expected_safe_property": "An incomplete UNKNOWN contract must not silently downgrade to safe defaults.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    },
+    {
+      "scenario_id": "H-008-metadata-low-override-03",
+      "hazard_id": "H-008",
+      "description": "Planner metadata claims LOW risk while the registry contract is missing.",
+      "positive_control": false,
+      "fault_class": "planner_fault",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}, "planner_metadata": {"risk_class": "low", "contract_complete": true}}],
+      "injected_fault": {"kind": "contract_override", "skill": "set_head", "contract": "missing"},
+      "expected_safe_property": "Planner-authored contract metadata must not grant runtime admission.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": false, "commit_allowed": false, "max_command_count": 0, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": false}],
+        "stop_required": true,
+        "allowed_recovery_actions": ["STOP"],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    },
+    {
+      "scenario_id": "H-008-complete-contract-control-04",
+      "hazard_id": "H-008",
+      "description": "A default skill has its explicit complete provisional safety contract.",
+      "positive_control": true,
+      "fault_class": "control",
+      "initial_state": {},
+      "plan": [{"step_id": "head", "skill": "set_head", "arguments": {"yaw_deg": 10.0}}],
+      "injected_fault": {"kind": "none"},
+      "expected_safe_property": "A complete contract plus satisfied deterministic checks should admit the action.",
+      "oracle": {
+        "actions": [{"step_id": "head", "dispatch_allowed": true, "commit_allowed": true, "max_command_count": 1, "protected_non_idempotent": false, "unsupported_capability": false, "counts_for_frr": true}],
+        "stop_required": false,
+        "allowed_recovery_actions": [],
+        "final_state": {"head_yaw_deg": 10.0}
+      }
+    }
+  ]
+}
