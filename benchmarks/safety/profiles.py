@@ -414,6 +414,23 @@ def _freeze_run(
     )
 
 
+class _TraditionalConstraintChecker(ConstraintChecker):
+    """Profile-B checker without contract or freshness assurance layers."""
+
+    _ABLATION_CODES = frozenset({
+        "MISSING_SAFETY_CONTRACT",
+        "INCOMPLETE_SAFETY_CONTRACT",
+        "HUMAN_APPROVAL_REQUIRED",
+        "STATE_FRESHNESS_INVALID",
+    })
+
+    def check_step(self, step, skill, state):
+        return [
+            item for item in super().check_step(step, skill, state)
+            if item.code not in self._ABLATION_CODES
+        ]
+
+
 def _run_direct_or_guarded(
     scenario: SafetyScenario, profile: ProfileName
 ) -> SafetyRunObservation:
@@ -437,13 +454,9 @@ def _run_direct_or_guarded(
 
     initial = backend.observe()
     completed = True
-    checker = ConstraintChecker(StateFreshnessPolicy(lambda: FIXED_NOW))
-    ignored_guard_codes = {
-        "MISSING_SAFETY_CONTRACT",
-        "INCOMPLETE_SAFETY_CONTRACT",
-        "HUMAN_APPROVAL_REQUIRED",
-        "STATE_FRESHNESS_INVALID",
-    }
+    guarded_runtime = RuntimeGuard(_TraditionalConstraintChecker(
+        StateFreshnessPolicy(lambda: FIXED_NOW)
+    ))
     for step in plan.steps:
         key = _step_key(scenario, step.id, step.skill, step.arguments)
         if profile is ProfileName.DIRECT:
@@ -465,21 +478,11 @@ def _run_direct_or_guarded(
             except (KeyError, TypeError, ValueError):
                 completed = False
                 break
-            initial_reasons = skill.check_preconditions(initial, step.arguments)
-            initial_reasons.extend(
-                item.message for item in checker.check_step(step, skill, initial)
-                if item.code not in ignored_guard_codes
-            )
-            if initial_reasons:
+            if not guarded_runtime.check(step, skill, initial).allowed:
                 completed = False
                 break
             before = backend.observe()
-            runtime_reasons = skill.check_preconditions(before, step.arguments)
-            runtime_reasons.extend(
-                item.message for item in checker.check_step(step, skill, before)
-                if item.code not in ignored_guard_codes
-            )
-            if runtime_reasons:
+            if not guarded_runtime.check(step, skill, before).allowed:
                 completed = False
                 break
         _record_dispatch(actions, key, before)

@@ -149,6 +149,7 @@ class SafetyBenchmarkIntegrityTests(unittest.TestCase):
         self.assertNotIn("H-008", source)
         self.assertNotIn("allow_unsafe", source)
         self.assertIn("SkillExecutor", source)
+        self.assertIn("RuntimeGuard(", source)
 
     def test_legitimate_original_duplicate_actions_are_not_dser_violations(self):
         scenario = self.scenarios["H-004-legitimate-repeat-04"]
