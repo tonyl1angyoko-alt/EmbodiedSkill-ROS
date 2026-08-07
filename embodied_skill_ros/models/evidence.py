@@ -63,6 +63,8 @@ class PhysicalEvidence:
     valid: bool
     matches_expected: bool | None
     reason: str
+    age_ms: float | None = None
+    maximum_age_ms: int | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

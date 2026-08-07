@@ -16,6 +16,8 @@ from .runtime_guard import RuntimeGuard
 from ..backends.base_backend import RobotBackend
 from ..grounding.plan_grounder import EmbodiedPlanGrounder
 from ..grounding.plan_repairer import PlanRepairer
+from ..grounding.constraint_checker import ConstraintChecker
+from ..models.freshness import StateFreshnessPolicy
 from ..models.robot_state import RobotState
 from ..models.skill_result import CommandReceipt, SkillResult
 from ..models.task_plan import PlanStep, TaskPlan
@@ -44,14 +46,17 @@ class SkillExecutor:
     def __init__(self, registry: SkillRegistry, backend: RobotBackend,
                  max_retries: int = 1,
                  max_replans: int = 1,
-                 replanner: Callable[..., TaskPlan | None] | None = None):
+                 replanner: Callable[..., TaskPlan | None] | None = None,
+                 freshness_policy: StateFreshnessPolicy | None = None):
         self.registry = registry
         self.backend = backend
         self.state_manager = StateManager(backend)
-        self.grounder = EmbodiedPlanGrounder(registry)
+        self.freshness_policy = freshness_policy or StateFreshnessPolicy()
+        checker = ConstraintChecker(self.freshness_policy)
+        self.grounder = EmbodiedPlanGrounder(registry, checker)
         self.repairer = PlanRepairer()
-        self.guard = RuntimeGuard()
-        self.verifier = OutcomeVerifier()
+        self.guard = RuntimeGuard(checker)
+        self.verifier = OutcomeVerifier(self.freshness_policy)
         self.recovery = RecoveryManager(max_retries)
         if max_replans < 0:
             raise ValueError("max_replans must be non-negative")
@@ -174,13 +179,17 @@ class SkillExecutor:
 
     @staticmethod
     def _failure_kind(transaction: SkillTransaction, receipt: CommandReceipt,
-                      dispatch_exception: Exception | None) -> FailureKind:
+                      dispatch_exception: Exception | None,
+                      verification=None) -> FailureKind:
         if transaction.state is TransactionState.FAILED:
             return FailureKind.OUTCOME_FAILED
         if transaction.state is TransactionState.REJECTED:
             return FailureKind.COMMAND_REJECTED
         if receipt.timed_out or dispatch_exception is not None:
             return FailureKind.DISPATCH_UNCERTAIN
+        if (verification is not None
+                and any(item.fresh is False for item in verification.evidence)):
+            return FailureKind.EVIDENCE_STALE
         return FailureKind.EVIDENCE_UNVERIFIED
 
     def execute(self, plan: TaskPlan, allow_repair: bool = True,
@@ -293,6 +302,17 @@ class SkillExecutor:
             restart_current_step = False
             completed_transaction_state: TransactionState | None = None
             while True:
+                freshness = self.grounder.checker.evaluate_state_freshness(
+                    skill, before
+                )
+                if freshness is not None and not freshness.valid:
+                    rejected = self._new_transaction(plan, step, attempt, trace)
+                    message = (
+                        f"state freshness invalid for skill {skill.name}: "
+                        f"{freshness.reason}"
+                    )
+                    rejected.transition(TransactionState.REJECTED, message)
+                    return self._stop_and_report(plan, message, results, trace)
                 transaction = self._new_transaction(plan, step, attempt, trace)
                 transaction.transition(
                     TransactionState.ADMITTED,
@@ -386,7 +406,7 @@ class SkillExecutor:
                 recovery = self.recovery.decide(RecoveryContext(
                     contract=skill.safety_contract,
                     failure_kind=self._failure_kind(
-                        transaction, receipt, dispatch_exception
+                        transaction, receipt, dispatch_exception, verification
                     ),
                     physical_outcome=physical_outcome,
                     transaction_state=transaction.state,
@@ -439,7 +459,7 @@ class SkillExecutor:
                     recovery = self.recovery.decide(RecoveryContext(
                         contract=skill.safety_contract,
                         failure_kind=self._failure_kind(
-                            transaction, receipt, dispatch_exception
+                            transaction, receipt, dispatch_exception, reobservation
                         ),
                         physical_outcome=physical_outcome,
                         transaction_state=transaction.state,

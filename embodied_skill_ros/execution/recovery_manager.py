@@ -20,6 +20,7 @@ class FailureKind(str, Enum):
     DISPATCH_UNCERTAIN = "dispatch_uncertain"
     OUTCOME_FAILED = "outcome_failed"
     EVIDENCE_UNVERIFIED = "evidence_unverified"
+    EVIDENCE_STALE = "evidence_stale"
 
 
 @dataclass(frozen=True)
@@ -102,8 +103,13 @@ class RecoveryManager:
                     RecoveryAction.REOBSERVE,
                     "non-idempotent dispatch is unverified; observe without redispatch",
                 )
+            detail = (
+                "stale or invalid-timestamp evidence persisted; "
+                if context.failure_kind is FailureKind.EVIDENCE_STALE else ""
+            )
             return self._escalate(
-                "non-idempotent dispatch did not commit; automatic redispatch is prohibited "
+                detail + "non-idempotent dispatch did not commit; "
+                "automatic redispatch is prohibited "
                 f"with rollbackability={contract.rollbackability.value}"
             )
 
@@ -112,6 +118,11 @@ class RecoveryManager:
             return RecoveryDecision(
                 RecoveryAction.REOBSERVE,
                 "outcome is unverified; observe again before any redispatch",
+            )
+
+        if context.failure_kind is FailureKind.EVIDENCE_STALE:
+            return self._escalate(
+                "stale or invalid-timestamp evidence persisted after bounded reobservation"
             )
 
         if (contract.risk_class is RiskClass.CRITICAL

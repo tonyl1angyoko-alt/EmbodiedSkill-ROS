@@ -1,23 +1,12 @@
 from __future__ import annotations
 
-from datetime import datetime
 import math
 
 from ..models.evidence import EvidenceRequirement, PhysicalEvidence
+from ..models.freshness import StateFreshnessPolicy
 from ..models.robot_state import RobotState
 from ..models.skill_result import VerificationResult
 from ..skills.base_skill import RobotSkill
-from ..tracing.execution_trace import utc_now
-
-
-def _valid_timestamp(value: str | None) -> bool:
-    if not isinstance(value, str) or not value:
-        return False
-    try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-    except ValueError:
-        return False
-    return parsed.tzinfo is not None
 
 
 def _is_finite_number(value) -> bool:
@@ -25,70 +14,87 @@ def _is_finite_number(value) -> bool:
             and math.isfinite(float(value)))
 
 
-def _missing_requirement(field: str, target, after: RobotState) -> PhysicalEvidence:
+def _missing_requirement(field: str, target, after: RobotState,
+                         freshness_policy: StateFreshnessPolicy) -> PhysicalEvidence:
+    freshness = freshness_policy.evaluate(after.timestamp, None)
     return PhysicalEvidence(
         source="robot_state",
         state_field=field,
         measured_at=after.timestamp,
-        received_at=utc_now(),
+        received_at=freshness.evaluated_at,
         observed_value=getattr(after, field, None),
         expected_value=target,
         tolerance=None,
-        fresh=None,
+        fresh=(freshness.valid if freshness.maximum_age_ms is not None
+               else (False if not freshness.valid else None)),
         valid=False,
         matches_expected=None,
         reason=f"missing evidence requirement for expected field {field}",
+        age_ms=freshness.age_ms,
+        maximum_age_ms=None,
     )
 
 
 def _evaluate_requirement(requirement: EvidenceRequirement, field: str, target,
-                          after: RobotState) -> PhysicalEvidence:
+                          after: RobotState,
+                          freshness_policy: StateFreshnessPolicy) -> PhysicalEvidence:
     actual = getattr(after, field, None)
-    valid = True
+    freshness = freshness_policy.evaluate(
+        after.timestamp, requirement.maximum_age_ms
+    )
+    value_valid = True
     matches: bool | None = None
+    reasons = []
     if requirement.source != "robot_state":
-        valid = False
-        reason = f"unsupported evidence source: {requirement.source}"
+        value_valid = False
+        reasons.append(f"unsupported evidence source: {requirement.source}")
     elif target is None:
-        valid = False
-        reason = f"expected {field} is missing"
+        value_valid = False
+        reasons.append(f"expected {field} is missing")
     elif isinstance(target, (int, float)) and not isinstance(target, bool) and not _is_finite_number(target):
-        valid = False
-        reason = f"expected {field} is non-finite"
+        value_valid = False
+        reasons.append(f"expected {field} is non-finite")
     elif actual is None:
-        valid = False
-        reason = f"observed {field} is missing"
+        value_valid = False
+        reasons.append(f"observed {field} is missing")
     elif isinstance(actual, (int, float)) and not isinstance(actual, bool) and not _is_finite_number(actual):
-        valid = False
-        reason = f"observed {field} is non-finite"
-    elif not _valid_timestamp(after.timestamp):
-        valid = False
-        reason = f"measurement timestamp for {field} is invalid"
+        value_valid = False
+        reasons.append(f"observed {field} is non-finite")
     else:
         if (_is_finite_number(target) and _is_finite_number(actual)
                 and requirement.tolerance is not None):
             matches = abs(float(actual) - float(target)) <= requirement.tolerance
         else:
             matches = actual == target
-        reason = ("evidence matches expected effect" if matches
-                  else f"{field}={actual!r}, expected {target!r}")
+        reasons.append(
+            "evidence matches expected effect" if matches
+            else f"{field}={actual!r}, expected {target!r}"
+        )
+    if not freshness.valid:
+        reasons.append(f"evidence freshness invalid: {freshness.reason}")
+    valid = value_valid and freshness.valid
     return PhysicalEvidence(
         source=requirement.source,
         state_field=field,
         measured_at=after.timestamp,
-        received_at=utc_now(),
+        received_at=freshness.evaluated_at,
         observed_value=actual,
         expected_value=target,
         tolerance=requirement.tolerance,
-        # Phase 2A validates timestamp shape. Age enforcement is Phase 2B.
-        fresh=None,
+        fresh=(freshness.valid if requirement.maximum_age_ms is not None
+               else (False if not freshness.valid else None)),
         valid=valid,
         matches_expected=matches,
-        reason=reason,
+        reason="; ".join(reasons),
+        age_ms=freshness.age_ms,
+        maximum_age_ms=freshness.maximum_age_ms,
     )
 
 
 class OutcomeVerifier:
+    def __init__(self, freshness_policy: StateFreshnessPolicy | None = None):
+        self.freshness_policy = freshness_policy or StateFreshnessPolicy()
+
     def verify(self, skill: RobotSkill, arguments: dict, before: RobotState,
                after: RobotState) -> VerificationResult:
         semantic = skill.verify_outcome(arguments, before, after)
@@ -105,14 +111,16 @@ class OutcomeVerifier:
         for field, target in expected.items():
             requirement = requirements.get(field)
             evidence.append(
-                _missing_requirement(field, target, after)
+                _missing_requirement(field, target, after, self.freshness_policy)
                 if requirement is None
-                else _evaluate_requirement(requirement, field, target, after)
+                else _evaluate_requirement(
+                    requirement, field, target, after, self.freshness_policy
+                )
             )
         evidence_complete = bool(expected) and all(
             item.valid for item in evidence
         )
-        achieved = semantic.achieved and all(
+        achieved = evidence_complete and semantic.achieved and all(
             item.matches_expected is True for item in evidence
         )
         commit_ready = evidence_complete and achieved

@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import defaultdict, deque
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, Callable
 
 from .base_backend import RobotBackend
 from ..models.robot_state import RobotState
@@ -20,7 +20,9 @@ class FaultEvent:
 class MockRobotBackend(RobotBackend):
     """Deterministic backend with explicit command/physics fault injection."""
 
-    def __init__(self, initial_state: RobotState | None = None):
+    def __init__(self, initial_state: RobotState | None = None,
+                 now_fn: Callable[[], datetime] | None = None):
+        self._now_fn = now_fn or (lambda: datetime.now(timezone.utc))
         self._state = initial_state or RobotState(
             left_arm_ready=True, right_arm_ready=True,
             left_arm_safe=True, right_arm_safe=True,
@@ -28,6 +30,7 @@ class MockRobotBackend(RobotBackend):
             lift_ready=True, lift_height_mm=100.0,
             head_ready=True, head_yaw_deg=0.0, head_pitch_deg=0.0,
             emergency_stop=False,
+            timestamp=self._now_fn().isoformat(),
         )
         self._faults: dict[str, deque[FaultEvent]] = defaultdict(deque)
         self.command_log: list[tuple[str, dict[str, Any]]] = []
@@ -43,7 +46,7 @@ class MockRobotBackend(RobotBackend):
         return self._state.copy()
 
     def set_state(self, **changes: Any) -> None:
-        changes.setdefault("timestamp", datetime.now(timezone.utc).isoformat())
+        changes.setdefault("timestamp", self._now_fn().isoformat())
         self._state = self._state.copy(**changes)
 
     def command(self, skill_name: str, arguments: dict[str, Any]) -> CommandReceipt:
