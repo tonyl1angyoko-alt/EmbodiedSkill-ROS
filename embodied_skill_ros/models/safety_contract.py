@@ -70,6 +70,8 @@ class SkillSafetyContract:
             issues.append("idempotency is UNKNOWN")
         if self.rollbackability is Rollbackability.UNKNOWN:
             issues.append("rollbackability is UNKNOWN")
+        if not self.evidence_requirements:
+            issues.append("evidence requirements are missing")
         return tuple(issues)
 
     @property

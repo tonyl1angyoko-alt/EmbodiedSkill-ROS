@@ -1,4 +1,3 @@
-from dataclasses import replace
 import unittest
 
 from embodied_skill_ros.backends.mock_backend import FaultEvent, MockRobotBackend
@@ -9,19 +8,17 @@ from embodied_skill_ros.models.transaction import (
     TransactionState,
 )
 from embodied_skill_ros.models.task_plan import PlanStep, TaskPlan
+from embodied_skill_ros.models.skill_result import VerificationResult
 from embodied_skill_ros.skills.registry import build_default_registry
 
 from test_models_and_registry import ready_state
 
 
-def execute_head(*, fault=None, verify_outcomes=True, remove_evidence=False):
+def execute_head(*, fault=None, verify_outcomes=True):
     backend = MockRobotBackend(ready_state())
     if fault is not None:
         backend.inject("set_head", fault)
     registry = build_default_registry()
-    if remove_evidence:
-        skill = registry.get("set_head")
-        skill.safety_contract = replace(skill.safety_contract, evidence_requirements=())
     report = SkillExecutor(registry, backend, max_retries=0).execute(
         TaskPlan("head", [PlanStep("s1", "set_head", {"yaw_deg": 5})]),
         verify_outcomes=verify_outcomes,
@@ -56,6 +53,23 @@ class TransactionLifecycleTests(unittest.TestCase):
         with self.assertRaises(InvalidTransactionTransition):
             transaction.transition(TransactionState.COMMITTED, "receipt is not evidence")
 
+    def test_forged_commit_ready_without_evidence_cannot_commit(self):
+        transaction = SkillTransaction("tx-1", "plan", "step", "set_head", {}, 1)
+        transaction.transition(TransactionState.ADMITTED, "admission passed")
+        transaction.transition(TransactionState.DISPATCHED, "backend call boundary")
+        transaction.transition(TransactionState.ACKNOWLEDGED, "receipt accepted")
+        transaction.apply_verification(
+            VerificationResult(
+                achieved=True,
+                message="forged",
+                evidence=(),
+                evidence_complete=False,
+                commit_ready=True,
+            ),
+            verification_enabled=True,
+        )
+        self.assertEqual(transaction.state, TransactionState.UNVERIFIED)
+
     def test_matching_complete_evidence_commits(self):
         _backend, report = execute_head()
         transaction = report.trace.transactions[0]
@@ -84,7 +98,11 @@ class TransactionLifecycleTests(unittest.TestCase):
         self.assertTrue(all(item.valid for item in transaction.evidence))
 
     def test_accepted_without_sufficient_evidence_is_unverified(self):
-        _backend, report = execute_head(remove_evidence=True)
+        _backend, report = execute_head(fault=FaultEvent(
+            "physical_failure",
+            "head observation unavailable",
+            {"head_yaw_deg": None},
+        ))
         transaction = report.trace.transactions[0]
         self.assertFalse(report.success)
         self.assertTrue(transaction.command_accepted)

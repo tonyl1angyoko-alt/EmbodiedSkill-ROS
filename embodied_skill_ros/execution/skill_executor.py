@@ -6,7 +6,12 @@ import time
 from typing import Callable
 
 from .outcome_verifier import OutcomeVerifier
-from .recovery_manager import RecoveryAction, RecoveryManager
+from .recovery_manager import (
+    FailureKind,
+    RecoveryAction,
+    RecoveryContext,
+    RecoveryManager,
+)
 from .runtime_guard import RuntimeGuard
 from ..backends.base_backend import RobotBackend
 from ..grounding.plan_grounder import EmbodiedPlanGrounder
@@ -15,6 +20,7 @@ from ..models.robot_state import RobotState
 from ..models.skill_result import CommandReceipt, SkillResult
 from ..models.task_plan import PlanStep, TaskPlan
 from ..models.transaction import SkillTransaction, TransactionState
+from ..models.safety_contract import Idempotency
 from ..skills.registry import SkillRegistry
 from ..state.state_manager import StateManager
 from ..tracing.execution_trace import ExecutionTrace, TraceRecord, utc_now
@@ -69,11 +75,16 @@ class SkillExecutor:
         trace.add_transaction(transaction)
         return transaction
 
-    def _reject_plan_transactions(self, plan: TaskPlan, trace: ExecutionTrace,
-                                  reason: str) -> None:
+    def _reject_plan_transactions(
+        self,
+        plan: TaskPlan,
+        trace: ExecutionTrace,
+        reason: str,
+        target: TransactionState = TransactionState.REJECTED,
+    ) -> None:
         for step in plan.steps:
             transaction = self._new_transaction(plan, step, 1, trace)
-            transaction.transition(TransactionState.REJECTED, reason)
+            transaction.transition(target, reason)
 
     def _stop_and_report(self, plan: TaskPlan, message: str,
                          results: list[SkillResult] | None = None,
@@ -118,6 +129,60 @@ class SkillExecutor:
             return self.replanner(continuation, state, completed_steps)
         return self.replanner(continuation, state)
 
+    def _same_step_semantics(self, first: PlanStep, second: PlanStep) -> bool:
+        if first.skill != second.skill:
+            return False
+        try:
+            skill = self.registry.get(first.skill)
+        except KeyError:
+            return False
+        return (
+            skill.canonical_arguments(first.arguments)
+            == skill.canonical_arguments(second.arguments)
+        )
+
+    def _protected_replan_replay(
+        self,
+        replanned: TaskPlan,
+        original_continuation: TaskPlan,
+        completed_steps: list[PlanStep],
+        completed_states: list[TransactionState],
+    ) -> PlanStep | None:
+        # Preserve legitimate repeated actions that were already present in the
+        # unexecuted continuation. Only additional reintroduced actions are
+        # compared with runtime-owned checkpoints.
+        unmatched_continuation = list(original_continuation.steps)
+        for candidate in replanned.steps:
+            continuation_match = next(
+                (index for index, pending in enumerate(unmatched_continuation)
+                 if self._same_step_semantics(candidate, pending)),
+                None,
+            )
+            if continuation_match is not None:
+                unmatched_continuation.pop(continuation_match)
+                continue
+            for completed, state in zip(completed_steps, completed_states):
+                contract = self.registry.get(completed.skill).safety_contract
+                protected = state is TransactionState.COMMITTED or (
+                    state is TransactionState.UNVERIFIED
+                    and contract is not None
+                    and contract.idempotency is not Idempotency.IDEMPOTENT
+                )
+                if protected and self._same_step_semantics(candidate, completed):
+                    return candidate
+        return None
+
+    @staticmethod
+    def _failure_kind(transaction: SkillTransaction, receipt: CommandReceipt,
+                      dispatch_exception: Exception | None) -> FailureKind:
+        if transaction.state is TransactionState.FAILED:
+            return FailureKind.OUTCOME_FAILED
+        if transaction.state is TransactionState.REJECTED:
+            return FailureKind.COMMAND_REJECTED
+        if receipt.timed_out or dispatch_exception is not None:
+            return FailureKind.DISPATCH_UNCERTAIN
+        return FailureKind.EVIDENCE_UNVERIFIED
+
     def execute(self, plan: TaskPlan, allow_repair: bool = True,
                 verify_outcomes: bool = True, allow_recovery: bool = True,
                 ground_plan: bool = True, runtime_guard: bool = True) -> ExecutionReport:
@@ -131,7 +196,13 @@ class SkillExecutor:
             if not grounding.valid:
                 if grounding.requires_stop:
                     message = "; ".join(i.message for i in grounding.issues)
-                    self._reject_plan_transactions(plan, trace, message)
+                    target = (
+                        TransactionState.ESCALATED
+                        if any(issue.code == "HUMAN_APPROVAL_REQUIRED"
+                               for issue in grounding.issues)
+                        else TransactionState.REJECTED
+                    )
+                    self._reject_plan_transactions(plan, trace, message, target)
                     return self._stop_and_report(
                         plan, message, trace=trace
                     )
@@ -172,7 +243,12 @@ class SkillExecutor:
             contract_violation = skill.safety_contract_violation()
             if contract_violation is not None:
                 rejected = self._new_transaction(plan, step, 1, trace)
-                rejected.transition(TransactionState.REJECTED, contract_violation[1])
+                target = (
+                    TransactionState.ESCALATED
+                    if contract_violation[0] == "HUMAN_APPROVAL_REQUIRED"
+                    else TransactionState.REJECTED
+                )
+                rejected.transition(target, contract_violation[1])
                 return self._stop_and_report(
                     plan, contract_violation[1], results, trace
                 )
@@ -304,9 +380,79 @@ class SkillExecutor:
                 if not allow_recovery:
                     return self._stop_and_report(plan, message, results, trace)
                 may_replan = self.replanner is not None and replan_count < self.max_replans
-                recovery = self.recovery.decide(attempt, receipt.timed_out, may_replan)
                 result.recovery_triggered = True
                 record.recovery_triggered = True
+                reobserve_count = 0
+                recovery = self.recovery.decide(RecoveryContext(
+                    contract=skill.safety_contract,
+                    failure_kind=self._failure_kind(
+                        transaction, receipt, dispatch_exception
+                    ),
+                    physical_outcome=physical_outcome,
+                    transaction_state=transaction.state,
+                    dispatch_crossed=True,
+                    attempt=attempt,
+                    retry_budget_remaining=max(
+                        0, self.recovery.max_retries - attempt + 1
+                    ),
+                    replanner_available=may_replan,
+                    reobserve_count=reobserve_count,
+                ))
+                while recovery.action is RecoveryAction.REOBSERVE:
+                    trace.decisions.append("REOBSERVE")
+                    reobserve_count += 1
+                    observed = self.state_manager.refresh()
+                    reobservation = self.verifier.verify(
+                        skill, step.arguments, before, observed
+                    )
+                    transaction.apply_verification(
+                        reobservation, verification_enabled=True
+                    )
+                    if transaction.state is TransactionState.COMMITTED:
+                        physical_outcome = True
+                        message = reobservation.message
+                        achieved = True
+                    elif transaction.state is TransactionState.FAILED:
+                        physical_outcome = False
+                        message = reobservation.message
+                        achieved = False
+                    else:
+                        physical_outcome = None
+                        message = reobservation.message
+                        achieved = False
+                    observed = self.state_manager.mark_result(
+                        "success" if achieved else "failure"
+                    )
+                    result.after_state = observed
+                    result.physical_outcome_achieved = physical_outcome
+                    result.message = message
+                    result.error = None if achieved else message
+                    result.transaction_state = transaction.state.value
+                    record.after_state = observed.to_dict()
+                    record.outcome_verified = physical_outcome
+                    record.verification_message = message
+                    record.error = result.error
+                    record.transaction_state = transaction.state.value
+                    if achieved:
+                        completed_transaction_state = TransactionState.COMMITTED
+                        break
+                    recovery = self.recovery.decide(RecoveryContext(
+                        contract=skill.safety_contract,
+                        failure_kind=self._failure_kind(
+                            transaction, receipt, dispatch_exception
+                        ),
+                        physical_outcome=physical_outcome,
+                        transaction_state=transaction.state,
+                        dispatch_crossed=True,
+                        attempt=attempt,
+                        retry_budget_remaining=max(
+                            0, self.recovery.max_retries - attempt + 1
+                        ),
+                        replanner_available=may_replan,
+                        reobserve_count=reobserve_count,
+                    ))
+                if achieved:
+                    break
                 trace.decisions.append(recovery.action.value.upper())
                 if recovery.action is RecoveryAction.RETRY:
                     attempt += 1
@@ -338,13 +484,35 @@ class SkillExecutor:
                             return self._stop_and_report(
                                 plan, "replanner returned an empty continuation", results, trace
                             )
+                        replayed = self._protected_replan_replay(
+                            replanned,
+                            continuation,
+                            completed_steps,
+                            completed_transaction_states,
+                        )
+                        if replayed is not None:
+                            return self._stop_and_report(
+                                plan,
+                                "replan would replay protected non-idempotent or committed "
+                                f"transaction: {replayed.skill}",
+                                results,
+                                trace,
+                            )
                         grounding = self.grounder.ground(replanned, replan_state)
                         if not grounding.valid:
                             if grounding.requires_stop:
                                 message = "; ".join(
                                     issue.message for issue in grounding.issues
                                 )
-                                self._reject_plan_transactions(replanned, trace, message)
+                                target = (
+                                    TransactionState.ESCALATED
+                                    if any(issue.code == "HUMAN_APPROVAL_REQUIRED"
+                                           for issue in grounding.issues)
+                                    else TransactionState.REJECTED
+                                )
+                                self._reject_plan_transactions(
+                                    replanned, trace, message, target
+                                )
                                 return self._stop_and_report(
                                     plan,
                                     message,
@@ -382,6 +550,13 @@ class SkillExecutor:
                         index = len(completed_steps)
                         restart_from_replan = True
                         break
+                if recovery.action is RecoveryAction.ESCALATE:
+                    transaction.transition(TransactionState.ESCALATED, recovery.reason)
+                    result.transaction_state = transaction.state.value
+                    record.transaction_state = transaction.state.value
+                    return self._stop_and_report(
+                        plan, recovery.reason, results, trace
+                    )
                 return self._stop_and_report(plan, recovery.reason, results, trace)
             if not restart_from_replan and not restart_current_step:
                 completed_steps.append(step)

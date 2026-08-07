@@ -525,16 +525,16 @@ class ExecutionTests(unittest.TestCase):
     def test_retry_rechecks_guard_and_repairs_drift(self):
         backend = MockRobotBackend(ready_state())
         backend.inject(
-            "move_agv",
-            FaultEvent("physical_failure", "base did not move", {"right_arm_safe": False}),
+            "set_lift",
+            FaultEvent("physical_failure", "lift did not move", {"right_arm_safe": False}),
         )
         report = executor_for(backend, retries=1).execute(
-            TaskPlan("move", [PlanStep("s1", "move_agv", {"distance_m": 1.0})])
+            TaskPlan("lift", [PlanStep("s1", "set_lift", {"height_mm": 300.0})])
         )
         self.assertTrue(report.success)
         self.assertEqual(
             [name for name, _ in backend.command_log[:3]],
-            ["move_agv", "retract_arm", "move_agv"],
+            ["set_lift", "retract_arm", "set_lift"],
         )
         self.assertIn("REGROUND", report.trace.decisions)
 

@@ -55,7 +55,7 @@ _DIRECT_TRANSITIONS = {
     TransactionState.FAILED: frozenset({TransactionState.ESCALATED}),
     TransactionState.UNVERIFIED: frozenset({TransactionState.ESCALATED}),
     TransactionState.COMMITTED: frozenset(),
-    TransactionState.REJECTED: frozenset(),
+    TransactionState.REJECTED: frozenset({TransactionState.ESCALATED}),
     TransactionState.ESCALATED: frozenset(),
 }
 
@@ -108,7 +108,14 @@ class SkillTransaction:
         if not verification_enabled or verification is None:
             target = TransactionState.UNVERIFIED
             reason = "physical outcome verification was not performed"
-        elif verification.commit_ready:
+        elif (verification.commit_ready
+              and verification.achieved
+              and verification.evidence_complete
+              and bool(verification.evidence)
+              and all(item.valid
+                      and item.matches_expected is True
+                      and item.fresh is not False
+                      for item in verification.evidence)):
             target = TransactionState.COMMITTED
             reason = "required physical evidence satisfied commit conditions"
         elif verification.evidence_complete and not verification.achieved:

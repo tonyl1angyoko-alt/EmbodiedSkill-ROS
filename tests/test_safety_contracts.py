@@ -3,6 +3,7 @@ import unittest
 
 from embodied_skill_ros.backends.mock_backend import MockRobotBackend
 from embodied_skill_ros.execution.skill_executor import SkillExecutor
+from embodied_skill_ros.models.evidence import EvidenceRequirement
 from embodied_skill_ros.models.safety_contract import (
     Idempotency,
     RiskClass,
@@ -40,6 +41,25 @@ class UnknownContractSkill(RobotSkill):
         )
 
 
+class HumanApprovalSkill(RobotSkill):
+    def __init__(self):
+        super().__init__(
+            "human_approval",
+            "Test skill that requires human approval.",
+            {},
+            {"test"},
+            {},
+            1.0,
+            safety_contract=SkillSafetyContract(
+                risk_class=RiskClass.HIGH,
+                idempotency=Idempotency.IDEMPOTENT,
+                rollbackability=Rollbackability.NOT_AUTOMATIC,
+                requires_human_approval=True,
+                evidence_requirements=(EvidenceRequirement("head_yaw_deg"),),
+            ),
+        )
+
+
 class SafetyContractTests(unittest.TestCase):
     def test_default_skills_have_explicit_complete_provisional_contracts(self):
         for skill in build_default_registry():
@@ -67,6 +87,15 @@ class SafetyContractTests(unittest.TestCase):
             "compensation_skill": "recover_pose",
             "evidence_requirements": [],
         })
+
+    def test_contract_without_evidence_requirements_is_incomplete(self):
+        contract = SkillSafetyContract(
+            risk_class=RiskClass.LOW,
+            idempotency=Idempotency.IDEMPOTENT,
+            rollbackability=Rollbackability.NOT_AUTOMATIC,
+        )
+        self.assertFalse(contract.is_complete)
+        self.assertIn("evidence requirements are missing", contract.completeness_issues)
 
     def test_missing_contract_fails_closed_before_dispatch(self):
         backend = MockRobotBackend(ready_state())
@@ -103,6 +132,17 @@ class SafetyContractTests(unittest.TestCase):
         self.assertFalse(report.success)
         self.assertIn("MISSING_SAFETY_CONTRACT", report.message)
         self.assertNotIn("missing_contract", [name for name, _ in backend.command_log])
+
+    def test_human_approval_requirement_escalates_without_dispatch(self):
+        backend = MockRobotBackend(ready_state())
+        registry = SkillRegistry()
+        registry.register(HumanApprovalSkill())
+        report = SkillExecutor(registry, backend, max_retries=0).execute(
+            TaskPlan("approval", [PlanStep("s1", "human_approval", {})])
+        )
+        self.assertFalse(report.success)
+        self.assertEqual(report.trace.transactions[0].state.value, "escalated")
+        self.assertNotIn("human_approval", [name for name, _ in backend.command_log])
 
     def test_llm_schema_exposes_registry_contract_as_metadata(self):
         captured = {}

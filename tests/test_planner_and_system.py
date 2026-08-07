@@ -56,8 +56,8 @@ class PlannerAndSystemTests(unittest.TestCase):
 
     def test_default_system_recovers_from_one_fault(self):
         system = build_mock_system(ready_state(), max_retries=1)
-        system.backend.inject("move_agv", FaultEvent("physical_failure"))
-        report = system.run_instruction("移动到工作台。")
+        system.backend.inject("set_head", FaultEvent("physical_failure"))
+        report = system.run_instruction("请抬头")
         self.assertTrue(report.success)
         self.assertEqual(len(report.results), 2)
 
