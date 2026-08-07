@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "embodied-skill-ros"
 version = "0.1.0"
 description = "State-grounded planning and risk-aware execution for ROS2 mobile manipulators"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = []
 
 [project.optional-dependencies]
@@ -15,6 +15,9 @@ dev = ["pytest>=7"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+markers = [
+  "ros2: requires Ubuntu 22.04 with a sourced ROS2 Humble runtime",
+]
 
 [tool.setuptools.packages.find]
 include = ["embodied_skill_ros*"]
