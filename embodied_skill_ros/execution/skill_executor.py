@@ -12,8 +12,9 @@ from ..backends.base_backend import RobotBackend
 from ..grounding.plan_grounder import EmbodiedPlanGrounder
 from ..grounding.plan_repairer import PlanRepairer
 from ..models.robot_state import RobotState
-from ..models.skill_result import SkillResult
+from ..models.skill_result import CommandReceipt, SkillResult
 from ..models.task_plan import PlanStep, TaskPlan
+from ..models.transaction import SkillTransaction, TransactionState
 from ..skills.registry import SkillRegistry
 from ..state.state_manager import StateManager
 from ..tracing.execution_trace import ExecutionTrace, TraceRecord, utc_now
@@ -30,6 +31,7 @@ class ExecutionReport:
     stop_attempted: bool = False
     stop_accepted: bool | None = None
     stop_message: str = ""
+    assurance_complete: bool = False
 
 
 class SkillExecutor:
@@ -49,6 +51,29 @@ class SkillExecutor:
             raise ValueError("max_replans must be non-negative")
         self.max_replans = max_replans
         self.replanner = replanner
+        self._transaction_serial = 0
+
+    def _new_transaction(self, plan: TaskPlan, step: PlanStep, attempt: int,
+                         trace: ExecutionTrace) -> SkillTransaction:
+        self._transaction_serial += 1
+        transaction = SkillTransaction(
+            transaction_id=(
+                f"{plan.plan_id}:{plan.revision}:{step.id}:{attempt}:{self._transaction_serial}"
+            ),
+            plan_id=plan.plan_id,
+            step_id=step.id,
+            skill_name=step.skill,
+            arguments=dict(step.arguments),
+            attempt=attempt,
+        )
+        trace.add_transaction(transaction)
+        return transaction
+
+    def _reject_plan_transactions(self, plan: TaskPlan, trace: ExecutionTrace,
+                                  reason: str) -> None:
+        for step in plan.steps:
+            transaction = self._new_transaction(plan, step, 1, trace)
+            transaction.transition(TransactionState.REJECTED, reason)
 
     def _stop_and_report(self, plan: TaskPlan, message: str,
                          results: list[SkillResult] | None = None,
@@ -98,41 +123,56 @@ class SkillExecutor:
                 ground_plan: bool = True, runtime_guard: bool = True) -> ExecutionReport:
         if not plan.steps:
             return self._stop_and_report(plan, "invalid empty executable plan")
+        trace = ExecutionTrace(plan.plan_id)
         state = self.state_manager.refresh()
         decision = "EXECUTE"
         if ground_plan:
             grounding = self.grounder.ground(plan, state)
             if not grounding.valid:
                 if grounding.requires_stop:
+                    message = "; ".join(i.message for i in grounding.issues)
+                    self._reject_plan_transactions(plan, trace, message)
                     return self._stop_and_report(
-                        plan, "; ".join(i.message for i in grounding.issues)
+                        plan, message, trace=trace
                     )
                 if not allow_repair:
-                    return self._stop_and_report(plan, "plan is not grounded")
+                    self._reject_plan_transactions(plan, trace, "plan is not grounded")
+                    return self._stop_and_report(plan, "plan is not grounded", trace=trace)
                 repaired = self.repairer.repair(plan, state, grounding)
                 if repaired is None:
-                    return self._stop_and_report(plan, "plan repair failed")
+                    self._reject_plan_transactions(plan, trace, "plan repair failed")
+                    return self._stop_and_report(plan, "plan repair failed", trace=trace)
                 plan = repaired
                 decision = "REPAIR"
                 grounding = self.grounder.ground(plan, state)
                 if not grounding.valid:
-                    return self._stop_and_report(plan, "repaired plan remains invalid")
+                    self._reject_plan_transactions(
+                        plan, trace, "repaired plan remains invalid"
+                    )
+                    return self._stop_and_report(
+                        plan, "repaired plan remains invalid", trace=trace
+                    )
 
-        trace = ExecutionTrace(plan.plan_id, decisions=[decision])
+        trace.decisions.append(decision)
         results: list[SkillResult] = []
         index = 0
         replan_count = 0
         runtime_repair_count = 0
         completed_steps: list[PlanStep] = []
+        completed_transaction_states: list[TransactionState] = []
         while index < len(plan.steps):
             step = plan.steps[index]
             try:
                 skill = self.registry.get(step.skill)
                 skill.validate_arguments(step.arguments)
             except (KeyError, TypeError, ValueError) as exc:
+                rejected = self._new_transaction(plan, step, 1, trace)
+                rejected.transition(TransactionState.REJECTED, str(exc))
                 return self._stop_and_report(plan, str(exc), results, trace)
             contract_violation = skill.safety_contract_violation()
             if contract_violation is not None:
+                rejected = self._new_transaction(plan, step, 1, trace)
+                rejected.transition(TransactionState.REJECTED, contract_violation[1])
                 return self._stop_and_report(
                     plan, contract_violation[1], results, trace
                 )
@@ -161,6 +201,11 @@ class SkillExecutor:
                         decision = "REPAIR" if decision == "EXECUTE" else decision
                         trace.decisions.append("REPAIR")
                         continue
+                    rejected = self._new_transaction(plan, step, 1, trace)
+                    rejected.transition(
+                        TransactionState.REJECTED,
+                        "runtime guard: " + "; ".join(guard.reasons),
+                    )
                     return self._stop_and_report(
                         plan,
                         "runtime guard: " + "; ".join(guard.reasons),
@@ -170,10 +215,28 @@ class SkillExecutor:
             attempt = 1
             restart_from_replan = False
             restart_current_step = False
+            completed_transaction_state: TransactionState | None = None
             while True:
+                transaction = self._new_transaction(plan, step, attempt, trace)
+                transaction.transition(
+                    TransactionState.ADMITTED,
+                    "grounding, contract, and runtime admission checks passed",
+                )
                 started = utc_now()
                 monotonic_start = time.monotonic()
-                receipt = skill.execute(self.backend, step.arguments)
+                transaction.transition(
+                    TransactionState.DISPATCHED,
+                    "backend command side-effect boundary entered",
+                )
+                dispatch_exception = None
+                try:
+                    receipt = skill.execute(self.backend, step.arguments)
+                except Exception as exc:
+                    dispatch_exception = exc
+                    receipt = CommandReceipt(
+                        False,
+                        f"backend command raised {type(exc).__name__}: {exc}",
+                    )
                 elapsed = time.monotonic() - monotonic_start
                 if elapsed > skill.timeout:
                     receipt.accepted = False
@@ -185,13 +248,39 @@ class SkillExecutor:
                 verification = (self.verifier.verify(skill, step.arguments, before, after)
                                 if receipt.accepted and verify_outcomes
                                 else None)
-                achieved = receipt.accepted and (verification.achieved if verification else True)
-                if verification is not None:
-                    physical_outcome = verification.achieved
+                transaction.command_accepted = receipt.accepted
+                if receipt.accepted:
+                    transaction.transition(
+                        TransactionState.ACKNOWLEDGED,
+                        "backend returned an accepted command receipt",
+                    )
+                    transaction.apply_verification(
+                        verification, verification_enabled=verify_outcomes
+                    )
+                elif receipt.timed_out or dispatch_exception is not None:
+                    transaction.transition(
+                        TransactionState.UNVERIFIED,
+                        "dispatch crossed the backend boundary but its outcome is uncertain",
+                    )
+                else:
+                    transaction.transition(
+                        TransactionState.REJECTED,
+                        "backend explicitly rejected the command",
+                    )
+                achieved = receipt.accepted and (
+                    transaction.state is TransactionState.COMMITTED
+                    if verify_outcomes else True
+                )
+                if transaction.state is TransactionState.COMMITTED:
+                    physical_outcome = True
+                    message = verification.message
+                elif transaction.state is TransactionState.FAILED:
+                    physical_outcome = False
                     message = verification.message
                 elif receipt.accepted:
                     physical_outcome = None
-                    message = "command accepted; physical outcome not verified"
+                    message = (verification.message if verification is not None
+                               else "command accepted; physical outcome not verified")
                 else:
                     physical_outcome = None
                     message = receipt.backend_message
@@ -200,14 +289,17 @@ class SkillExecutor:
                                      physical_outcome,
                                      message, before, after, receipt.backend_message,
                                      None if achieved else message,
-                                     receipt.timed_out, False, attempt)
+                                     receipt.timed_out, False, attempt,
+                                     transaction.transaction_id, transaction.state.value)
                 record = TraceRecord(skill.name, dict(step.arguments), started, utc_now(),
                                      receipt.accepted, receipt.backend_message,
                                      before.to_dict(), after.to_dict(), physical_outcome, message,
-                                     result.error, receipt.timed_out, False, attempt)
+                                     result.error, receipt.timed_out, False, attempt,
+                                     transaction.transaction_id, transaction.state.value)
                 trace.add(record)
                 results.append(result)
                 if achieved:
+                    completed_transaction_state = transaction.state
                     break
                 if not allow_recovery:
                     return self._stop_and_report(plan, message, results, trace)
@@ -249,9 +341,13 @@ class SkillExecutor:
                         grounding = self.grounder.ground(replanned, replan_state)
                         if not grounding.valid:
                             if grounding.requires_stop:
+                                message = "; ".join(
+                                    issue.message for issue in grounding.issues
+                                )
+                                self._reject_plan_transactions(replanned, trace, message)
                                 return self._stop_and_report(
                                     plan,
-                                    "; ".join(issue.message for issue in grounding.issues),
+                                    message,
                                     results,
                                     trace,
                                 )
@@ -289,5 +385,19 @@ class SkillExecutor:
                 return self._stop_and_report(plan, recovery.reason, results, trace)
             if not restart_from_replan and not restart_current_step:
                 completed_steps.append(step)
+                if completed_transaction_state is not None:
+                    completed_transaction_states.append(completed_transaction_state)
                 index += 1
-        return ExecutionReport(True, decision, plan, results, trace, "task completed")
+        return ExecutionReport(
+            True,
+            decision,
+            plan,
+            results,
+            trace,
+            "task completed",
+            assurance_complete=(
+                bool(completed_transaction_states)
+                and all(state is TransactionState.COMMITTED
+                        for state in completed_transaction_states)
+            ),
+        )

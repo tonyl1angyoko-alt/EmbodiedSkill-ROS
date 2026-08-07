@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from ..models.transaction import SkillTransaction
+
 
 @dataclass
 class TraceRecord:
@@ -23,6 +25,8 @@ class TraceRecord:
     timed_out: bool = False
     recovery_triggered: bool = False
     attempt: int = 1
+    transaction_id: str | None = None
+    transaction_state: str | None = None
 
 
 @dataclass
@@ -30,9 +34,13 @@ class ExecutionTrace:
     plan_id: str
     records: list[TraceRecord] = field(default_factory=list)
     decisions: list[str] = field(default_factory=list)
+    transactions: list[SkillTransaction] = field(default_factory=list)
 
     def add(self, record: TraceRecord) -> None:
         self.records.append(record)
+
+    def add_transaction(self, transaction: SkillTransaction) -> None:
+        self.transactions.append(transaction)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

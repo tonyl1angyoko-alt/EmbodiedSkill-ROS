@@ -3,6 +3,7 @@ import unittest
 from benchmarks.run_benchmark import verification_score
 from embodied_skill_ros.backends.mock_backend import FaultEvent, MockRobotBackend
 from embodied_skill_ros.execution.skill_executor import SkillExecutor
+from embodied_skill_ros.models.evidence import EvidenceRequirement
 from embodied_skill_ros.models.skill_result import CommandReceipt
 from embodied_skill_ros.models.task_plan import PlanStep, TaskPlan
 from embodied_skill_ros.models.safety_contract import (
@@ -48,6 +49,7 @@ class CounterBackend(SpyBackend):
         if skill_name == "increment_counter":
             self.command_log.append((skill_name, dict(arguments)))
             self.counter += 1
+            self.set_state(head_yaw_deg=float(self.counter))
             return CommandReceipt(True, "counter incremented")
         return super().command(skill_name, arguments)
 
@@ -60,7 +62,15 @@ class IncrementCounterSkill(RobotSkill):
                              risk_class=RiskClass.MEDIUM,
                              idempotency=Idempotency.NON_IDEMPOTENT,
                              rollbackability=Rollbackability.NOT_AUTOMATIC,
+                             evidence_requirements=(
+                                 EvidenceRequirement("head_yaw_deg"),
+                             ),
                          ))
+
+    def expected_effects(self, arguments, before):
+        if before.head_yaw_deg is None:
+            return {"head_yaw_deg": None}
+        return {"head_yaw_deg": float(before.head_yaw_deg) + 1.0}
 
 
 class ExecutionTests(unittest.TestCase):

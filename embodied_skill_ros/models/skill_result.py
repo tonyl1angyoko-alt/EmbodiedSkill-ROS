@@ -39,3 +39,5 @@ class SkillResult:
     timed_out: bool = False
     recovery_triggered: bool = False
     attempt: int = 1
+    transaction_id: str | None = None
+    transaction_state: str | None = None
