@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from .base_backend import RobotBackend
+from dataclasses import fields
+
+from .base_backend import (
+    BackendCapabilities, ParameterDomain, RobotBackend, SkillSemantics,
+)
 from ..models.robot_state import RobotState
 from ..models.skill_result import CommandReceipt
 
@@ -29,9 +33,59 @@ class JakaRobotBackend(RobotBackend):
         self.agv_position_provider = agv_position_provider
         self._last_agv_position: float | None = None  # No odometry adapter confirmed in chat_agent path.
 
+    def capabilities(self) -> BackendCapabilities:
+        supported = {"safe_stop"}
+        observable: set[str] = {"last_skill_result"}
+        if self.arm is not None and self.transport_pose_name is not None:
+            supported.add("retract_arm")
+        if self.arm is not None:
+            observable.update({"left_arm_ready", "right_arm_ready"})
+        if self.agv is not None:
+            supported.add("move_agv")
+        if self.agv_position_provider is not None:
+            observable.update({"agv_position_m", "agv_ready"})
+        if self.lift is not None:
+            supported.add("set_lift")
+            observable.update({"lift_height_mm", "lift_ready"})
+        if self.head is not None:
+            supported.add("set_head")
+            observable.update({"head_yaw_deg", "head_pitch_deg", "head_ready"})
+        if self.state_provider is not None:
+            observable = {
+                item.name for item in fields(RobotState)
+                if item.name not in {
+                    "facts", "observed_at", "stale_fields", "conflicts", "timestamp"
+                }
+            }
+        semantics = []
+        if "retract_arm" in supported:
+            semantics.append(SkillSemantics(
+                "retract_arm",
+                (ParameterDomain("arm", choices=frozenset({"left", "right"})),),
+                frozenset({"left_arm_safe", "right_arm_safe"}),
+            ))
+        if "move_agv" in supported:
+            semantics.append(SkillSemantics(
+                "move_agv",
+                (ParameterDomain("speed_mps", minimum=0.01, maximum=0.5),),
+            ))
+        if "set_lift" in supported:
+            semantics.append(SkillSemantics(
+                "set_lift", (ParameterDomain("height_mm", minimum=0.0, maximum=780.0),)
+            ))
+        return BackendCapabilities(
+            "JakaRobotBackend",
+            frozenset(supported),
+            frozenset(observable),
+            supports_safe_stop=self.agv is not None,
+            runtime="optional-legacy-ros2-sdk",
+            refreshable_fields=frozenset(observable) if self.state_provider else frozenset(),
+            skill_semantics=tuple(semantics),
+        )
+
     def observe(self) -> RobotState:
         if self.state_provider is not None:
-            return self.state_provider().copy()
+            return self.state_provider().copy().with_observation_time()
         state = RobotState(
             left_arm_ready=False if self.arm is None else None,
             right_arm_ready=False if self.arm is None else None,
@@ -73,7 +127,7 @@ class JakaRobotBackend(RobotBackend):
         except Exception:
             state.agv_position_m = None
             state.agv_ready = False
-        return state
+        return state.with_observation_time()
 
     def command(self, skill_name: str, arguments: dict[str, Any]) -> CommandReceipt:
         try:
@@ -100,8 +154,9 @@ class JakaRobotBackend(RobotBackend):
                 if "pitch_deg" in arguments:
                     ok = bool(self.head.pitch_to(arguments["pitch_deg"])) and ok
             elif skill_name == "safe_stop":
-                if self.agv is not None:
-                    self.agv.stop()
+                if self.agv is None:
+                    return CommandReceipt(False, "safe stop adapter unavailable")
+                self.agv.stop()
                 ok = True
             else:
                 return CommandReceipt(False, f"JAKA adapter does not implement {skill_name}")

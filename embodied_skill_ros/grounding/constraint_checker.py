@@ -25,13 +25,6 @@ class ConstraintChecker:
         busy = state.active_resources & skill.required_resources
         if busy:
             out.append(ConstraintViolation("RESOURCE_BUSY", step.id, f"resources busy: {sorted(busy)}"))
-        if step.skill == "move_agv":
-            if state.left_arm_safe is not True:
-                out.append(ConstraintViolation("LEFT_ARM_UNSAFE_FOR_AGV", step.id, "left arm is not transport-safe"))
-            if state.right_arm_safe is not True:
-                out.append(ConstraintViolation("RIGHT_ARM_UNSAFE_FOR_AGV", step.id, "right arm is not transport-safe"))
-        if step.skill == "set_lift" and (state.left_arm_safe is not True or state.right_arm_safe is not True):
-            out.append(ConstraintViolation("ARM_LIFT_INCOMPATIBLE", step.id, "retract arms before lift motion"))
         return out
 
     def check_parallel(self, steps: list[PlanStep], skills: dict[str, RobotSkill]) -> list[ConstraintViolation]:
@@ -42,6 +35,7 @@ class ConstraintChecker:
                 groups.setdefault(step.parallel_group, []).append(step)
         for group_steps in groups.values():
             used: set[str] = set()
+            prior_skills: list[RobotSkill] = []
             for step in group_steps:
                 skill = skills.get(step.skill)
                 if skill is None:
@@ -51,8 +45,13 @@ class ConstraintChecker:
                     out.append(ConstraintViolation("PARALLEL_RESOURCE_CONFLICT", step.id,
                                                    f"parallel resources conflict: {sorted(overlap)}"))
                 used |= skill.required_resources
-            names = {s.skill for s in group_steps}
-            if "move_agv" in names and ("extend_arm" in names or "set_lift" in names):
-                out.append(ConstraintViolation("BODY_CONFLICT", group_steps[-1].id,
-                                               "AGV motion conflicts with arm extension/lift motion"))
+                for prior in prior_skills:
+                    if (skill.required_resources & prior.incompatible_resources
+                            or prior.required_resources & skill.incompatible_resources):
+                        out.append(ConstraintViolation(
+                            "BODY_CONFLICT", step.id,
+                            f"incompatible resources in parallel group: "
+                            f"{sorted(skill.required_resources | prior.required_resources)}",
+                        ))
+                prior_skills.append(skill)
         return out

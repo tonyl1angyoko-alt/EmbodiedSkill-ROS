@@ -28,6 +28,14 @@ class JakaBackendTests(unittest.TestCase):
         self.assertFalse(receipt.accepted)
         self.assertIn("UNKNOWN", receipt.backend_message)
 
+    def test_transport_skill_capability_requires_calibrated_pose_name(self):
+        without_pose = JakaRobotBackend(arm_skill=object()).capabilities()
+        with_pose = JakaRobotBackend(
+            arm_skill=object(), transport_pose_name="validated_transport"
+        ).capabilities()
+        self.assertNotIn("retract_arm", without_pose.supported_skills)
+        self.assertIn("retract_arm", with_pose.supported_skills)
+
 
 if __name__ == "__main__":
     unittest.main()

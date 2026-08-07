@@ -22,10 +22,18 @@ class RecoveryManager:
             raise ValueError("max_retries must be non-negative")
         self.max_retries = max_retries
 
-    def decide(self, attempt: int, timed_out: bool, replanner_available: bool) -> RecoveryDecision:
-        if attempt <= self.max_retries:
+    def decide(self, attempt: int, timed_out: bool, replanner_available: bool,
+               policy: tuple[str, ...] = (
+                   "observe", "repair", "local_retry", "replan", "safe_stop"
+               )) -> RecoveryDecision:
+        normalized = ("local_retry" if item == "retry" else item for item in policy)
+        allowed = tuple(dict.fromkeys(normalized))
+        if "local_retry" in allowed and attempt <= self.max_retries:
             reason = "bounded local retry after timeout" if timed_out else "bounded local retry"
             return RecoveryDecision(RecoveryAction.RETRY, reason)
-        if replanner_available:
+        if "replan" in allowed and replanner_available:
             return RecoveryDecision(RecoveryAction.REPLAN, "retry budget exhausted")
-        return RecoveryDecision(RecoveryAction.STOP, "no recovery path remains")
+        return RecoveryDecision(
+            RecoveryAction.STOP,
+            "skill recovery policy exhausted; safe stop required",
+        )
