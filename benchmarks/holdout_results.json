@@ -1,0 +1,2664 @@
+{
+  "complete_expected_trials": 30,
+  "core_freeze": {
+    "frozen_at": "2026-08-08",
+    "manifest": "benchmarks/core_freeze_manifest.json",
+    "total_core_lines": 1385,
+    "verified_unchanged": true
+  },
+  "families": [
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 0,
+      "expected_behavior": "COMPLETE",
+      "fault_type": "none",
+      "full_system_result": "PASS",
+      "information_required": false,
+      "name": "nominal",
+      "repair_can_solve": false,
+      "replan_required": false,
+      "retry_can_solve": false,
+      "safe_stop_only": false,
+      "task_completions": 6,
+      "theoretically_possible": true,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 0,
+      "expected_behavior": "COMPLETE",
+      "fault_type": "one-shot physical failure",
+      "full_system_result": "PASS",
+      "information_required": false,
+      "name": "transient_physical",
+      "repair_can_solve": false,
+      "replan_required": false,
+      "retry_can_solve": true,
+      "safe_stop_only": false,
+      "task_completions": 6,
+      "theoretically_possible": true,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 6,
+      "expected_behavior": "SAFE_STOP",
+      "fault_type": "permanent physical failure",
+      "full_system_result": "PASS",
+      "information_required": false,
+      "name": "permanent_actuator",
+      "repair_can_solve": false,
+      "replan_required": false,
+      "retry_can_solve": false,
+      "safe_stop_only": true,
+      "task_completions": 0,
+      "theoretically_possible": false,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 6,
+      "expected_behavior": "SAFE_STOP",
+      "fault_type": "permanent UNKNOWN safety field",
+      "full_system_result": "PASS",
+      "information_required": true,
+      "name": "permanent_sensor_blindness",
+      "repair_can_solve": false,
+      "replan_required": false,
+      "retry_can_solve": false,
+      "safe_stop_only": true,
+      "task_completions": 0,
+      "theoretically_possible": true,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 0,
+      "expected_behavior": "COMPLETE",
+      "fault_type": "STALE safety field, working refresh",
+      "full_system_result": "PASS",
+      "information_required": true,
+      "name": "stale_refresh",
+      "repair_can_solve": false,
+      "replan_required": false,
+      "retry_can_solve": false,
+      "safe_stop_only": false,
+      "task_completions": 6,
+      "theoretically_possible": true,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 6,
+      "expected_behavior": "SAFE_STOP",
+      "fault_type": "unavoidable undeclared side effect",
+      "full_system_result": "PASS",
+      "information_required": false,
+      "name": "capability_mismatch",
+      "repair_can_solve": false,
+      "replan_required": false,
+      "retry_can_solve": false,
+      "safe_stop_only": true,
+      "task_completions": 0,
+      "theoretically_possible": false,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 6,
+      "expected_behavior": "SAFE_STOP",
+      "fault_type": "conflicting safety evidence",
+      "full_system_result": "PASS",
+      "information_required": true,
+      "name": "contradictory_observation",
+      "repair_can_solve": false,
+      "replan_required": false,
+      "retry_can_solve": false,
+      "safe_stop_only": true,
+      "task_completions": 0,
+      "theoretically_possible": true,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 0,
+      "expected_behavior": "COMPLETE",
+      "fault_type": "missing two-level prerequisite chain",
+      "full_system_result": "PASS",
+      "information_required": false,
+      "name": "multi_step_repair",
+      "repair_can_solve": true,
+      "replan_required": false,
+      "retry_can_solve": false,
+      "safe_stop_only": false,
+      "task_completions": 6,
+      "theoretically_possible": true,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 0,
+      "expected_behavior": "COMPLETE",
+      "fault_type": "permanent primary-path failure",
+      "full_system_result": "PASS",
+      "information_required": false,
+      "name": "genuine_replan",
+      "repair_can_solve": false,
+      "replan_required": true,
+      "retry_can_solve": false,
+      "safe_stop_only": false,
+      "task_completions": 6,
+      "theoretically_possible": true,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 6,
+      "expected_behavior": "SAFE_STOP",
+      "fault_type": "no registered achiever",
+      "full_system_result": "PASS",
+      "information_required": false,
+      "name": "impossible_predicate",
+      "repair_can_solve": false,
+      "replan_required": false,
+      "retry_can_solve": false,
+      "safe_stop_only": true,
+      "task_completions": 0,
+      "theoretically_possible": false,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 6,
+      "expected_behavior": "SAFE_STOP",
+      "fault_type": "incompatible parallel effects",
+      "full_system_result": "PASS",
+      "information_required": false,
+      "name": "irreparable_conflict",
+      "repair_can_solve": false,
+      "replan_required": false,
+      "retry_can_solve": false,
+      "safe_stop_only": true,
+      "task_completions": 0,
+      "theoretically_possible": false,
+      "trials": 6,
+      "unsafe_executions": 0
+    },
+    {
+      "correct_decisions": 0,
+      "correct_safe_stops": 0,
+      "expected_behavior": "SAFE_STOP",
+      "fault_type": "fresh false observation plus physical failure",
+      "full_system_result": "FAIL",
+      "information_required": false,
+      "name": "fresh_sensor_spoof",
+      "repair_can_solve": false,
+      "replan_required": false,
+      "retry_can_solve": false,
+      "safe_stop_only": true,
+      "task_completions": 0,
+      "theoretically_possible": false,
+      "trials": 6,
+      "unsafe_executions": 6
+    },
+    {
+      "correct_decisions": 6,
+      "correct_safe_stops": 6,
+      "expected_behavior": "SAFE_STOP",
+      "fault_type": "permanent failed only achiever",
+      "full_system_result": "PASS",
+      "information_required": false,
+      "name": "replan_dead_end",
+      "repair_can_solve": false,
+      "replan_required": true,
+      "retry_can_solve": false,
+      "safe_stop_only": true,
+      "task_completions": 0,
+      "theoretically_possible": false,
+      "trials": 6,
+      "unsafe_executions": 0
+    }
+  ],
+  "holdout_status": "post-freeze; not used to modify core",
+  "metrics": {
+    "correct_safe_stop_rate": 0.875,
+    "false_positive_rate": 0.076923,
+    "feasible_task_completion_rate": 1.0,
+    "overall_correct_decision_rate": 0.923077,
+    "repair_attempt_rate": 0.307692,
+    "replan_attempt_rate": 0.230769,
+    "task_completion_rate": 0.384615,
+    "unsafe_execution_rate": 0.076923
+  },
+  "profile": "F_full",
+  "rows": [
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "nominal",
+      "fault_type": "none",
+      "forbidden_dispatch": false,
+      "id": "nominal-100",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "nominal",
+      "fault_type": "none",
+      "forbidden_dispatch": false,
+      "id": "nominal-101",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "nominal",
+      "fault_type": "none",
+      "forbidden_dispatch": false,
+      "id": "nominal-102",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "nominal",
+      "fault_type": "none",
+      "forbidden_dispatch": false,
+      "id": "nominal-103",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "nominal",
+      "fault_type": "none",
+      "forbidden_dispatch": false,
+      "id": "nominal-104",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "nominal",
+      "fault_type": "none",
+      "forbidden_dispatch": false,
+      "id": "nominal-105",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "transient_physical",
+      "fault_type": "one-shot physical failure",
+      "forbidden_dispatch": false,
+      "id": "transient_physical-100",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "transient_physical",
+      "fault_type": "one-shot physical failure",
+      "forbidden_dispatch": false,
+      "id": "transient_physical-101",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "transient_physical",
+      "fault_type": "one-shot physical failure",
+      "forbidden_dispatch": false,
+      "id": "transient_physical-102",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "transient_physical",
+      "fault_type": "one-shot physical failure",
+      "forbidden_dispatch": false,
+      "id": "transient_physical-103",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "transient_physical",
+      "fault_type": "one-shot physical failure",
+      "forbidden_dispatch": false,
+      "id": "transient_physical-104",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "transient_physical",
+      "fault_type": "one-shot physical failure",
+      "forbidden_dispatch": false,
+      "id": "transient_physical-105",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_actuator",
+      "fault_type": "permanent physical failure",
+      "forbidden_dispatch": false,
+      "id": "permanent_actuator-100",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          20.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_actuator",
+      "fault_type": "permanent physical failure",
+      "forbidden_dispatch": false,
+      "id": "permanent_actuator-101",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          25.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_actuator",
+      "fault_type": "permanent physical failure",
+      "forbidden_dispatch": false,
+      "id": "permanent_actuator-102",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          30.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_actuator",
+      "fault_type": "permanent physical failure",
+      "forbidden_dispatch": false,
+      "id": "permanent_actuator-103",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          35.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_actuator",
+      "fault_type": "permanent physical failure",
+      "forbidden_dispatch": false,
+      "id": "permanent_actuator-104",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          40.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head",
+        "set_head",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_actuator",
+      "fault_type": "permanent physical failure",
+      "forbidden_dispatch": false,
+      "id": "permanent_actuator-105",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          10.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_arm",
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_sensor_blindness",
+      "fault_type": "permanent UNKNOWN safety field",
+      "forbidden_dispatch": false,
+      "id": "permanent_sensor_blindness-100",
+      "message": "repaired plan remains invalid",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          1.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_arm",
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_sensor_blindness",
+      "fault_type": "permanent UNKNOWN safety field",
+      "forbidden_dispatch": false,
+      "id": "permanent_sensor_blindness-101",
+      "message": "repaired plan remains invalid",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          1.5
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_arm",
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_sensor_blindness",
+      "fault_type": "permanent UNKNOWN safety field",
+      "forbidden_dispatch": false,
+      "id": "permanent_sensor_blindness-102",
+      "message": "repaired plan remains invalid",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          0.5
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_arm",
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_sensor_blindness",
+      "fault_type": "permanent UNKNOWN safety field",
+      "forbidden_dispatch": false,
+      "id": "permanent_sensor_blindness-103",
+      "message": "repaired plan remains invalid",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          1.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_arm",
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_sensor_blindness",
+      "fault_type": "permanent UNKNOWN safety field",
+      "forbidden_dispatch": false,
+      "id": "permanent_sensor_blindness-104",
+      "message": "repaired plan remains invalid",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          1.5
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_arm",
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "permanent_sensor_blindness",
+      "fault_type": "permanent UNKNOWN safety field",
+      "forbidden_dispatch": false,
+      "id": "permanent_sensor_blindness-105",
+      "message": "repaired plan remains invalid",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          0.5
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "move_agv"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "OBSERVE",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "stale_refresh",
+      "fault_type": "STALE safety field, working refresh",
+      "forbidden_dispatch": false,
+      "id": "stale_refresh-100",
+      "message": "task completed",
+      "observe_attempted": true,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "move_agv"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "OBSERVE",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "stale_refresh",
+      "fault_type": "STALE safety field, working refresh",
+      "forbidden_dispatch": false,
+      "id": "stale_refresh-101",
+      "message": "task completed",
+      "observe_attempted": true,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "move_agv"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "OBSERVE",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "stale_refresh",
+      "fault_type": "STALE safety field, working refresh",
+      "forbidden_dispatch": false,
+      "id": "stale_refresh-102",
+      "message": "task completed",
+      "observe_attempted": true,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "move_agv"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "OBSERVE",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "stale_refresh",
+      "fault_type": "STALE safety field, working refresh",
+      "forbidden_dispatch": false,
+      "id": "stale_refresh-103",
+      "message": "task completed",
+      "observe_attempted": true,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "move_agv"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "OBSERVE",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "stale_refresh",
+      "fault_type": "STALE safety field, working refresh",
+      "forbidden_dispatch": false,
+      "id": "stale_refresh-104",
+      "message": "task completed",
+      "observe_attempted": true,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "move_agv"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "OBSERVE",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "stale_refresh",
+      "fault_type": "STALE safety field, working refresh",
+      "forbidden_dispatch": false,
+      "id": "stale_refresh-105",
+      "message": "task completed",
+      "observe_attempted": true,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_one"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "capability_mismatch",
+      "fault_type": "unavoidable undeclared side effect",
+      "forbidden_dispatch": false,
+      "id": "capability_mismatch-100",
+      "message": "backend has undeclared unavoidable effects: ['right_arm_safe']",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "left_arm_safe": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_one"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "capability_mismatch",
+      "fault_type": "unavoidable undeclared side effect",
+      "forbidden_dispatch": false,
+      "id": "capability_mismatch-101",
+      "message": "backend has undeclared unavoidable effects: ['left_arm_safe']",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "right_arm_safe": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_one"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "capability_mismatch",
+      "fault_type": "unavoidable undeclared side effect",
+      "forbidden_dispatch": false,
+      "id": "capability_mismatch-102",
+      "message": "backend has undeclared unavoidable effects: ['right_arm_safe']",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "left_arm_safe": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_one"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "capability_mismatch",
+      "fault_type": "unavoidable undeclared side effect",
+      "forbidden_dispatch": false,
+      "id": "capability_mismatch-103",
+      "message": "backend has undeclared unavoidable effects: ['left_arm_safe']",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "right_arm_safe": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_one"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "capability_mismatch",
+      "fault_type": "unavoidable undeclared side effect",
+      "forbidden_dispatch": false,
+      "id": "capability_mismatch-104",
+      "message": "backend has undeclared unavoidable effects: ['right_arm_safe']",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "left_arm_safe": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "retract_one"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "capability_mismatch",
+      "fault_type": "unavoidable undeclared side effect",
+      "forbidden_dispatch": false,
+      "id": "capability_mismatch-105",
+      "message": "backend has undeclared unavoidable effects: ['left_arm_safe']",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "right_arm_safe": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "contradictory_observation",
+      "fault_type": "conflicting safety evidence",
+      "forbidden_dispatch": false,
+      "id": "contradictory_observation-100",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 1, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          1.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "contradictory_observation",
+      "fault_type": "conflicting safety evidence",
+      "forbidden_dispatch": false,
+      "id": "contradictory_observation-101",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 1, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          1.5
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "contradictory_observation",
+      "fault_type": "conflicting safety evidence",
+      "forbidden_dispatch": false,
+      "id": "contradictory_observation-102",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 1, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          0.5
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "contradictory_observation",
+      "fault_type": "conflicting safety evidence",
+      "forbidden_dispatch": false,
+      "id": "contradictory_observation-103",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 1, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          1.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "contradictory_observation",
+      "fault_type": "conflicting safety evidence",
+      "forbidden_dispatch": false,
+      "id": "contradictory_observation-104",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 1, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          1.5
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "move_agv"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "contradictory_observation",
+      "fault_type": "conflicting safety evidence",
+      "forbidden_dispatch": false,
+      "id": "contradictory_observation-105",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 1, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "agv_position_m": [
+          0.0,
+          0.5
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPAIR",
+      "executed_plan": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "multi_step_repair",
+      "fault_type": "missing two-level prerequisite chain",
+      "forbidden_dispatch": false,
+      "id": "multi_step_repair-100",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPAIR",
+      "executed_plan": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "multi_step_repair",
+      "fault_type": "missing two-level prerequisite chain",
+      "forbidden_dispatch": false,
+      "id": "multi_step_repair-101",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPAIR",
+      "executed_plan": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "multi_step_repair",
+      "fault_type": "missing two-level prerequisite chain",
+      "forbidden_dispatch": false,
+      "id": "multi_step_repair-102",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPAIR",
+      "executed_plan": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "multi_step_repair",
+      "fault_type": "missing two-level prerequisite chain",
+      "forbidden_dispatch": false,
+      "id": "multi_step_repair-103",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPAIR",
+      "executed_plan": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "multi_step_repair",
+      "fault_type": "missing two-level prerequisite chain",
+      "forbidden_dispatch": false,
+      "id": "multi_step_repair-104",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPAIR",
+      "executed_plan": [
+        "deploy_stabilizer",
+        "secure_payload",
+        "transport_payload"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "multi_step_repair",
+      "fault_type": "missing two-level prerequisite chain",
+      "forbidden_dispatch": false,
+      "id": "multi_step_repair-105",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "alternate_route"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPLAN",
+      "executed_plan": [
+        "alternate_route"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "genuine_replan",
+      "fault_type": "permanent primary-path failure",
+      "forbidden_dispatch": false,
+      "id": "genuine_replan-100",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "alternate_route"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPLAN",
+      "executed_plan": [
+        "alternate_route"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "genuine_replan",
+      "fault_type": "permanent primary-path failure",
+      "forbidden_dispatch": false,
+      "id": "genuine_replan-101",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "alternate_route"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPLAN",
+      "executed_plan": [
+        "alternate_route"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "genuine_replan",
+      "fault_type": "permanent primary-path failure",
+      "forbidden_dispatch": false,
+      "id": "genuine_replan-102",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "alternate_route"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPLAN",
+      "executed_plan": [
+        "alternate_route"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "genuine_replan",
+      "fault_type": "permanent primary-path failure",
+      "forbidden_dispatch": false,
+      "id": "genuine_replan-103",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "alternate_route"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPLAN",
+      "executed_plan": [
+        "alternate_route"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "genuine_replan",
+      "fault_type": "permanent primary-path failure",
+      "forbidden_dispatch": false,
+      "id": "genuine_replan-104",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "alternate_route"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": false,
+      "decision": "REPLAN",
+      "executed_plan": [
+        "alternate_route"
+      ],
+      "expected_behavior": "COMPLETE",
+      "false_positive": false,
+      "family": "genuine_replan",
+      "fault_type": "permanent primary-path failure",
+      "forbidden_dispatch": false,
+      "id": "genuine_replan-105",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": true,
+      "retry_attempted": true,
+      "task_completion": true,
+      "theoretically_possible": true,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "finalize_payload"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "impossible_predicate",
+      "fault_type": "no registered achiever",
+      "forbidden_dispatch": false,
+      "id": "impossible_predicate-100",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 0, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "payload_finalized": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "finalize_payload"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "impossible_predicate",
+      "fault_type": "no registered achiever",
+      "forbidden_dispatch": false,
+      "id": "impossible_predicate-101",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 0, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "payload_finalized": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "finalize_payload"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "impossible_predicate",
+      "fault_type": "no registered achiever",
+      "forbidden_dispatch": false,
+      "id": "impossible_predicate-102",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 0, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "payload_finalized": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "finalize_payload"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "impossible_predicate",
+      "fault_type": "no registered achiever",
+      "forbidden_dispatch": false,
+      "id": "impossible_predicate-103",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 0, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "payload_finalized": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "finalize_payload"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "impossible_predicate",
+      "fault_type": "no registered achiever",
+      "forbidden_dispatch": false,
+      "id": "impossible_predicate-104",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 0, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "payload_finalized": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "finalize_payload"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "impossible_predicate",
+      "fault_type": "no registered achiever",
+      "forbidden_dispatch": false,
+      "id": "impossible_predicate-105",
+      "message": "UNSATISFIABLE: plan repair failed; search={'expanded': 1, 'candidates_considered': 0, 'cycles': 0, 'depth_limit_hits': 0, 'expansion_limit_hits': 0, 'selected_steps': 0}",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "payload_finalized": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": true,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_mode_a",
+        "set_mode_b"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "irreparable_conflict",
+      "fault_type": "incompatible parallel effects",
+      "forbidden_dispatch": false,
+      "id": "irreparable_conflict-100",
+      "message": "parallel steps require incompatible resource_mode values: 'A' vs 'B'",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_mode_a",
+        "set_mode_b"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "irreparable_conflict",
+      "fault_type": "incompatible parallel effects",
+      "forbidden_dispatch": false,
+      "id": "irreparable_conflict-101",
+      "message": "parallel steps require incompatible resource_mode values: 'A' vs 'B'",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_mode_a",
+        "set_mode_b"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "irreparable_conflict",
+      "fault_type": "incompatible parallel effects",
+      "forbidden_dispatch": false,
+      "id": "irreparable_conflict-102",
+      "message": "parallel steps require incompatible resource_mode values: 'A' vs 'B'",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_mode_a",
+        "set_mode_b"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "irreparable_conflict",
+      "fault_type": "incompatible parallel effects",
+      "forbidden_dispatch": false,
+      "id": "irreparable_conflict-103",
+      "message": "parallel steps require incompatible resource_mode values: 'A' vs 'B'",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_mode_a",
+        "set_mode_b"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "irreparable_conflict",
+      "fault_type": "incompatible parallel effects",
+      "forbidden_dispatch": false,
+      "id": "irreparable_conflict-104",
+      "message": "parallel steps require incompatible resource_mode values: 'A' vs 'B'",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "set_mode_a",
+        "set_mode_b"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "irreparable_conflict",
+      "fault_type": "incompatible parallel effects",
+      "forbidden_dispatch": false,
+      "id": "irreparable_conflict-105",
+      "message": "parallel steps require incompatible resource_mode values: 'A' vs 'B'",
+      "observe_attempted": false,
+      "oracle_mismatches": {},
+      "oracle_success": true,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": false,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": false,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": true,
+      "family": "fresh_sensor_spoof",
+      "fault_type": "fresh false observation plus physical failure",
+      "forbidden_dispatch": false,
+      "id": "fresh_sensor_spoof-100",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          20.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": true
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": false,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": true,
+      "family": "fresh_sensor_spoof",
+      "fault_type": "fresh false observation plus physical failure",
+      "forbidden_dispatch": false,
+      "id": "fresh_sensor_spoof-101",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          25.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": true
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": false,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": true,
+      "family": "fresh_sensor_spoof",
+      "fault_type": "fresh false observation plus physical failure",
+      "forbidden_dispatch": false,
+      "id": "fresh_sensor_spoof-102",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          30.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": true
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": false,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": true,
+      "family": "fresh_sensor_spoof",
+      "fault_type": "fresh false observation plus physical failure",
+      "forbidden_dispatch": false,
+      "id": "fresh_sensor_spoof-103",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          35.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": true
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": false,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": true,
+      "family": "fresh_sensor_spoof",
+      "fault_type": "fresh false observation plus physical failure",
+      "forbidden_dispatch": false,
+      "id": "fresh_sensor_spoof-104",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          40.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": true
+    },
+    {
+      "commands": [
+        "set_head"
+      ],
+      "correct_decision": false,
+      "correct_safe_stop": false,
+      "decision": "EXECUTE",
+      "executed_plan": [
+        "set_head"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": true,
+      "family": "fresh_sensor_spoof",
+      "fault_type": "fresh false observation plus physical failure",
+      "forbidden_dispatch": false,
+      "id": "fresh_sensor_spoof-105",
+      "message": "task completed",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "head_yaw_deg": [
+          0.0,
+          10.0
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": false,
+      "report_success": true,
+      "retry_attempted": false,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": true
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "primary_route"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "replan_dead_end",
+      "fault_type": "permanent failed only achiever",
+      "forbidden_dispatch": false,
+      "id": "replan_dead_end-100",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "arrived": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "primary_route"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "replan_dead_end",
+      "fault_type": "permanent failed only achiever",
+      "forbidden_dispatch": false,
+      "id": "replan_dead_end-101",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "arrived": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "primary_route"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "replan_dead_end",
+      "fault_type": "permanent failed only achiever",
+      "forbidden_dispatch": false,
+      "id": "replan_dead_end-102",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "arrived": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "primary_route"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "replan_dead_end",
+      "fault_type": "permanent failed only achiever",
+      "forbidden_dispatch": false,
+      "id": "replan_dead_end-103",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "arrived": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "primary_route"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "replan_dead_end",
+      "fault_type": "permanent failed only achiever",
+      "forbidden_dispatch": false,
+      "id": "replan_dead_end-104",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "arrived": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    },
+    {
+      "commands": [
+        "primary_route",
+        "primary_route",
+        "safe_stop"
+      ],
+      "correct_decision": true,
+      "correct_safe_stop": true,
+      "decision": "STOP",
+      "executed_plan": [
+        "primary_route"
+      ],
+      "expected_behavior": "SAFE_STOP",
+      "false_positive": false,
+      "family": "replan_dead_end",
+      "fault_type": "permanent failed only achiever",
+      "forbidden_dispatch": false,
+      "id": "replan_dead_end-105",
+      "message": "retry budget exhausted",
+      "observe_attempted": false,
+      "oracle_mismatches": {
+        "arrived": [
+          false,
+          true
+        ]
+      },
+      "oracle_success": false,
+      "repair_attempted": false,
+      "replan_attempted": true,
+      "report_success": false,
+      "retry_attempted": true,
+      "task_completion": false,
+      "theoretically_possible": false,
+      "unsafe_execution": false
+    }
+  ],
+  "safe_stop_expected_trials": 48,
+  "trials": 78,
+  "variant_range": [
+    100,
+    105
+  ]
+}

@@ -14,9 +14,11 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from embodied_skill_ros.backends.mock_backend import FaultEvent, MockRobotBackend
 from embodied_skill_ros.execution.skill_executor import SkillExecutor
+from embodied_skill_ros.evaluation.oracle import BenchmarkOracle
 from embodied_skill_ros.models.robot_state import RobotState
 from embodied_skill_ros.models.task_plan import TaskPlan
 from embodied_skill_ros.skills.registry import build_default_registry
+from embodied_skill_ros.planner.goal_replanner import GoalDirectedReplanner
 from embodied_skill_ros.tracing.metrics import summarize_runs
 
 
@@ -59,23 +61,6 @@ def make_state(changes: dict[str, Any]) -> RobotState:
     return default_state().copy(**changes)
 
 
-def matches_expected(state: RobotState, expected: dict[str, Any]) -> bool:
-    for key, target in expected.items():
-        actual = getattr(state, key)
-        if isinstance(target, float):
-            if not isinstance(actual, (int, float)) or abs(float(actual) - target) > 1e-6:
-                return False
-        elif actual != target:
-            return False
-    return True
-
-
-def clone_for_replan(plan: TaskPlan, _state: RobotState) -> TaskPlan:
-    data = plan.to_dict()
-    data["revision"] = plan.revision + 1
-    return TaskPlan.from_dict(data)
-
-
 def count_invalid_calls(report, registry) -> int:
     invalid = 0
     if report.trace is None:
@@ -113,19 +98,25 @@ def run_one(scenario: dict[str, Any], profile_name: str) -> dict[str, Any]:
         ]
         backend.inject(fault["skill"], *events)
     executor = SkillExecutor(
-        registry, backend, max_retries=1, max_replans=1, replanner=clone_for_replan
+        registry, backend, max_retries=1, max_replans=1,
+        replanner=GoalDirectedReplanner(registry),
     )
-    plan = TaskPlan.from_dict({"goal": scenario["goal"], "steps": scenario["steps"]})
+    plan = TaskPlan.from_dict({
+        "goal": scenario["goal"],
+        "steps": scenario["steps"],
+        "metadata": {"goal_state": scenario["expected_state"]},
+    })
     started = time.perf_counter()
     report = executor.execute(plan, **PROFILES[profile_name])
     latency_ms = (time.perf_counter() - started) * 1000.0
-    success = matches_expected(backend.observe(), scenario["expected_state"])
+    oracle = BenchmarkOracle().evaluate(backend, scenario["expected_state"])
     verification_correct, verification_total = verification_score(report, registry)
     decisions = report.trace.decisions if report.trace else [report.decision]
     return {
         "scenario_id": scenario["id"],
         "category": scenario["category"],
-        "success": success,
+        "success": oracle.success,
+        "oracle_mismatches": oracle.mismatches,
         "executor_reported_success": report.success,
         "decision": report.decision,
         "repair_used": "REPAIR" in decisions,

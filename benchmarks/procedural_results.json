@@ -1,0 +1,4869 @@
+{
+  "profiles": {
+    "direct_unverified": {
+      "metrics": {
+        "false_positive_rate": 0.23,
+        "fault_counts": {
+          "command_failure": 60,
+          "none": 48,
+          "physical_failure": 46,
+          "timeout": 46
+        },
+        "success_by_fault": {
+          "command_failure": 0.0,
+          "none": 1.0,
+          "physical_failure": 0.0,
+          "timeout": 0.0
+        },
+        "success_rate": 0.24,
+        "trials": 200
+      },
+      "runs": [
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0000",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0001",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0002",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0003",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0004",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0005",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0006",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0007",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0008",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0009",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0010",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0011",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0012",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0013",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0014",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0015",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0016",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0017",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0018",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0019",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0020",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0021",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0022",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0023",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0024",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0025",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0026",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0027",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0028",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0029",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0030",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0031",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0032",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0033",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0034",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0035",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0036",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0037",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0038",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0039",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0040",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0041",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0042",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0043",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0044",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0045",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0046",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0047",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0048",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0049",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0050",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0051",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0052",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0053",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0054",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0055",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0056",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0057",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0058",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0059",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0060",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0061",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0062",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0063",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0064",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0065",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0066",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0067",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0068",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0069",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0070",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0071",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0072",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0073",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0074",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0075",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0076",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0077",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0078",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0079",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0080",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0081",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0082",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0083",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0084",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0085",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0086",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0087",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0088",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0089",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0090",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0091",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0092",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0093",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0094",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0095",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0096",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0097",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0098",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0099",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0100",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0101",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0102",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0103",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0104",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0105",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0106",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0107",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0108",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0109",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0110",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0111",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0112",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0113",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0114",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0115",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0116",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0117",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0118",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0119",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0120",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0121",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0122",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0123",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0124",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0125",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0126",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0127",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0128",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0129",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0130",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0131",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0132",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0133",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0134",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0135",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0136",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0137",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0138",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0139",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0140",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0141",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0142",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0143",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0144",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0145",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0146",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0147",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0148",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0149",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0150",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0151",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0152",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0153",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0154",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0155",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0156",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0157",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0158",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0159",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0160",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0161",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0162",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0163",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0164",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0165",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0166",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0167",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0168",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0169",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0170",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0171",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0172",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0173",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0174",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0175",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0176",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0177",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0178",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0179",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0180",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0181",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0182",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0183",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0184",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0185",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0186",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0187",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0188",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0189",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0190",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": true,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0191",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0192",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0193",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0194",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0195",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0196",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0197",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0198",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0199",
+          "success": false
+        }
+      ]
+    },
+    "grounded_no_recovery": {
+      "metrics": {
+        "false_positive_rate": 0.0,
+        "fault_counts": {
+          "command_failure": 60,
+          "none": 48,
+          "physical_failure": 46,
+          "timeout": 46
+        },
+        "success_by_fault": {
+          "command_failure": 0.0,
+          "none": 1.0,
+          "physical_failure": 0.0,
+          "timeout": 0.0
+        },
+        "success_rate": 0.24,
+        "trials": 200
+      },
+      "runs": [
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0000",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0001",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0002",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0003",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0004",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0005",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0006",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0007",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0008",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0009",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0010",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0011",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0012",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0013",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0014",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0015",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0016",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0017",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0018",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0019",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0020",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0021",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0022",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0023",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0024",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0025",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0026",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0027",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0028",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0029",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0030",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0031",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0032",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0033",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0034",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0035",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0036",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0037",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0038",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0039",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0040",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0041",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0042",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0043",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0044",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0045",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0046",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0047",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0048",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0049",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0050",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0051",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0052",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0053",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0054",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0055",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0056",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0057",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0058",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0059",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0060",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0061",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0062",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0063",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0064",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0065",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0066",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0067",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0068",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0069",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0070",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0071",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0072",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0073",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0074",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0075",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0076",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0077",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0078",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0079",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0080",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0081",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0082",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0083",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0084",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0085",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0086",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0087",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0088",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0089",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0090",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0091",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0092",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0093",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0094",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0095",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0096",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0097",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0098",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0099",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0100",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0101",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0102",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0103",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0104",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0105",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0106",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0107",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0108",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0109",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0110",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0111",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0112",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0113",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0114",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0115",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0116",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0117",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0118",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0119",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0120",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0121",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0122",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0123",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0124",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0125",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0126",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0127",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0128",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0129",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0130",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0131",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0132",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0133",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0134",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0135",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0136",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0137",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0138",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0139",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0140",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0141",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0142",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0143",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0144",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0145",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0146",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0147",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0148",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0149",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0150",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0151",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0152",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0153",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0154",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0155",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0156",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0157",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0158",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0159",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0160",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0161",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0162",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0163",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0164",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0165",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0166",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0167",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0168",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0169",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0170",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0171",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0172",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0173",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0174",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0175",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0176",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0177",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0178",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0179",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0180",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0181",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0182",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0183",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0184",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0185",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0186",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0187",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0188",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0189",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0190",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0191",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0192",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0193",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0194",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0195",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0196",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0197",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0198",
+          "success": false
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": false,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0199",
+          "success": false
+        }
+      ]
+    },
+    "grounded_with_recovery": {
+      "metrics": {
+        "false_positive_rate": 0.0,
+        "fault_counts": {
+          "command_failure": 60,
+          "none": 48,
+          "physical_failure": 46,
+          "timeout": 46
+        },
+        "success_by_fault": {
+          "command_failure": 1.0,
+          "none": 1.0,
+          "physical_failure": 1.0,
+          "timeout": 1.0
+        },
+        "success_rate": 1.0,
+        "trials": 200
+      },
+      "runs": [
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0000",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0001",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0002",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0003",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0004",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0005",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0006",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0007",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0008",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0009",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0010",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0011",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0012",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0013",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0014",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0015",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0016",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0017",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0018",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0019",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0020",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0021",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0022",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0023",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0024",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0025",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0026",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0027",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0028",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0029",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0030",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0031",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0032",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0033",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0034",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0035",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0036",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0037",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0038",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0039",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0040",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0041",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0042",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0043",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0044",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0045",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0046",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0047",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0048",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0049",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0050",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0051",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0052",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0053",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0054",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0055",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0056",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0057",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0058",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0059",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0060",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0061",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0062",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0063",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0064",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0065",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0066",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0067",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0068",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0069",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0070",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0071",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0072",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0073",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0074",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0075",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0076",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0077",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0078",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0079",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0080",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0081",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0082",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0083",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0084",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0085",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0086",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0087",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0088",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0089",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0090",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0091",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0092",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0093",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0094",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0095",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0096",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0097",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0098",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0099",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0100",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0101",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0102",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0103",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0104",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0105",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0106",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0107",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0108",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0109",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0110",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0111",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0112",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0113",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0114",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0115",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0116",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0117",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0118",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0119",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0120",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0121",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0122",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0123",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0124",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0125",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0126",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0127",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0128",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0129",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0130",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0131",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0132",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0133",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0134",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0135",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0136",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0137",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0138",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0139",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0140",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0141",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0142",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0143",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0144",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0145",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0146",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0147",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0148",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0149",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0150",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0151",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0152",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0153",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0154",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0155",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0156",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0157",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0158",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0159",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0160",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0161",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0162",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0163",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0164",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0165",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0166",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0167",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0168",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0169",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0170",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0171",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0172",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0173",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0174",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0175",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0176",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0177",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0178",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0179",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0180",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0181",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0182",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0183",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0184",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0185",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0186",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0187",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0188",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0189",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0190",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "physical_failure",
+          "id": "procedural_20260808_0191",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0192",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0193",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0194",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0195",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0196",
+          "success": true
+        },
+        {
+          "attempts": 1,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "none",
+          "id": "procedural_20260808_0197",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "command_failure",
+          "id": "procedural_20260808_0198",
+          "success": true
+        },
+        {
+          "attempts": 2,
+          "executor_reported_success": true,
+          "false_positive": false,
+          "fault_mode": "timeout",
+          "id": "procedural_20260808_0199",
+          "success": true
+        }
+      ]
+    }
+  },
+  "seed": 20260808,
+  "trial_count": 200
+}

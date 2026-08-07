@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-08-08",
+  "purpose": "Core frozen before zero-core new-skill and adversarial holdout definitions.",
+  "total_core_lines": 1385,
+  "files": {
+    "embodied_skill_ros/grounding/constraint_checker.py": {"lines": 57, "sha256": "f21225bc8f48d20404b7574423564eafbccb8a1447eccdb676320027e1d2d5c0"},
+    "embodied_skill_ros/grounding/plan_grounder.py": {"lines": 137, "sha256": "e158b090223177255fad12e3b2bd978e1118a1de8c3f6ab5448d457ef54b4fca"},
+    "embodied_skill_ros/grounding/plan_repairer.py": {"lines": 146, "sha256": "4ea6aa6ba082f2d3709f09d5e56db14af9093b1d77695e67462e131fbebbecc1"},
+    "embodied_skill_ros/execution/recovery_manager.py": {"lines": 39, "sha256": "7f5df4955dcdf6a03844547a443b11983c3f760e60171bd0eb14f0399d188221"},
+    "embodied_skill_ros/execution/skill_executor.py": {"lines": 333, "sha256": "d125f669b8f1b506fd1678ba7b42e0094194fa3e375e03c365a8f265eaca131e"},
+    "embodied_skill_ros/execution/outcome_verifier.py": {"lines": 11, "sha256": "932660e2a9449f39082fee2bcd5c3baeb7f314cecc7ee05bf7b657eaf0fbd639"},
+    "embodied_skill_ros/execution/runtime_guard.py": {"lines": 24, "sha256": "d400211adc360878afef6f3eeb933f96ee86c060e7bc241adf6e86a00eaafbb4"},
+    "embodied_skill_ros/skills/base_skill.py": {"lines": 283, "sha256": "f61623286c262f8c701c469abe5c2be1d778e43541ec04134854000d48a8f6a6"},
+    "embodied_skill_ros/skills/registry.py": {"lines": 72, "sha256": "8bca8adee4f88006f52b0e5ac8f3435f3d82d6ec6b4ba393b81854f110ef69b1"},
+    "embodied_skill_ros/models/robot_state.py": {"lines": 123, "sha256": "f4dc246ad5402cb703065843b006e204a834b01e8c33bfe219e3b941228bc267"},
+    "embodied_skill_ros/backends/base_backend.py": {"lines": 96, "sha256": "bdae59485feae729ef132a6155b5d3880bb1dc4b1725c61dd9f02ce0f56627cf"},
+    "embodied_skill_ros/planner/goal_replanner.py": {"lines": 64, "sha256": "5582df97abbd9b4593e3965b99e1db4fa469d608452334c578aed867315ccd00"}
+  }
+}
