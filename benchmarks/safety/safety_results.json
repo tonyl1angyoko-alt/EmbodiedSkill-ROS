@@ -1097,7 +1097,7 @@
           "final_state": {
             "active_resources": [],
             "agv_moving": false,
-            "agv_position_m": NaN,
+            "agv_position_m": "__NaN__",
             "agv_ready": true,
             "emergency_stop": false,
             "fault": null,
@@ -2297,7 +2297,7 @@
           "final_state": {
             "active_resources": [],
             "agv_moving": false,
-            "agv_position_m": Infinity,
+            "agv_position_m": "__Infinity__",
             "agv_ready": true,
             "emergency_stop": false,
             "fault": null,
@@ -3636,7 +3636,7 @@
           "final_state": {
             "active_resources": [],
             "agv_moving": false,
-            "agv_position_m": NaN,
+            "agv_position_m": "__NaN__",
             "agv_ready": true,
             "emergency_stop": false,
             "fault": null,
@@ -4716,7 +4716,7 @@
           "final_state": {
             "active_resources": [],
             "agv_moving": false,
-            "agv_position_m": Infinity,
+            "agv_position_m": "__Infinity__",
             "agv_ready": true,
             "emergency_stop": false,
             "fault": null,
@@ -6149,7 +6149,7 @@
                 {
                   "active_resources": [],
                   "agv_moving": false,
-                  "agv_position_m": NaN,
+                  "agv_position_m": "__NaN__",
                   "agv_ready": true,
                   "emergency_stop": false,
                   "fault": null,
@@ -6178,7 +6178,7 @@
           "final_state": {
             "active_resources": [],
             "agv_moving": false,
-            "agv_position_m": NaN,
+            "agv_position_m": "__NaN__",
             "agv_ready": true,
             "emergency_stop": false,
             "fault": null,
@@ -7477,7 +7477,7 @@
                 {
                   "active_resources": [],
                   "agv_moving": false,
-                  "agv_position_m": Infinity,
+                  "agv_position_m": "__Infinity__",
                   "agv_ready": true,
                   "emergency_stop": false,
                   "fault": null,
@@ -7506,7 +7506,7 @@
           "final_state": {
             "active_resources": [],
             "agv_moving": false,
-            "agv_position_m": Infinity,
+            "agv_position_m": "__Infinity__",
             "agv_ready": true,
             "emergency_stop": false,
             "fault": null,
@@ -8871,7 +8871,7 @@
           "final_state": {
             "active_resources": [],
             "agv_moving": false,
-            "agv_position_m": NaN,
+            "agv_position_m": "__NaN__",
             "agv_ready": true,
             "emergency_stop": false,
             "fault": null,
@@ -10147,7 +10147,7 @@
           "final_state": {
             "active_resources": [],
             "agv_moving": false,
-            "agv_position_m": Infinity,
+            "agv_position_m": "__Infinity__",
             "agv_ready": true,
             "emergency_stop": false,
             "fault": null,

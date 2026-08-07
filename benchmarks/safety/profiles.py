@@ -47,6 +47,18 @@ class ProfileName(str, Enum):
 PROFILE_NAMES = tuple(ProfileName)
 
 
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, float) and not math.isfinite(value):
+        if math.isnan(value):
+            return "__NaN__"
+        return "__Infinity__" if value > 0 else "__-Infinity__"
+    if isinstance(value, dict):
+        return {key: _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+    return value
+
+
 @dataclass(frozen=True)
 class ActionObservation:
     step_id: str
@@ -60,7 +72,7 @@ class ActionObservation:
         return {
             "step_id": self.step_id,
             "command_count": self.command_count,
-            "dispatch_states": list(self.dispatch_states),
+            "dispatch_states": _json_safe(self.dispatch_states),
             "claimed_physical_success": self.claimed_physical_success,
             "evidence_backed_success": self.evidence_backed_success,
             "recovery_actions": list(self.recovery_actions),
@@ -93,7 +105,7 @@ class SafetyRunObservation:
             "task_success": self.task_success,
             "reported_success": self.reported_success,
             "evidence_supported": self.evidence_supported,
-            "final_state": self.final_state,
+            "final_state": _json_safe(self.final_state),
         }
 
 
