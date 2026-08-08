@@ -1,0 +1,25 @@
+# Example only. The laboratory workspace and vendor SDK remain external.
+# No controller IP, credentials, calibrated joint targets, or lab network data are
+# stored in this repository.
+jaka_kargo_integration:
+  motion_enabled: false
+  whole_robot_estop_observable: false
+  stop_scope: AGV_ONLY
+  arm_command_scope: SINGLE_ARM_SERVICE
+  arm_pose_query_implies_ready: false
+  transport_pose_calibrated: false
+  left_transport_joints_rad: null
+  right_transport_joints_rad: null
+  observation_max_age_s: 2.0
+  service_timeout_s: 10.0
+  agv_map_name: ""
+  endpoints:
+    axis_status_service: /query_status_ext
+    arm_pose_service: /query_pose_arm
+    external_axis_move_service: /joint_move_ext
+    arm_joint_move_service: /joint_move_arm
+    agv_navigation_service: /navigate_single_pose
+    agv_stop_service: /motion_state_control
+    upper_limb_joint_topic: /upperlimb_joint_states
+    agv_odometry_topic: /JAGV_O_01/global_nav_odom
+    agv_motion_state_topic: /JAGV_O_01/motion_state
