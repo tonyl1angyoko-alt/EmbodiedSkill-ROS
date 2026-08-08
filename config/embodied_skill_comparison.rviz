@@ -13,10 +13,10 @@ Panels:
 Visualization Manager:
   Class: ""
   Displays:
-    - Alpha: 0.48
+    - Alpha: 0.42
       Cell Size: 0.5
       Class: rviz_default_plugins/Grid
-      Color: 105; 110; 118
+      Color: 95; 100; 108
       Enabled: true
       Name: Ground Grid
       Plane: XY
@@ -87,14 +87,14 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 5.8
+      Distance: 6.7
       Focal Point:
-        X: 0.45
+        X: 0.35
         Y: 0
-        Z: 0.50
+        Z: 0.72
       Name: A/B Recording View
       Near Clip Distance: 0.01
-      Pitch: 0.58
+      Pitch: 0.56
       Target Frame: map
       Yaw: 3.14
     Saved: ~
