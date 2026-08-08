@@ -7,6 +7,26 @@ from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 
 
+def _action_remappings(lane: str) -> list[tuple[str, str]]:
+    """Remap every transport endpoint that backs the ROS2 validation Action.
+
+    rclpy actions expand an action name into five concrete ROS graph endpoints.
+    Remapping only the parent action name is not sufficient for the absolute-name
+    ActionServer used by the frozen runtime fake robot, so the comparison launch
+    remaps the full transport surface explicitly.
+    """
+
+    source = "/embodied_skill/execute_skill"
+    target = f"/comparison/{lane}/execute_skill"
+    return [
+        (f"{source}/_action/send_goal", f"{target}/_action/send_goal"),
+        (f"{source}/_action/get_result", f"{target}/_action/get_result"),
+        (f"{source}/_action/cancel_goal", f"{target}/_action/cancel_goal"),
+        (f"{source}/_action/feedback", f"{target}/_action/feedback"),
+        (f"{source}/_action/status", f"{target}/_action/status"),
+    ]
+
+
 def _fake_robot(lane: str) -> Node:
     return Node(
         package="embodied_skill_ros",
@@ -16,13 +36,13 @@ def _fake_robot(lane: str) -> Node:
         remappings=[
             ("/embodied_skill/state", f"/comparison/{lane}/state"),
             ("/embodied_skill/runtime_events", f"/comparison/{lane}/runtime_events"),
-            ("/embodied_skill/execute_skill", f"/comparison/{lane}/execute_skill"),
             ("/embodied_skill/get_capabilities", f"/comparison/{lane}/get_capabilities"),
             ("/embodied_skill/safe_stop", f"/comparison/{lane}/safe_stop"),
             (
                 "/embodied_skill/test/get_hidden_state",
                 f"/comparison/{lane}/test/get_hidden_state",
             ),
+            *_action_remappings(lane),
         ],
     )
 
