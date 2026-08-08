@@ -9,7 +9,11 @@ setup(
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/embodied_skill_ros"]),
         ("share/embodied_skill_ros", ["package.xml"]),
-        ("share/embodied_skill_ros/config", glob("config/*.yaml")),
+        (
+            "share/embodied_skill_ros/config",
+            glob("config/*.yaml") + glob("config/*.rviz"),
+        ),
+        ("share/embodied_skill_ros/description", glob("description/*")),
         ("share/embodied_skill_ros/docs", glob("docs/*.md")),
         ("share/embodied_skill_ros/launch", glob("launch/*.launch.py")),
     ],
@@ -24,6 +28,8 @@ setup(
             "jaka_kargo_probe = embodied_skill_ros.integrations.jaka_kargo.integration_probe:main",
             "jaka_kargo_stub = embodied_skill_ros.integrations.jaka_kargo.legacy_stub_node:main",
             "validate_jaka_kargo = embodied_skill_ros.integrations.jaka_kargo.runtime_validation:main",
+            "rviz_demo_bridge = embodied_skill_ros.visualization.rviz_demo_bridge:main",
+            "rviz_demo = embodied_skill_ros.visualization.rviz_demo_runner:main",
         ],
     },
 )

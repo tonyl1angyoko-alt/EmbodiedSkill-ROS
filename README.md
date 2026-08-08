@@ -60,6 +60,7 @@ task successes.
 | JAKA/Kargo source semantics | `STATICALLY-INSPECTED` |
 | External interfaces and unmodified `jaka_toolbox` | `ROS2-BUILD-VERIFIED` |
 | JAKA/Kargo adapter with exact-schema stub | `UNIT-VERIFIED` / `ROS2-RUNTIME-VERIFIED` |
+| Self-contained RViz state visualization | `DEMO-VERIFIED` (presentation only) |
 | External JAKA/Kargo nodes with vendor SDK | `UNVERIFIED` |
 | JAKA robot hardware | `UNVERIFIED` |
 | Gazebo / MoveIt2 physics simulation | `UNVERIFIED` |
@@ -68,6 +69,13 @@ The v0.2 core result remains 107/107. The larger 128/128 count requires the two
 external interface packages to be built and sourced; without them, the integration
 runtime test skips explicitly. Demo video is pending a real recording. No simulator
 run or hardware video is claimed.
+
+### RViz visualization demo
+
+Two one-command, self-contained recording cases visualize authentic generic repair
+and the accepted-action/no-motion negative control. The primitive URDF consumes the
+existing ROS observations through a display-only interpolation bridge; it is not a
+physics simulator. See [RViz demo reproduction](docs/RVIZ_DEMO.md).
 
 ## 30-second architecture
 

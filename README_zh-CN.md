@@ -150,9 +150,17 @@ Service client timeout 也不被描述成物理 cancellation。
 | 外部 interface packages 与未修改的 `jaka_toolbox` | `ROS2-BUILD-VERIFIED` |
 | adapter contract mapping | `UNIT-VERIFIED` |
 | 独立进程、exact-schema integration stub | `ROS2-RUNTIME-VERIFIED` |
+| 自包含 RViz 状态可视化 | `DEMO-VERIFIED`（仅 presentation layer） |
 | 外部 vendor-backed JAKA node runtime | `UNVERIFIED` |
 | JAKA hardware | `UNVERIFIED` |
 | Gazebo / MoveIt2 physics simulation | `UNVERIFIED` |
+
+### RViz 可视化 Demo
+
+两个一键启动的自包含录屏场景展示真实的 generic repair，以及 ROS Action 接受并
+返回 `SUCCEEDED`、但没有物理状态变化时被 OutcomeVerifier 拒绝的 negative
+control。primitive URDF 只通过独立 bridge 可视化已有 ROS observation，不是
+physics simulation。复现命令见 [RViz Demo 文档](docs/RVIZ_DEMO.md)。
 
 ## Evaluation 与已知边界
 
