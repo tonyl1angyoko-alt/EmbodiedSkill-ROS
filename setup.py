@@ -30,6 +30,8 @@ setup(
             "validate_jaka_kargo = embodied_skill_ros.integrations.jaka_kargo.runtime_validation:main",
             "rviz_demo_bridge = embodied_skill_ros.visualization.rviz_demo_bridge:main",
             "rviz_demo = embodied_skill_ros.visualization.rviz_demo_runner:main",
+            "rviz_comparison_bridge = embodied_skill_ros.visualization.rviz_comparison_bridge:main",
+            "rviz_comparison = embodied_skill_ros.visualization.rviz_comparison_runner:main",
         ],
     },
 )
