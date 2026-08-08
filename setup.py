@@ -14,10 +14,13 @@ setup(
         ("share/embodied_skill_ros/launch", glob("launch/*.launch.py")),
     ],
     install_requires=[],
+    tests_require=["pytest"],
     zip_safe=True,
     entry_points={
         "console_scripts": [
             "mock_bridge = embodied_skill_ros.ros2.mock_bridge_node:main",
+            "fake_robot = embodied_skill_ros.ros2.fake_robot_node:main",
+            "validate_runtime = embodied_skill_ros.ros2.runtime_validation:main",
         ],
     },
 )
