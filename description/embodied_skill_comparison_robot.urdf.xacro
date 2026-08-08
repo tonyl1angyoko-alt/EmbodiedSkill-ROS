@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="embodied_skill_comparison_robot">
+  <xacro:arg name="prefix" default="demo_"/>
+
+  <material name="$(arg prefix)chassis_material"><color rgba="0.12 0.34 0.62 1.0"/></material>
+  <material name="$(arg prefix)arm_material"><color rgba="0.95 0.47 0.10 1.0"/></material>
+  <material name="$(arg prefix)wheel_material"><color rgba="0.08 0.08 0.10 1.0"/></material>
+  <material name="$(arg prefix)joint_material"><color rgba="0.48 0.50 0.54 1.0"/></material>
+
+  <link name="$(arg prefix)base_link">
+    <visual>
+      <origin xyz="0 0 0.24"/>
+      <geometry><box size="0.80 0.52 0.20"/></geometry>
+      <material name="$(arg prefix)chassis_material"/>
+    </visual>
+  </link>
+
+  <link name="$(arg prefix)left_wheel">
+    <visual>
+      <origin rpy="1.5708 0 0"/>
+      <geometry><cylinder radius="0.13" length="0.08"/></geometry>
+      <material name="$(arg prefix)wheel_material"/>
+    </visual>
+  </link>
+  <joint name="$(arg prefix)left_wheel_mount" type="fixed">
+    <parent link="$(arg prefix)base_link"/>
+    <child link="$(arg prefix)left_wheel"/>
+    <origin xyz="0 0.30 0.14"/>
+  </joint>
+
+  <link name="$(arg prefix)right_wheel">
+    <visual>
+      <origin rpy="1.5708 0 0"/>
+      <geometry><cylinder radius="0.13" length="0.08"/></geometry>
+      <material name="$(arg prefix)wheel_material"/>
+    </visual>
+  </link>
+  <joint name="$(arg prefix)right_wheel_mount" type="fixed">
+    <parent link="$(arg prefix)base_link"/>
+    <child link="$(arg prefix)right_wheel"/>
+    <origin xyz="0 -0.30 0.14"/>
+  </joint>
+
+  <link name="$(arg prefix)arm_base">
+    <visual>
+      <origin xyz="0 0 0.15"/>
+      <geometry><cylinder radius="0.12" length="0.30"/></geometry>
+      <material name="$(arg prefix)joint_material"/>
+    </visual>
+  </link>
+  <joint name="$(arg prefix)arm_base_mount" type="fixed">
+    <parent link="$(arg prefix)base_link"/>
+    <child link="$(arg prefix)arm_base"/>
+    <origin xyz="-0.20 0 0.34"/>
+  </joint>
+
+  <link name="$(arg prefix)shoulder_link">
+    <visual>
+      <origin xyz="0.25 0 0"/>
+      <geometry><box size="0.50 0.10 0.10"/></geometry>
+      <material name="$(arg prefix)arm_material"/>
+    </visual>
+  </link>
+  <joint name="$(arg prefix)shoulder_joint" type="revolute">
+    <parent link="$(arg prefix)arm_base"/>
+    <child link="$(arg prefix)shoulder_link"/>
+    <origin xyz="0 0 0.30"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.35" upper="0.60" effort="10" velocity="2.0"/>
+  </joint>
+
+  <link name="$(arg prefix)forearm_link">
+    <visual>
+      <origin xyz="0.20 0 0"/>
+      <geometry><box size="0.40 0.085 0.085"/></geometry>
+      <material name="$(arg prefix)arm_material"/>
+    </visual>
+  </link>
+  <joint name="$(arg prefix)elbow_joint" type="revolute">
+    <parent link="$(arg prefix)shoulder_link"/>
+    <child link="$(arg prefix)forearm_link"/>
+    <origin xyz="0.50 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-0.20" upper="2.10" effort="10" velocity="2.0"/>
+  </joint>
+
+  <link name="$(arg prefix)tool_link">
+    <visual>
+      <geometry><cylinder radius="0.07" length="0.12"/></geometry>
+      <material name="$(arg prefix)joint_material"/>
+    </visual>
+  </link>
+  <joint name="$(arg prefix)tool_mount" type="fixed">
+    <parent link="$(arg prefix)forearm_link"/>
+    <child link="$(arg prefix)tool_link"/>
+    <origin xyz="0.43 0 0" rpy="0 1.5708 0"/>
+  </joint>
+</robot>
