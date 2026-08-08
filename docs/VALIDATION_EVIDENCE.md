@@ -29,8 +29,15 @@ simulation, or hardware result.
 | Asynchronous TOCTOU safety | `KNOWN-UNSAFE-LIMITATION` | L1 changes a fresh safety fact between guard and transition; prohibited motion succeeds | Freshness is not an atomic lease/interlock |
 | Fresh ROS sensor spoof | `KNOWN-UNSAFE-LIMITATION` | L2 reproduces executor success with false hidden state | Intentional frozen trust-model boundary |
 | Gazebo/MoveIt simulation | `UNVERIFIED` | no simulation executed | No simulation result claimed |
-| JAKA adapter mapping | `STATICALLY-INSPECTED` | `docs/JAKA_CAPABILITY_AUDIT.md`; bilateral preflight and partial-safe-stop honesty tests | Vendor bridge packages/services not active |
-| JAKA hardware | `UNVERIFIED` | adapter contract tests only | No command was sent to hardware |
+| Legacy JAKA/Kargo source and interface semantics | `STATICALLY-INSPECTED` | `docs/JAKA_KARGO_INTEGRATION_ANALYSIS.md`; full external workspace call-chain/interface/IP audit | Source evidence does not establish runtime behavior |
+| Exact external interfaces and unmodified `jaka_toolbox` | `ROS2-BUILD-VERIFIED` | temporary Humble build of `jagv_interfaces`, `jaka_toolbox_interfaces`, and `jaka_toolbox` | Node construction initializes SDK/controller, so it was not launched |
+| JAKA/Kargo skill, state, and capability mappings | `UNIT-VERIFIED` | 20 tests under `tests/integration` | Stubbed transport, not hardware |
+| Exact-schema JAKA/Kargo adapter runtime | `ROS2-RUNTIME-VERIFIED` | J1–J9 in `jaka_kargo_validation_outputs/integration_scenarios.json`; separate stub process; external generated types | Legacy-compatible deterministic stub, not physics or vendor node |
+| Accepted Service/no measured transition | `ROS2-RUNTIME-VERIFIED` | J2 returns Service success, preserves lift state, then verifier returns STOP | Conditioned on truthful query response |
+| Bilateral-effect preflight | `UNIT-VERIFIED` / `ROS2-RUNTIME-VERIFIED` | J3 rejects narrow single-arm contract before command transmission | Actual preset service was not called |
+| JAKA/Kargo Service timeout honesty | `UNIT-VERIFIED` / `ROS2-RUNTIME-VERIFIED` | J5 records client timeout and noncancellable semantics | Timed-out server/physical motion may continue |
+| External JAKA/Kargo vendor-node runtime | `UNVERIFIED` | deliberately not launched | Requires private configuration and supervised controller access |
+| JAKA hardware | `UNVERIFIED` | no command was sent | No hardware claim |
 
 ## Historical frozen macOS evidence
 
@@ -64,3 +71,23 @@ ROS_LOG_DIR=/tmp/embodied_skill_ros_logs ROS_LOCALHOST_ONLY=1 \
 ```
 
 See `docs/ROS2_RUNTIME_VALIDATION_REPORT.md` for scenario-level interpretation.
+
+## Extended JAKA/Kargo integration evidence
+
+With the exact external generated interfaces sourced, the extended environment has
+128 tests: the v0.2 set of 107, 20 pure-Python integration contract tests, and one
+process-separated ROS2 integration-runtime test. The latter runs nine scenarios.
+
+```bash
+source /opt/ros/humble/setup.bash
+source /path/to/external/interface_workspace/install/setup.bash
+source install/setup.bash
+ROS_LOG_DIR=/tmp/embodied_skill_jaka_logs ROS_LOCALHOST_ONLY=1 \
+  colcon test --packages-select embodied_skill_ros
+ROS_LOG_DIR=/tmp/embodied_skill_jaka_logs ROS_LOCALHOST_ONLY=1 \
+  ros2 run embodied_skill_ros validate_jaka_kargo \
+  --output jaka_kargo_validation_outputs/integration_scenarios.json
+```
+
+The committed example deployment disables motion, does not assert global E-stop
+scope, and contains no calibration, private IP, vendor binary, or robot asset.

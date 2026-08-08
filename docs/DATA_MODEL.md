@@ -7,13 +7,18 @@
 Only `KNOWN` and fresh evidence may satisfy a precondition. Dynamic deployment facts
 live in the `facts` map, allowing new skills without editing the core dataclass.
 
-| Field group | Fields | Mock | Default JAKA adapter |
+| Field group | Fields | Mock | JAKA/Kargo integration |
 |---|---|---|---|
-| Arms | `left/right_arm_ready`, `left/right_arm_safe` | deterministic | readiness queried where legacy `_query_arm` is available; safety UNKNOWN without validated provider |
-| AGV | `agv_ready`, `agv_moving`, `agv_position_m` | deterministic | UNKNOWN unless an odometry/state provider is supplied |
-| Lift | `lift_ready`, `lift_height_mm` | deterministic | measured through legacy external-axis backend |
-| Head | `head_ready`, yaw, pitch | deterministic | measured through legacy external-axis backend |
-| Runtime | `active_resources`, `emergency_stop`, `fault`, `last_skill_result`, timestamp | deterministic | UNKNOWN unless provided; last result maintained by `StateManager` |
+| Arms | `left/right_arm_ready`, `left/right_arm_safe` | deterministic | `PoseQuery` supplies joints/readiness; safety remains UNKNOWN without calibrated target+tolerance |
+| AGV | `agv_ready`, `agv_moving`, `agv_position_m` | deterministic | odometry + `MotionState`; absent topic data remains UNKNOWN |
+| Lift | `lift_ready`, `lift_height_mm` | deterministic | measured by `AxisStatusQuery(0)` |
+| Head | `head_ready`, yaw, pitch | deterministic | measured by `AxisStatusQuery(2/3)`; physical pitch sign is normalized |
+| Waist | dynamic `facts.waist_angle_deg`, `facts.waist_ready` | optional handler | measured by `AxisStatusQuery(1)` |
+| Runtime | `active_resources`, `emergency_stop`, `fault`, `last_skill_result`, timestamp | deterministic | AGV-only E-stop/fault is not promoted to whole-robot state without an explicit deployment assertion |
+
+Each JAKA/Kargo query or topic sample carries an observation time. Query failure
+does not reuse command receipt as evidence. A sample exceeding the configured age is
+marked STALE through the existing `RobotState` mechanism.
 
 ## `TaskPlan` and `PlanStep`
 

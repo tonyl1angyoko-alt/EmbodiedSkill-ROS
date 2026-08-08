@@ -1,6 +1,8 @@
 # New Architecture
 
-EmbodiedSkill-ROS separates planning semantics from robot transport. The core depends only on typed Python interfaces; ROS2 and JAKA imports remain inside the optional legacy adapter objects supplied by the integrator.
+EmbodiedSkill-ROS separates planning semantics from robot transport. The core depends
+only on typed Python interfaces; ROS2 and JAKA imports remain inside optional
+transport adapters.
 
 ## Component architecture
 
@@ -22,8 +24,10 @@ flowchart TB
     SM --> RG
     RG --> B["RobotBackend"]
     B --> M["MockRobotBackend"]
-    B --> J["JakaRobotBackend"]
-    J --> L["Existing ROS2 / SDK skill objects"]
+    B --> J["JakaKargoBackend"]
+    J --> SP["State Provider + Capability Mapper"]
+    SP --> JT["Lazy exact-schema ROS2 Transport"]
+    JT --> L["External JAKA/Kargo ROS2 stack"]
     B --> O["Observed RobotState"]
     B --> HW["Hidden Mock physical world"]
     HW --> BO["Independent benchmark oracle"]
@@ -95,8 +99,14 @@ The executor implements `EXECUTE → REPAIR → REPLAN → STOP` as an escalatio
 - `MockRobotBackend` keeps physical world truth private from its observation model,
   provides deterministic transitions and fault injection, and exposes truth only to
   the benchmark oracle.
-- `JakaRobotBackend` imports no ROS2 module itself. It calls legacy skill objects that are constructed by the original ROS2 application.
-- Unobservable fields are `None` (`UNKNOWN`). A callback-based `state_provider` and `agv_position_provider` allow an integrator to add verified observations without changing core code.
+- The earlier `JakaRobotBackend` remains a lightweight object adapter. The v0.3
+  `JakaKargoBackend` adds an explicit transport, state provider, and capability
+  mapper for the audited laboratory stack; neither path adds vendor imports to the
+  frozen core.
+- `JakaKargoRos2Transport` lazily loads externally built generated interfaces. The
+  original workspace and SDK remain an external deployment dependency.
+- Unobservable or uncalibrated fields are `None` (`UNKNOWN`). Service receipt never
+  fabricates a state effect.
 - Every backend declares supported skills, observable effects, safe-stop support, and
   runtime identity. Unsupported execution stops before command dispatch.
 - The optional `mock_bridge` node imports `rclpy` only when invoked and is reserved for
@@ -104,8 +114,9 @@ The executor implements `EXECUTE → REPAIR → REPLAN → STOP` as an escalatio
 
 ## Minimum implemented scope
 
-Five executable skills cover four components: arm retract/extend, AGV move, lift
-position, and head pose. New declarative skills can be registered without core edits;
+The default registry contains five executable skills across arm, AGV, lift, and
+head. The JAKA/Kargo integration registry also adds a waist contract without editing
+the frozen registry. New declarative skills can be registered without core edits;
 the test suite demonstrates this with a tool-preparation/docking pair. The deterministic
 planner intentionally handles only the documented demo language. Arbitrary natural
 language belongs behind `LLMPlannerAdapter`, whose output is still registry-constrained

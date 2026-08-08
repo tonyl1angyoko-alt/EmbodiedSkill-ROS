@@ -2,7 +2,22 @@
 
 ## [Unreleased]
 
-No changes yet.
+Planned `v0.3.0` — JAKA/Kargo Integration Layer:
+
+- audit the separately delivered laboratory JAKA/Kargo workspace, its real ROS2
+  interfaces, SDK boundary, observation signals, side effects, stop scope,
+  cancellation, timeout, dependencies, provenance, and publication risks;
+- add an optional `JakaKargoBackend`, measured-state provider, capability mapper,
+  and lazy exact-schema ROS2 transport without changing the frozen core;
+- map five skills across arm, AGV, lift, head, and waist while preserving UNKNOWN
+  state and rejecting semantic-scope mismatch before transmission;
+- add a motion-disabled read-only probe and external-dependency deployment boundary;
+- add 20 integration contract tests and nine process-separated ROS2 scenarios,
+  including Service-success/no-physical-transition and timeout negative controls;
+- build-verify the exact external interface packages and unmodified `jaka_toolbox`
+  without redistributing vendor/laboratory material; and
+- document that vendor-node runtime, calibration, whole-robot stop, hardware, and
+  physics simulation remain unverified.
 
 ## [0.2.0] - 2026-08-08
 

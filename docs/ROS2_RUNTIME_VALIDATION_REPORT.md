@@ -1,5 +1,12 @@
 # ROS2 Humble Runtime Validation Report
 
+Historical scope: this report is the v0.2 frozen-core fake-runtime validation record.
+For current JAKA/Kargo integration evidence, see
+`JAKA_KARGO_INTEGRATION_ANALYSIS.md`, `JAKA_KARGO_INTERFACE_MATRIX.md`, and
+`../jaka_kargo_validation_outputs/README.md`. The historical environment statements
+below are retained rather than rewritten as though the external stack had already
+been built during v0.2.
+
 Validation date: 2026-08-08
 
 Base milestone: `7fdf9255a454f375dbc1c1328895c6e71812bdb7`
@@ -202,6 +209,7 @@ Claims an ICRA/IROS reviewer could still reject:
 - sensor-fault tolerance: the fresh-spoof false positive remains;
 - atomic safety preconditions: the TOCTOU scenario is unsafe;
 - production ROS API maturity: the validation action envelope is test-only;
-- JAKA deployment safety: adapter mappings are static only and whole-robot safe
-  stop, calibrated transport poses, odometry, and supervised execution remain
-  unverified.
+- JAKA deployment safety at this milestone: adapter mappings were static only.
+  v0.3 later build-verified the external packages and runtime-verified the new
+  adapter against an exact-schema stub, but whole-robot stop, calibrated deployment,
+  vendor-node runtime, and supervised execution remain unverified.

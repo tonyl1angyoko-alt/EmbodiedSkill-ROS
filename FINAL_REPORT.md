@@ -1,6 +1,8 @@
 # EmbodiedSkill-ROS Portfolio Release Report
 
-Current release target: `v0.2.0` — ROS2 Runtime Portfolio Release
+Current development target: `v0.3.0` — JAKA/Kargo Integration Layer
+
+Frozen portfolio milestone: `v0.2.0` — ROS2 Runtime Portfolio Release
 
 Current evidence date: 2026-08-08
 
@@ -31,7 +33,9 @@ This repository independently implements the planner-neutral reliability layer:
   hidden physical truth;
 - deterministic fault injection and an independent benchmark oracle;
 - fixed, procedural, adversarial V2, ablation, and frozen holdout evaluation; and
-- a process-separated ROS2 Humble fake-robot runtime plus JAKA semantic audit.
+- a process-separated ROS2 Humble fake-robot runtime; and
+- a JAKA/Kargo adapter, measured-state provider, capability mapper, ROS transport,
+  contract suite, and exact-schema process-separated integration harness.
 
 This is not a claim that the whole JAKA robot stack was built from scratch.
 
@@ -52,7 +56,7 @@ This is not a claim that the whole JAKA robot stack was built from scratch.
 The older fixed-benchmark result that counted an equivalent plan as replanning is a
 historical methodology error. The corrected current fixed result is 93.33%.
 
-### Ubuntu 22.04 / ROS2 Humble
+### Ubuntu 22.04 / ROS2 Humble baseline
 
 - environment: Ubuntu 22.04.5, Python 3.10.12, ROS2 Humble, Fast DDS;
 - `colcon build`: one `ros.ament_python` package passed;
@@ -60,6 +64,21 @@ historical methodology error. The corrected current fixed result is 93.33%.
 - `colcon test-result`: 107 tests, zero errors/failures/skips;
 - runtime harness: R1–R15 all produced their expected decisions; and
 - limitation probes: fresh sensor spoof and ROS2 TOCTOU both remain reproduced.
+
+### JAKA/Kargo integration candidate
+
+- five skill mappings: single-arm retract, map-X AGV motion, lift, head, and waist;
+- eight ROS endpoints exercised: six Services and two asynchronous topics;
+- 20 pure-Python integration contract tests passed;
+- nine process-separated exact-schema integration scenarios passed;
+- full extended environment: 128 tests, zero failures/errors/skips;
+- exact external `jagv_interfaces`, `jaka_toolbox_interfaces`, and unmodified
+  `jaka_toolbox` built on Humble; and
+- all 12 frozen core hashes still match; frozen-core modification count is zero.
+
+The runtime harness loads the generated types from the external packages and starts
+a separate legacy-compatible stub. It does not launch the vendor-backed JAKA node,
+initialize the SDK/controller, or command hardware.
 
 The fake robot is a separate OS process. Commands cross a ROS action; physical state
 is hidden in that process; observations return asynchronously by topic; and short
@@ -98,15 +117,19 @@ verifies backend-level external cancellation without a partial state transition.
 - No collision safety, real-time guarantee, safety-rated interlock, sensor-fault
   tolerance, physics-simulation validity, or hardware safety is claimed.
 
-## 6. JAKA and simulation status
+## 6. JAKA/Kargo integration and simulation status
 
-The JAKA mapping is `STATICALLY-INSPECTED`. Static audit found that a nominal
-single-arm retract may call a bilateral preset, elementary AGV motion lacks verified
-odometry, head effects can occur sequentially, lift calls are synchronous, and the
-available stop operation is AGV-only. Whole-robot safe stop is not advertised.
+The external workspace and call graph are `STATICALLY-INSPECTED`; its interface
+packages and unmodified toolbox are `ROS2-BUILD-VERIFIED`; the integration mappings
+are `UNIT-VERIFIED`; and the separate exact-schema stub path is
+`ROS2-RUNTIME-VERIFIED`. The vendor-backed node, SDK session, controller connection,
+calibration, and hardware are `UNVERIFIED`.
 
-JAKA ROS runtime, JAKA hardware execution, transport-pose calibration, Gazebo, and
-MoveIt2 simulation remain `UNVERIFIED`.
+The adapter does not use the legacy bilateral preset to satisfy a single-arm
+contract. It exposes no motion capability without configured calibration and
+whole-robot emergency-stop observability. Head effects remain sequential, Service
+timeout cannot prove cancellation, and the only audited stop is AGV-only. Gazebo
+and MoveIt2 simulation remain `UNVERIFIED`.
 
 ## 7. Three-minute interview explanation
 
@@ -122,12 +145,14 @@ and every command is followed by state observation and effect verification. Gene
 effect search can insert preparation actions; persistent failure can trigger a
 structurally different plan suffix.
 
-On Ubuntu 22.04 with ROS2 Humble, I validated the loop against a fake robot in a
-separate process using topics, services, and actions. All 15 required scenarios
-produced the expected decision, including a negative control where ROS returned
-`SUCCEEDED` but no physical transition occurred. I also retained two failures: a
-fresh false sensor can fool verification, and freshness cannot prevent a
-check→dispatch race. JAKA hardware and physics simulation are still unverified.”
+On Ubuntu 22.04 with ROS2 Humble, I first validated the loop against a fake robot in
+a separate process using topics, services, and actions. All 15 required scenarios
+produced the expected decision. I then audited the existing JAKA/Kargo workspace and
+implemented a separate skill/state/capability adapter. Nine process-separated
+scenarios use its real generated ROS schemas, including a Service-success/no-motion
+negative control. The external packages also build unmodified. I did not launch the
+vendor node or claim hardware validation. Fresh sensor spoof, check→dispatch TOCTOU,
+noncancellable Service timeout, and AGV-only stop remain explicit limitations.”
 
 ## 8. Evidence index
 
@@ -136,4 +161,7 @@ check→dispatch race. JAKA hardware and physics simulation are still unverified
 - `ros2_validation_outputs/runtime_scenarios.json`
 - `docs/BENCHMARK_V2_METHODOLOGY.md`
 - `docs/JAKA_CAPABILITY_AUDIT.md`
+- `docs/JAKA_KARGO_INTEGRATION_ANALYSIS.md`
+- `docs/JAKA_KARGO_INTERFACE_MATRIX.md`
+- `jaka_kargo_validation_outputs/integration_scenarios.json`
 - `docs/REMAINING_FAILURE_MODES.md`

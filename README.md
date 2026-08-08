@@ -30,15 +30,17 @@ Planner / LLM  →  EmbodiedSkill-ROS  →  ROS2 / Robot Backend
 | Validated platform | Ubuntu 22.04.5, ROS2 Humble, Fast DDS |
 | Architecture | Contract-driven execution layer between planner and backend |
 | Evaluation | Fault injection, independent oracle, ablation, frozen holdout |
-| Runtime | Process-separated ROS2 fake robot using topics, services, and actions |
-| Hardware | JAKA mapping statically inspected; hardware unverified |
+| Runtime | Process-separated core fake robot plus legacy-schema JAKA/Kargo integration stub |
+| Deployment | External JAKA/Kargo packages build-verified; vendor-node runtime and hardware unverified |
 
 ## Key evidence
 
 | Result | What it means |
 |---:|---|
 | **15 / 15** | required process-separated ROS2 runtime scenarios produced the expected decision |
-| **107** | tests passed under the ROS2 Humble / colcon validation environment |
+| **9 / 9** | JAKA/Kargo adapter scenarios passed through a separate ROS2 process using the external schemas |
+| **128** | tests passed in the extended ROS2 Humble environment (107 v0.2 + 20 integration contract + 1 integration runtime) |
+| **5 / 8** | robot skills mapped / external ROS endpoints exercised by the integration harness |
 | **25 / 25** | feasible cases completed in the frozen adversarial V2 design suite |
 | **60 / 65 (92.31%)** | correct decisions across all adversarial V2 trials |
 | **12 files / 1,385 LOC** | frozen reasoning core protected by a hash manifest |
@@ -53,12 +55,17 @@ task successes.
 | Pure-Python core and Mock experiments | `UNIT-VERIFIED` / `MOCK-VERIFIED` |
 | Fixed, procedural, adversarial, ablation, and frozen holdout evaluation | `BENCHMARK-VERIFIED` |
 | Process-separated fake-robot runtime on Ubuntu 22.04.5 / ROS2 Humble | `ROS2-RUNTIME-VERIFIED` |
-| JAKA API and capability mapping | `STATICALLY-INSPECTED` |
+| JAKA/Kargo source semantics | `STATICALLY-INSPECTED` |
+| External interfaces and unmodified `jaka_toolbox` | `ROS2-BUILD-VERIFIED` |
+| JAKA/Kargo adapter with exact-schema stub | `UNIT-VERIFIED` / `ROS2-RUNTIME-VERIFIED` |
+| External JAKA/Kargo nodes with vendor SDK | `UNVERIFIED` |
 | JAKA robot hardware | `UNVERIFIED` |
 | Gazebo / MoveIt2 physics simulation | `UNVERIFIED` |
 
-Demo video: pending a real recording. No screenshot, simulator run, or hardware video
-is claimed by this release.
+The v0.2 core result remains 107/107. The larger 128/128 count requires the two
+external interface packages to be built and sourced; without them, the integration
+runtime test skips explicitly. Demo video is pending a real recording. No simulator
+run or hardware video is claimed.
 
 ## 30-second architecture
 
@@ -121,7 +128,7 @@ That separately delivered reference workspace is not redistributed in this
 repository. EmbodiedSkill-ROS does not claim that the JAKA robot system or its
 elementary hardware skills were built from scratch here.
 
-### My work in EmbodiedSkill-ROS
+### Core redesign — my work
 
 Based on those existing skill/backend interfaces, I designed and implemented a
 separate reliable embodied skill execution layer:
@@ -135,7 +142,26 @@ separate reliable embodied skill execution layer:
 - an independent hidden-state benchmark oracle and deterministic fault injection;
 - fixed, procedural, adversarial V2, A–F ablation, and frozen holdout evaluation;
 - a process-separated ROS2 Humble runtime using topics, services, and actions; and
-- a static JAKA capability/semantic-scope audit with explicit failure boundaries.
+- a JAKA capability/semantic-scope audit with explicit failure boundaries.
+
+### JAKA/Kargo system integration — my work
+
+For v0.3, I added the boundary that reconnects the unchanged reasoning core to the
+laboratory stack:
+
+- a `JakaKargoBackend` that normalizes heterogeneous service semantics;
+- a measured-state provider that maps feedback to `KNOWN`, `UNKNOWN`, and `STALE`;
+- a capability mapper for endpoint availability, component scope, unavoidable side
+  effects, timeout, cancellation, observation, and stop scope;
+- lazy ROS2 transport imports, a motion-disabled read-only deployment probe, and an
+  external-dependency build boundary;
+- 20 integration contract tests and nine process-separated ROS2 scenarios using
+  the real generated legacy interface types; and
+- an IP/provenance audit that keeps the vendor SDK, robot assets, private network
+  configuration, and original workspace outside this repository.
+
+The laboratory stack still owns low-level actuation. EmbodiedSkill-ROS owns the
+execution semantics and the integration boundary.
 
 ## Core design
 
@@ -177,8 +203,10 @@ Legacy JAKA preset: potentially moves BOTH arms
 ```
 
 Because abstract scope is narrower than the unavoidable backend effect, capability
-preflight rejects the command before transmission. The JAKA mapping is only
-`STATICALLY-INSPECTED`; this is not JAKA runtime or hardware evidence.
+preflight rejects the command before transmission. The source semantics are
+`STATICALLY-INSPECTED`, and this rejection is `UNIT-VERIFIED` plus
+`ROS2-RUNTIME-VERIFIED` against a schema-compatible stub. It is not vendor-node or
+hardware evidence.
 
 ## ROS2 runtime validation
 
@@ -208,6 +236,43 @@ R1–R15 cover nominal execution, command rejection, accepted/no-motion, delayed
 observation, stale and unknown safety evidence, successful and failed refresh,
 transient recovery, generic repair, structural replanning, capability mismatch,
 timeout, cancellation, and terminal stop behavior.
+
+## JAKA/Kargo integration
+
+```text
+EmbodiedSkill-ROS Core
+        ↓
+JakaKargoBackend
+        ↓
+State Provider + Capability Mapper
+        ↓
+JakaKargoRos2Transport
+        ↓
+External JAKA/Kargo ROS2 Interfaces
+        ↓
+Existing jaka_toolbox / JAGV Nodes
+        ↓
+Vendor SDK / Robot
+```
+
+The integration maps five skills—single-arm retract, AGV map-X motion, lift, head,
+and waist—onto six Services and two asynchronous AGV topics. It observes arm joints,
+four external axes, odometry, and AGV motion/fault state. Missing or uncalibrated
+signals remain `UNKNOWN`; `PoseQuery` success does not default to arm readiness, and
+a successful Service response never fabricates an effect.
+
+For AGV motion, the adapter waits for post-command odometry and motion-state
+revisions rather than immediately reusing its pre-command topic cache.
+
+J2 repeats the central negative control through the actual external message/service
+schemas: `/joint_move_ext` returns success, the separate stub does not move the lift,
+the later `/query_status_ext` observation remains unchanged, and verification stops.
+The harness also verifies stale/unknown handling, bilateral semantic rejection,
+service timeout honesty, arm feedback, odometry, and head/waist translation.
+
+The original interface packages and unmodified `jaka_toolbox` compile on Humble.
+The vendor-backed node was deliberately not launched because construction initiates
+controller/SDK setup. No hardware command was sent.
 
 ## Evaluation summary
 
@@ -256,14 +321,17 @@ The complete failure ledger is in
 
 ## JAKA status
 
-`JakaRobotBackend` wraps already initialized legacy objects without importing vendor
-packages at core import time. Static inspection found open-loop AGV displacement,
-bilateral arm-preset scope, sequential head side effects, synchronous lift semantics,
-and an AGV-only stop that cannot be advertised as whole-robot safe stop.
+`JakaKargoBackend` uses an optional ROS2 transport and never imports vendor packages
+from the core path. Motion capabilities are withheld unless motion is explicitly
+enabled, endpoints are discovered, whole-robot emergency-stop observability is
+asserted, and required arm targets are calibrated. The audited AGV stop remains
+`AGV_ONLY`, Service timeout does not claim physical cancellation, and bilateral
+preset effects cannot silently satisfy a single-arm contract.
 
-See the [JAKA capability audit](docs/JAKA_CAPABILITY_AUDIT.md). Hardware execution,
-transport-pose calibration, odometry, whole-robot stopping, and supervised validation
-remain `UNVERIFIED`.
+See the [integration analysis](docs/JAKA_KARGO_INTEGRATION_ANALYSIS.md) and
+[interface matrix](docs/JAKA_KARGO_INTERFACE_MATRIX.md). External node runtime,
+SDK/controller connection, calibration, whole-robot stopping, supervised hardware,
+and physics simulation remain `UNVERIFIED`.
 
 ## Quick reproduction
 
@@ -288,7 +356,7 @@ ROS_LOG_DIR=/tmp/embodied_skill_ros_logs ROS_LOCALHOST_ONLY=1 \
 colcon test-result --all --verbose
 ```
 
-Expected validated result: **107 tests, zero errors, zero failures, zero skips**.
+Expected v0.2 baseline: **107 tests, zero errors, zero failures, zero skips**.
 
 Run the process-separated scenario harness:
 
@@ -301,6 +369,23 @@ ROS_LOG_DIR=/tmp/embodied_skill_ros_logs ROS_LOCALHOST_ONLY=1 \
 Expected summary: **15/15 required scenarios pass** and both unsafe limitation
 probes—fresh sensor spoof and TOCTOU—remain reproduced.
 
+For JAKA/Kargo integration, keep the separately delivered workspace outside this
+repository. Build and source `jagv_interfaces` and `jaka_toolbox_interfaces`, then:
+
+```bash
+source /opt/ros/humble/setup.bash
+source /path/to/kargo_ws_delivery_20260521/install/setup.bash
+source install/setup.bash
+
+ROS_LOG_DIR=/tmp/embodied_skill_jaka_logs ROS_LOCALHOST_ONLY=1 \
+  ros2 run embodied_skill_ros validate_jaka_kargo \
+  --output jaka_kargo_validation_outputs/integration_scenarios.json
+```
+
+Expected integration result: **9/9 scenarios pass**. With the external types
+available, the complete environment reports **128/128 tests**. This harness starts
+a separate legacy-compatible stub; it does not load the vendor SDK or move hardware.
+
 ## Documentation map
 
 - [Validation evidence ledger](docs/VALIDATION_EVIDENCE.md)
@@ -309,6 +394,9 @@ probes—fresh sensor spoof and TOCTOU—remain reproduced.
 - [Adversarial V2 methodology](docs/BENCHMARK_V2_METHODOLOGY.md)
 - [Frozen-core reproducibility](docs/STANDALONE_REPRODUCIBILITY.md)
 - [JAKA capability audit](docs/JAKA_CAPABILITY_AUDIT.md)
+- [JAKA/Kargo integration analysis](docs/JAKA_KARGO_INTEGRATION_ANALYSIS.md)
+- [JAKA/Kargo interface matrix](docs/JAKA_KARGO_INTERFACE_MATRIX.md)
+- [JAKA/Kargo runtime evidence](jaka_kargo_validation_outputs/README.md)
 - [Architecture details](docs/NEW_ARCHITECTURE.md)
 - [Literature and novelty boundaries](docs/LITERATURE_AND_NOVELTY.md)
 - [Remaining failure modes](docs/REMAINING_FAILURE_MODES.md)
@@ -316,10 +404,11 @@ probes—fresh sensor spoof and TOCTOU—remain reproduced.
 
 ## Roadmap
 
-Portfolio v0.2.0 freezes the current evidence-backed execution artifact. Near-term
-work is deliberately narrow: record a real demo, add externally administered tasks,
-and validate a physics simulator or supervised robot backend without changing the
-meaning of existing benchmark results. An optional research track may study
+Portfolio v0.2.0 remains the frozen ROS2-core milestone. v0.3 adds the JAKA/Kargo
+integration layer without changing any frozen reasoning file. The next gate is a
+reviewed deployment configuration and supervised, low-risk state/motion validation;
+until then the release is an integration-layer candidate, not a hardware release.
+An optional research track may study
 version/evidence-guarded command admission for ROS2 check→dispatch races; it is not
 required for the current project claims.
 

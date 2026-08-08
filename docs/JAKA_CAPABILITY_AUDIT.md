@@ -2,17 +2,20 @@
 
 Audit date: 2026-08-08
 
-Status: `STATICALLY-INSPECTED`; JAKA ROS runtime and hardware remain `UNVERIFIED`.
+Status: historical v0.2 static audit, superseded for current integration evidence by
+`JAKA_KARGO_INTEGRATION_ANALYSIS.md` and `JAKA_KARGO_INTERFACE_MATRIX.md`. JAKA
+vendor-node runtime and hardware remain `UNVERIFIED`.
 
 ## Available evidence
 
 A sibling delivery workspace contains the reference Python skill adapters, JAKA
 ROS service definitions, C++ SDK bridge sources, and an x86-64
 `libjakaAPI_2_3_1_DUAL.so`. `file` and `ldd` show that the library matches this host
-architecture and its ordinary system-library dependencies resolve. However, only
-`jaka_kargo_description` is built/installed in that workspace. `jaka_toolbox`,
-`jaka_toolbox_interfaces`, `jagv_interfaces`, and `moveit_msgs` are not discoverable
-from its install prefix, and no JAKA services or hardware session were started.
+architecture and its ordinary system-library dependencies resolve. At this audit
+point, only `jaka_kargo_description` was present in the delivered install prefix.
+During v0.3 integration, the exact external `jagv_interfaces` and
+`jaka_toolbox_interfaces` plus the unmodified `jaka_toolbox` were built in a
+temporary overlay. No JAKA service node or hardware session was started.
 
 Finding source and a loadable ELF file is not runtime or hardware validation.
 
@@ -61,5 +64,6 @@ honesty correction, not a new physical safety mechanism.
 - record robot serial/configuration hashes, sanitized command receipts, measured
   before/after state, and independent outcome checks.
 
-Until that work is complete, no JAKA item in this repository is
-`ROS2-RUNTIME-VERIFIED`, `SIMULATION-VERIFIED`, or `HARDWARE-VERIFIED`.
+The v0.3 adapter is now `UNIT-VERIFIED`, and its separate exact-schema stub is
+`ROS2-RUNTIME-VERIFIED`. Those labels do not transfer to the external JAKA node,
+SDK session, simulation, or hardware, which remain `UNVERIFIED`.
