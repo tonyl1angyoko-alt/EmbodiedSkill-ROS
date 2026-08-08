@@ -235,8 +235,11 @@ def build_node() -> Any:
                 )
 
             self._tf_broadcaster = TransformBroadcaster(self)
+            # Humble RViz reliably restores its conventional MarkerArray topic.
+            # Keeping the presentation overlay there avoids saved-config topic
+            # property differences across RViz patch versions.
             self._marker_publisher = self.create_publisher(
-                MarkerArray, "/embodied_skill/comparison_markers", 10
+                MarkerArray, "/visualization_marker_array", 10
             )
             self._last_tick_ns = self.get_clock().now().nanoseconds
             self._timer = self.create_timer(1.0 / 25.0, self._publish_visual_state)
