@@ -34,7 +34,7 @@ class JakaRobotBackend(RobotBackend):
         self._last_agv_position: float | None = None  # No odometry adapter confirmed in chat_agent path.
 
     def capabilities(self) -> BackendCapabilities:
-        supported = {"safe_stop"}
+        supported: set[str] = set()
         observable: set[str] = {"last_skill_result"}
         if self.arm is not None and self.transport_pose_name is not None:
             supported.add("retract_arm")
@@ -77,7 +77,9 @@ class JakaRobotBackend(RobotBackend):
             "JakaRobotBackend",
             frozenset(supported),
             frozenset(observable),
-            supports_safe_stop=self.agv is not None,
+            # The delivered adapter can stop only the AGV.  That is not an
+            # honest whole-robot safe-stop guarantee for arms/lift/head.
+            supports_safe_stop=False,
             runtime="optional-legacy-ros2-sdk",
             refreshable_fields=frozenset(observable) if self.state_provider else frozenset(),
             skill_semantics=tuple(semantics),
@@ -157,7 +159,10 @@ class JakaRobotBackend(RobotBackend):
                 if self.agv is None:
                     return CommandReceipt(False, "safe stop adapter unavailable")
                 self.agv.stop()
-                ok = True
+                return CommandReceipt(
+                    False,
+                    "AGV stop sent; whole-robot safe stop remains UNVERIFIED",
+                )
             else:
                 return CommandReceipt(False, f"JAKA adapter does not implement {skill_name}")
             return CommandReceipt(bool(ok), "legacy ROS2/SDK call returned success" if ok else "legacy call failed")

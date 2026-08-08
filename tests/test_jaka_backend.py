@@ -36,6 +36,23 @@ class JakaBackendTests(unittest.TestCase):
         self.assertNotIn("retract_arm", without_pose.supported_skills)
         self.assertIn("retract_arm", with_pose.supported_skills)
 
+    def test_agv_stop_is_not_claimed_as_whole_robot_safe_stop(self):
+        class Agv:
+            stopped = False
+
+            def stop(self):
+                self.stopped = True
+
+        agv = Agv()
+        backend = JakaRobotBackend(agv_skill=agv)
+        capabilities = backend.capabilities()
+        self.assertFalse(capabilities.supports_safe_stop)
+        self.assertNotIn("safe_stop", capabilities.supported_skills)
+        receipt = backend.command("safe_stop", {})
+        self.assertTrue(agv.stopped)
+        self.assertFalse(receipt.accepted)
+        self.assertIn("whole-robot", receipt.backend_message)
+
 
 if __name__ == "__main__":
     unittest.main()
