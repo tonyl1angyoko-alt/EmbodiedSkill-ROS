@@ -1,0 +1,333 @@
+{
+  "hardware": "NOT EXECUTED",
+  "runtime": "ROS2 Humble legacy-compatible process stub",
+  "scenarios": [
+    {
+      "capabilities": {
+        "available_endpoints": [
+          "/JAGV_O_01/global_nav_odom",
+          "/JAGV_O_01/motion_state",
+          "/joint_move_arm",
+          "/joint_move_ext",
+          "/motion_state_control",
+          "/navigate_single_pose",
+          "/query_pose_arm",
+          "/query_status_ext"
+        ],
+        "blockers": [],
+        "cancellation": {
+          "move_agv": "COMPONENT_STOP",
+          "retract_arm": "NONE",
+          "set_head": "NONE",
+          "set_lift": "NONE",
+          "set_waist": "NONE"
+        },
+        "stop_scope": "AGV_ONLY",
+        "timeout_semantics": {
+          "move_agv": "BACKEND_BOUNDED",
+          "retract_arm": "CLIENT_WAIT_ONLY",
+          "set_head": "CLIENT_WAIT_ONLY",
+          "set_lift": "CLIENT_WAIT_ONLY",
+          "set_waist": "CLIENT_WAIT_ONLY"
+        }
+      },
+      "command_accepted": true,
+      "decision": "EXECUTE",
+      "id": "J1",
+      "name": "nominal measured lift",
+      "passed": true,
+      "physical_outcome_achieved": true
+    },
+    {
+      "capabilities": {
+        "available_endpoints": [
+          "/JAGV_O_01/global_nav_odom",
+          "/JAGV_O_01/motion_state",
+          "/joint_move_arm",
+          "/joint_move_ext",
+          "/motion_state_control",
+          "/navigate_single_pose",
+          "/query_pose_arm",
+          "/query_status_ext"
+        ],
+        "blockers": [],
+        "cancellation": {
+          "move_agv": "COMPONENT_STOP",
+          "retract_arm": "NONE",
+          "set_head": "NONE",
+          "set_lift": "NONE",
+          "set_waist": "NONE"
+        },
+        "stop_scope": "AGV_ONLY",
+        "timeout_semantics": {
+          "move_agv": "BACKEND_BOUNDED",
+          "retract_arm": "CLIENT_WAIT_ONLY",
+          "set_head": "CLIENT_WAIT_ONLY",
+          "set_lift": "CLIENT_WAIT_ONLY",
+          "set_waist": "CLIENT_WAIT_ONLY"
+        }
+      },
+      "command_accepted": true,
+      "decision": "STOP",
+      "id": "J2",
+      "name": "service success without measured transition",
+      "passed": true,
+      "physical_outcome_achieved": false
+    },
+    {
+      "capabilities": {
+        "available_endpoints": [
+          "/JAGV_O_01/global_nav_odom",
+          "/JAGV_O_01/motion_state",
+          "/joint_move_arm",
+          "/joint_move_ext",
+          "/motion_state_control",
+          "/navigate_single_pose",
+          "/query_pose_arm",
+          "/query_status_ext"
+        ],
+        "blockers": [],
+        "cancellation": {
+          "move_agv": "COMPONENT_STOP",
+          "retract_arm": "NONE",
+          "set_head": "NONE",
+          "set_lift": "NONE",
+          "set_waist": "NONE"
+        },
+        "stop_scope": "AGV_ONLY",
+        "timeout_semantics": {
+          "move_agv": "BACKEND_BOUNDED",
+          "retract_arm": "CLIENT_WAIT_ONLY",
+          "set_head": "CLIENT_WAIT_ONLY",
+          "set_lift": "CLIENT_WAIT_ONLY",
+          "set_waist": "CLIENT_WAIT_ONLY"
+        }
+      },
+      "decision": "STOP",
+      "id": "J3",
+      "message": "backend has undeclared unavoidable effects: ['right_arm_safe']",
+      "name": "bilateral preset rejected before dispatch",
+      "passed": true
+    },
+    {
+      "capabilities": {
+        "available_endpoints": [
+          "/JAGV_O_01/global_nav_odom",
+          "/JAGV_O_01/motion_state",
+          "/joint_move_arm",
+          "/joint_move_ext",
+          "/motion_state_control",
+          "/navigate_single_pose",
+          "/query_pose_arm",
+          "/query_status_ext"
+        ],
+        "blockers": [
+          "whole-robot emergency-stop state is not observable"
+        ],
+        "cancellation": {
+          "move_agv": "COMPONENT_STOP",
+          "retract_arm": "NONE",
+          "set_head": "NONE",
+          "set_lift": "NONE",
+          "set_waist": "NONE"
+        },
+        "stop_scope": "AGV_ONLY",
+        "timeout_semantics": {
+          "move_agv": "BACKEND_BOUNDED",
+          "retract_arm": "CLIENT_WAIT_ONLY",
+          "set_head": "CLIENT_WAIT_ONLY",
+          "set_lift": "CLIENT_WAIT_ONLY",
+          "set_waist": "CLIENT_WAIT_ONLY"
+        }
+      },
+      "decision": "STOP",
+      "id": "J4",
+      "message": "backend JakaKargoBackend does not support set_head",
+      "name": "unknown whole-robot emergency-stop evidence",
+      "passed": true
+    },
+    {
+      "capabilities": {
+        "available_endpoints": [
+          "/JAGV_O_01/global_nav_odom",
+          "/JAGV_O_01/motion_state",
+          "/joint_move_arm",
+          "/joint_move_ext",
+          "/motion_state_control",
+          "/navigate_single_pose",
+          "/query_pose_arm",
+          "/query_status_ext"
+        ],
+        "blockers": [],
+        "cancellation": {
+          "move_agv": "COMPONENT_STOP",
+          "retract_arm": "NONE",
+          "set_head": "NONE",
+          "set_lift": "NONE",
+          "set_waist": "NONE"
+        },
+        "stop_scope": "AGV_ONLY",
+        "timeout_semantics": {
+          "move_agv": "BACKEND_BOUNDED",
+          "retract_arm": "CLIENT_WAIT_ONLY",
+          "set_head": "CLIENT_WAIT_ONLY",
+          "set_lift": "CLIENT_WAIT_ONLY",
+          "set_waist": "CLIENT_WAIT_ONLY"
+        }
+      },
+      "decision": "STOP",
+      "id": "J5",
+      "name": "service timeout remains non-cancellable",
+      "passed": true,
+      "timed_out": true
+    },
+    {
+      "capabilities": {
+        "available_endpoints": [
+          "/JAGV_O_01/global_nav_odom",
+          "/JAGV_O_01/motion_state",
+          "/joint_move_arm",
+          "/joint_move_ext",
+          "/motion_state_control",
+          "/navigate_single_pose",
+          "/query_pose_arm",
+          "/query_status_ext"
+        ],
+        "blockers": [],
+        "cancellation": {
+          "move_agv": "COMPONENT_STOP",
+          "retract_arm": "NONE",
+          "set_head": "NONE",
+          "set_lift": "NONE",
+          "set_waist": "NONE"
+        },
+        "stop_scope": "AGV_ONLY",
+        "timeout_semantics": {
+          "move_agv": "BACKEND_BOUNDED",
+          "retract_arm": "CLIENT_WAIT_ONLY",
+          "set_head": "CLIENT_WAIT_ONLY",
+          "set_lift": "CLIENT_WAIT_ONLY",
+          "set_waist": "CLIENT_WAIT_ONLY"
+        }
+      },
+      "command_accepted": true,
+      "decision": "EXECUTE",
+      "id": "J6",
+      "name": "single-arm service mapping and measured joints",
+      "passed": true,
+      "physical_outcome_achieved": true
+    },
+    {
+      "capabilities": {
+        "available_endpoints": [
+          "/JAGV_O_01/global_nav_odom",
+          "/JAGV_O_01/motion_state",
+          "/joint_move_arm",
+          "/joint_move_ext",
+          "/motion_state_control",
+          "/navigate_single_pose",
+          "/query_pose_arm",
+          "/query_status_ext"
+        ],
+        "blockers": [],
+        "cancellation": {
+          "move_agv": "COMPONENT_STOP",
+          "retract_arm": "NONE",
+          "set_head": "NONE",
+          "set_lift": "NONE",
+          "set_waist": "NONE"
+        },
+        "stop_scope": "AGV_ONLY",
+        "timeout_semantics": {
+          "move_agv": "BACKEND_BOUNDED",
+          "retract_arm": "CLIENT_WAIT_ONLY",
+          "set_head": "CLIENT_WAIT_ONLY",
+          "set_lift": "CLIENT_WAIT_ONLY",
+          "set_waist": "CLIENT_WAIT_ONLY"
+        }
+      },
+      "command_accepted": true,
+      "decision": "EXECUTE",
+      "id": "J7",
+      "name": "AGV navigation service and odometry verification",
+      "passed": true,
+      "physical_outcome_achieved": true
+    },
+    {
+      "capabilities": {
+        "available_endpoints": [
+          "/JAGV_O_01/global_nav_odom",
+          "/JAGV_O_01/motion_state",
+          "/joint_move_arm",
+          "/joint_move_ext",
+          "/motion_state_control",
+          "/navigate_single_pose",
+          "/query_pose_arm",
+          "/query_status_ext"
+        ],
+        "blockers": [],
+        "cancellation": {
+          "move_agv": "COMPONENT_STOP",
+          "retract_arm": "NONE",
+          "set_head": "NONE",
+          "set_lift": "NONE",
+          "set_waist": "NONE"
+        },
+        "stop_scope": "AGV_ONLY",
+        "timeout_semantics": {
+          "move_agv": "BACKEND_BOUNDED",
+          "retract_arm": "CLIENT_WAIT_ONLY",
+          "set_head": "CLIENT_WAIT_ONLY",
+          "set_lift": "CLIENT_WAIT_ONLY",
+          "set_waist": "CLIENT_WAIT_ONLY"
+        }
+      },
+      "commands_verified": 2,
+      "decision": "EXECUTE",
+      "id": "J8",
+      "name": "head sign conversion and waist dynamic state",
+      "passed": true
+    },
+    {
+      "capabilities": {
+        "available_endpoints": [
+          "/JAGV_O_01/global_nav_odom",
+          "/JAGV_O_01/motion_state",
+          "/joint_move_arm",
+          "/joint_move_ext",
+          "/motion_state_control",
+          "/navigate_single_pose",
+          "/query_pose_arm",
+          "/query_status_ext"
+        ],
+        "blockers": [],
+        "cancellation": {
+          "move_agv": "COMPONENT_STOP",
+          "retract_arm": "NONE",
+          "set_head": "NONE",
+          "set_lift": "NONE",
+          "set_waist": "NONE"
+        },
+        "stop_scope": "AGV_ONLY",
+        "timeout_semantics": {
+          "move_agv": "BACKEND_BOUNDED",
+          "retract_arm": "CLIENT_WAIT_ONLY",
+          "set_head": "CLIENT_WAIT_ONLY",
+          "set_lift": "CLIENT_WAIT_ONLY",
+          "set_waist": "CLIENT_WAIT_ONLY"
+        }
+      },
+      "command_accepted": true,
+      "decision": "STOP",
+      "id": "J9",
+      "name": "navigation success without odometry transition",
+      "passed": true,
+      "physical_outcome_achieved": false
+    }
+  ],
+  "schema_version": 1,
+  "summary": {
+    "passed": 9,
+    "total": 9
+  }
+}
