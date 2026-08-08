@@ -1,14 +1,14 @@
 cff-version: 1.2.0
 message: "If you use this research prototype, please cite the software."
-title: "EmbodiedSkill-ROS: State-Grounded Planning and Risk-Aware Execution for ROS2 Mobile Manipulators"
+title: "EmbodiedSkill-ROS: Contract-Driven Reliable Skill Execution for ROS2 Robots"
 type: software
 authors:
   - family-names: "Fu"
     given-names: "Zhengqing"
-version: 0.1.0
-date-released: 2026-08-06
+version: 0.2.0
+date-released: 2026-08-08
 license: Apache-2.0
 abstract: >-
-  A Mock-validated research prototype for embodied skill representation,
-  robot-state grounding, deterministic plan repair, closed-loop outcome
-  verification, and bounded runtime recovery.
+  A contract-driven execution layer with epistemic robot state, generic repair,
+  structural replanning, outcome verification, adversarial evaluation, and
+  process-separated ROS2 Humble runtime validation.

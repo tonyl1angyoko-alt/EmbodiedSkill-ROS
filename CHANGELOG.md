@@ -2,27 +2,36 @@
 
 ## [Unreleased]
 
-- replace callback-only semantics with declarative skill predicates and effects;
-- add freshness-aware epistemic state and backend capability contracts;
-- make plan repair effect-driven and replanning goal-directed;
-- separate Mock observations from hidden physical truth and add an independent oracle;
-- add a seeded 200-trial procedural fault benchmark and integrity/property tests;
-- add frozen-core V2 adversarial and 78-trial post-freeze holdout suites, A-F/removal
-  ablations, explicit metric definitions, and a remaining-failures ledger;
-- add bounded multi-level generic repair, explicit contradictory evidence, active
-  observation, semantic capability checks, permanent faults, and genuine alternate-skill replanning;
-- add an optional ROS2 Mock bridge, launch file, evidence ledger, novelty audit, and
-  Ubuntu 22.04 + ROS2 Humble validation plan;
-- expand the suite to 102 tests (100 passing on macOS, 2 ROS2 tests skipped).
+No changes yet.
+
+## [0.2.0] - 2026-08-08
+
+ROS2 Runtime Portfolio Release:
+
+- add declarative skill contracts, freshness-aware epistemic state, generic
+  effect-driven repair, structural replanning, and backend capability preflight;
+- separate command acceptance, observation, outcome verification, and independent
+  hidden-state scoring;
+- correct the fixed benchmark methodology and retain 93.33% as the current
+  30-scenario deterministic Mock result;
+- add seeded procedural evaluation, adversarial V2, A–F/removal ablations, a
+  frozen-core holdout, exact metric definitions, and an explicit failure ledger;
+- freeze 12 reasoning files / 1,385 LOC with a hash manifest and verify a
+  zero-core-modification new-skill extension;
+- add Ubuntu 22.04.5 / ROS2 Humble validation with 107 passing tests;
+- add a process-separated fake robot and R1–R15 topic/service/action scenarios;
+- retain fresh-sensor-spoof and TOCTOU failures as explicit unsafe boundaries;
+- audit JAKA backend semantics without claiming runtime or hardware validation; and
+- redesign the project documentation for evidence-first portfolio presentation.
 
 ## [0.1.0] - 2026-08-06
 
-Initial research prototype:
+Initial Mock-validated research prototype:
 
 - unified embodied skill abstraction;
 - four-component Mock support;
 - state-grounded plan repair;
 - closed-loop execution and bounded recovery;
 - 30-scenario Mock benchmark;
-- automated test suite;
+- automated test suite; and
 - statically inspected JAKA adapter boundary.

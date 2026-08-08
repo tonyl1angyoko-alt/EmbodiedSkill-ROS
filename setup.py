@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="embodied_skill_ros",
-    version="0.1.0",
+    version="0.2.0",
     packages=find_packages(),
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/embodied_skill_ros"]),
