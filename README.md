@@ -1,259 +1,326 @@
 # EmbodiedSkill-ROS
 
-**State-Grounded Planning and Risk-Aware Execution for ROS2 Mobile Manipulators**
+**Contract-Driven Reliable Skill Execution for ROS2 Robots**
 
-EmbodiedSkill-ROS turns an LLM's high-level tool plan into a state-grounded, closed-loop robot execution process that prefers **EXECUTE → REPAIR → REPLAN → STOP**.
+EmbodiedSkill-ROS addresses a practical robotics gap: a ROS action or SDK call can
+return success while the intended physical state transition never occurs. It is a
+planner-independent execution layer that grounds high-level plans in robot state,
+checks backend semantics, executes through ROS2, observes the resulting state, and
+selects bounded retry, repair, replanning, or stop behavior from explicit contracts.
 
-> **Milestone:** Research core frozen at `7fdf9255`; process-separated ROS2 Humble
-> validation completed on Ubuntu 22.04 in `codex/ros2-humble-validation`. The
-> documented `fresh_sensor_spoof` failure remains intentionally visible, and ROS
-> runtime testing exposes an additional TOCTOU limitation.
+```text
+Planner / LLM  →  EmbodiedSkill-ROS  →  ROS2 / Robot Backend
+                    GROUND
+                      ↓
+                   EXECUTE
+                      ↓
+                   OBSERVE
+                      ↓
+                   VERIFY
+                      ↓
+             RETRY / REPAIR / REPLAN / STOP
+```
 
-> **Demo media placeholder:** replace `docs/assets/embodied_skill_ros_demo.gif` with a recorded Mock/hardware demo. No video is claimed in this repository yet.
+## Project at a glance
 
-## Validation status
-
-| Capability | Evidence |
+| | |
 |---|---|
-| Declarative contracts, epistemic state, generic repair, recovery policy | `UNIT-VERIFIED` / `MOCK-VERIFIED` |
-| 93.33% task success | `BENCHMARK-VERIFIED` on 30 predefined deterministic scenarios only; equivalent-plan "replan" no longer counts |
-| 200 seeded procedural transient-fault trials | `BENCHMARK-VERIFIED`; full 100%, but all faults expire before the allowed retry |
-| Frozen-core V2 adversarial / holdout | `BENCHMARK-VERIFIED`; 92.31% correct decisions, 87.50% correct safe stops, 7.69% unsafe executions |
-| Process-separated ROS2 fake robot: 15 required scenarios | `ROS2-RUNTIME-VERIFIED` on Ubuntu 22.04.5/Humble; 15/15 correct decisions |
-| ROS action accepted but no motion | `ROS2-RUNTIME-VERIFIED`; verifier rejects transport-only success |
-| ROS delayed observations, refresh, timeout, cancellation | `ROS2-RUNTIME-VERIFIED`; caller-facing executor cancellation remains incomplete |
-| Original ROS2/JAKA interface mapping | `STATICALLY-INSPECTED` from a separately delivered reference workspace |
-| ROS2 Humble / Ubuntu 22.04 build | `ROS2-RUNTIME-VERIFIED`; package discovery, launch graph, and colcon tests pass |
-| JAKA hardware execution and transport-safe pose calibration | `UNVERIFIED` |
-| Gazebo, MoveIt2, and RViz integration | `PLANNED` |
+| Domain | ROS2, embodied robotics, reliable execution |
+| Language | Python |
+| Validated platform | Ubuntu 22.04.5, ROS2 Humble, Fast DDS |
+| Architecture | Contract-driven execution layer between planner and backend |
+| Evaluation | Fault injection, independent oracle, ablation, frozen holdout |
+| Runtime | Process-separated ROS2 fake robot using topics, services, and actions |
+| Hardware | JAKA mapping statically inspected; hardware unverified |
 
-`CommandReceipt.accepted` is never presented as evidence that a real physical outcome occurred. In Mock execution, outcome success is determined from observed state; hardware validation still requires measured state providers and calibrated tolerances.
+## Key evidence
 
-## Core question
+| Result | What it means |
+|---:|---|
+| **15 / 15** | required process-separated ROS2 runtime scenarios produced the expected decision |
+| **107** | tests passed under the ROS2 Humble / colcon validation environment |
+| **25 / 25** | feasible cases completed in the frozen adversarial V2 design suite |
+| **60 / 65 (92.31%)** | correct decisions across all adversarial V2 trials |
+| **12 files / 1,385 LOC** | frozen reasoning core protected by a hash manifest |
+| **0 core modifications** | two new preparation skills generalized through declarative effects after core freeze |
 
-How can an LLM plan be grounded in the robot's current body state, available skills, actuator constraints, and measured outcomes? When a state mismatch or execution failure occurs, can the system repair or replan instead of immediately rejecting the task—or blindly continuing?
+These are deterministic artifact results, not deployment statistics. Seven of the
+15 ROS2 scenarios complete their task; eight correctly stop and are not counted as
+task successes.
 
-The project focuses on embodied task planning and execution reliability: approximately 70% state grounding, multi-component coordination, and physical outcome verification; 30% runtime constraints and recovery.
+| Validation boundary | Status |
+|---|---|
+| Pure-Python core and Mock experiments | `UNIT-VERIFIED` / `MOCK-VERIFIED` |
+| Fixed, procedural, adversarial, ablation, and frozen holdout evaluation | `BENCHMARK-VERIFIED` |
+| Process-separated fake-robot runtime on Ubuntu 22.04.5 / ROS2 Humble | `ROS2-RUNTIME-VERIFIED` |
+| JAKA API and capability mapping | `STATICALLY-INSPECTED` |
+| JAKA robot hardware | `UNVERIFIED` |
+| Gazebo / MoveIt2 physics simulation | `UNVERIFIED` |
 
-## Architecture
+Demo video: pending a real recording. No screenshot, simulator run, or hardware video
+is claimed by this release.
+
+## 30-second architecture
 
 ```mermaid
-flowchart LR
-    U["Instruction"] --> P["Structured / LLM planner"]
-    P --> G["EmbodiedPlanGrounder"]
-    S["RobotState"] --> G
-    R["SkillRegistry"] --> G
-    G -->|repairable| PR["PlanRepairer"]
-    PR --> G
-    G --> E["SkillExecutor"]
-    E --> RG["RuntimeGuard"]
-    RG --> B["Mock or JAKA Backend"]
-    B --> O["Observe"]
-    O --> V["OutcomeVerifier"]
-    V --> E
-    E --> RC["Bounded Recovery"]
-    RC -->|retry / re-ground / replan| E
-    E --> T["ExecutionTrace + Metrics"]
+flowchart TD
+    P["High-Level Planner / LLM"] --> TP["TaskPlan"]
+    TP --> SC["Declarative SkillContract"]
+    SC --> ES["Epistemic Robot State<br/>KNOWN / UNKNOWN / STALE"]
+    ES --> GC["Grounding + Capability Check"]
+    GC --> RR["Generic Repair / Replan"]
+    RR --> RB["ROS2 Backend"]
+    RB --> PO["Physical Observation"]
+    PO --> OV["Outcome Verification"]
+    OV --> D["Retry / Repair / Replan / Stop"]
+    D -->|bounded continuation| GC
 ```
 
-See [docs/NEW_ARCHITECTURE.md](docs/NEW_ARCHITECTURE.md) for the full architecture and sequence diagrams.
+Planning and execution reliability are deliberately separated. A deterministic
+planner, an LLM adapter, or another planning system can produce `TaskPlan`; the
+execution layer remains responsible for state grounding and evidence-based outcome
+verification.
 
-## Main contributions
+## Middleware success ≠ physical success
 
-1. Declarative `SkillContract` predicates/effects plus freshness-aware epistemic state.
-2. Effect-driven plan repair and goal-directed replanning without skill-name branches.
-3. Closed-loop execution that separates command acceptance, observation, and hidden physical truth.
-4. Enforced backend capability and per-skill recovery contracts.
-5. Reproducible fixed and procedural fault benchmarks with an independent oracle.
+The clearest negative control is ROS2 runtime scenario R3:
 
-## Why this is different from direct function calling
-
-| Direct function calling | EmbodiedSkill-ROS |
-|---|---|
-| Tool name + arguments | Skill schema + resources + preconditions + expected effects + timeout + recovery |
-| Conversation history as context | Typed, timestamped `RobotState`; UNKNOWN is explicit |
-| Execute calls in model-provided order | Validate, project state, repair ordering, then execute |
-| Function return often becomes “success” | `CommandReceipt` and physical `VerificationResult` are separate |
-| Failure text goes back to the model | Bounded retry, re-ground, replan, then safe stop |
-| No reproducible failure model | Deterministic fault injection and independent final-state scoring |
-
-## Quick start
-
-Requirements: Python 3.9+; the Mock core has no third-party runtime dependency.
-
-```bash
-cd embodied_skill_ros
-python3 examples/normal_task.py
-python3 examples/state_grounded_task.py
-python3 examples/plan_repair_demo.py
-python3 examples/recovery_demo.py
+```text
+ROS Action Goal
+      ↓
+   ACCEPTED
+      ↓
+Action Result: SUCCEEDED
+      ↓
+Fake Robot Hidden State: NO TARGET TRANSITION
+      ↓
+Fresh ROS Topic Observation
+      ↓
+OutcomeVerifier: FAILURE
+      ↓
+     STOP
 ```
 
-Run the standard-library test suite:
+EmbodiedSkill-ROS does not treat ROS Action `SUCCEEDED` as evidence that the
+contracted physical effect occurred. The action result and post-command observation
+remain separate trace records. See the
+[runtime report](docs/ROS2_RUNTIME_VALIDATION_REPORT.md) and
+[machine-readable trace](ros2_validation_outputs/runtime_scenarios.json).
+
+## Starting point & my contributions
+
+### Existing laboratory / reference system
+
+The starting point provided:
+
+- JAKA / ROS2 robot skill wrappers and SDK/service interfaces;
+- elementary arm, AGV, lift, and head skills; and
+- a function-calling dispatcher/reference agent.
+
+That separately delivered reference workspace is not redistributed in this
+repository. EmbodiedSkill-ROS does not claim that the JAKA robot system or its
+elementary hardware skills were built from scratch here.
+
+### My work in EmbodiedSkill-ROS
+
+Based on those existing skill/backend interfaces, I designed and implemented a
+separate reliable embodied skill execution layer:
+
+- declarative `SkillContract` schemas, predicates, resources, effects, timeouts,
+  and recovery policies;
+- epistemic `KNOWN`, `UNKNOWN`, `STALE`, and contradictory robot state;
+- generic effect-driven preparation repair and structural goal-directed replanning;
+- backend capability and unavoidable-side-effect preflight;
+- separation of command receipt, observation, verification, and hidden truth;
+- an independent hidden-state benchmark oracle and deterministic fault injection;
+- fixed, procedural, adversarial V2, A–F ablation, and frozen holdout evaluation;
+- a process-separated ROS2 Humble runtime using topics, services, and actions; and
+- a static JAKA capability/semantic-scope audit with explicit failure boundaries.
+
+## Core design
+
+### Declarative contracts and epistemic state
+
+Each skill declares what it requires and what it is expected to change. The executor
+does not silently interpret unavailable safety state as safe: evidence can be known,
+unknown, stale, or contradictory, and contracts can require bounded active refresh.
+
+### Bounded generic repair, not a general planner
+
+Repair uses declarative effect search rather than branching on concrete skill names.
+The frozen-core extension experiment begins with only `transport_payload` planned:
+
+```text
+deploy_stabilizer
+→ secure_payload
+→ transport_payload
+```
+
+The two preparation skills were added after the reasoning core was frozen. The same
+bounded search inserted them with **zero changes to the 12 frozen core files**. This
+is evidence for contract-driven extensibility, not a claim of general task-and-motion
+planning or optimal search.
+
+### Structural replanning
+
+Replanning must change the failed suffix. ROS2 scenario R11 makes `primary_route`
+permanently ineffective; the replanner selects `alternate_route`, while a retry-only
+counterfactual sends the primary action three times and still fails.
+
+### Backend capability contracts
+
+The JAKA audit exposes a concrete semantic mismatch:
+
+```text
+Abstract contract: retract LEFT arm only
+Legacy JAKA preset: potentially moves BOTH arms
+```
+
+Because abstract scope is narrower than the unavoidable backend effect, capability
+preflight rejects the command before transmission. The JAKA mapping is only
+`STATICALLY-INSPECTED`; this is not JAKA runtime or hardware evidence.
+
+## ROS2 runtime validation
+
+The validated runtime path is:
+
+```text
+EmbodiedSkill Core
+        ↓
+ROS2 Action
+        ↓
+Independent Fake Robot Process
+        ↓
+Hidden Physical State
+        ↓
+ROS2 Topic Observation
+        ↓
+Outcome Verifier
+```
+
+The fake robot is a separate OS process, not a direct Python backend call and not a
+physics simulator. Long-running and cancellable commands use a ROS action; state is
+published asynchronously; short reset, refresh, capability, and stop operations use
+services. The validation action uses a standard action as a test-only lifecycle
+envelope rather than claiming a production robot command schema.
+
+R1–R15 cover nominal execution, command rejection, accepted/no-motion, delayed
+observation, stale and unknown safety evidence, successful and failed refresh,
+transient recovery, generic repair, structural replanning, capability mismatch,
+timeout, cancellation, and terminal stop behavior.
+
+## Evaluation summary
+
+### Frozen adversarial V2 and holdout
+
+| Evaluation | Correct decisions | Feasible completion | Correct safe handling | Unsafe / false positive |
+|---|---:|---:|---:|---:|
+| Designed V2 (65) | 60/65 (92.31%) | 25/25 | 35/40 | 5/65 |
+| Frozen holdout (78) | 72/78 | 30/30 | 42/48 | 6/78 |
+
+The five design-suite false positives are the intentionally preserved
+`fresh_sensor_spoof` family. Metric definitions, family results, coupling controls,
+and A–F/removal ablations are in the
+[V2 methodology](docs/BENCHMARK_V2_METHODOLOGY.md).
+
+### Corrected fixed benchmark
+
+The smaller 30-scenario deterministic Mock benchmark remains useful as an engineering
+regression, not as the headline evidence:
+
+| Configuration | Task success | Invalid skill calls |
+|---|---:|---:|
+| Direct function calling | 60.00% | 14.55% |
+| State-grounded | 83.33% | 0.00% |
+| State-grounded + recovery | 93.33% | 0.00% |
+
+Historical methodology corrections are documented outside this portfolio summary.
+
+## Known failure boundaries
+
+- **Fresh evidence is not truthful evidence.** A fresh false sensor observation can
+  fool outcome verification; the independent oracle records the false positive.
+- **Freshness is not an atomic safety guarantee.** The ROS2 TOCTOU probe observes a
+  safe state, then changes the world before dispatch; unsafe motion still occurs.
+- **STOP is a policy decision, not a universal physical-stop proof.** Recovery
+  exhaustion paths call the backend stop operation, but some early grounding/preflight
+  STOP exits in the frozen executor do not transmit that operation. R15 blocks the
+  prohibited command while emergency stop is already observed active.
+- The synchronous executor has no caller-facing cancellation API, although the ROS2
+  backend can cancel actions and R14 verifies coherent adapter state afterward.
+- No collision safety, real-time guarantee, safety-rated interlock, sensor-fault
+  tolerance, simulation validity, or hardware safety is claimed.
+
+The complete failure ledger is in
+[docs/REMAINING_FAILURE_MODES.md](docs/REMAINING_FAILURE_MODES.md).
+
+## JAKA status
+
+`JakaRobotBackend` wraps already initialized legacy objects without importing vendor
+packages at core import time. Static inspection found open-loop AGV displacement,
+bilateral arm-preset scope, sequential head side effects, synchronous lift semantics,
+and an AGV-only stop that cannot be advertised as whole-robot safe stop.
+
+See the [JAKA capability audit](docs/JAKA_CAPABILITY_AUDIT.md). Hardware execution,
+transport-pose calibration, odometry, whole-robot stopping, and supervised validation
+remain `UNVERIFIED`.
+
+## Quick reproduction
+
+The pure-Python core requires Python 3.9+ and has no mandatory third-party runtime
+dependency:
 
 ```bash
 PYTHONPATH=. python3 -m unittest discover -s tests -v
 ```
 
-The tests are also pytest-compatible when pytest is installed. ROS2-marked tests skip
-with a clear reason when Humble is unavailable:
+Without ROS2, ROS-marked tests skip explicitly. On Ubuntu 22.04 with ROS2 Humble:
 
 ```bash
-python3 -m pytest
-```
+source /opt/ros/humble/setup.bash
 
-Run the Linux/Humble process-separated validation after sourcing ROS:
-
-```bash
 colcon build --symlink-install --packages-select embodied_skill_ros
 source install/setup.bash
+
+ROS_LOG_DIR=/tmp/embodied_skill_ros_logs ROS_LOCALHOST_ONLY=1 \
+  colcon test --packages-select embodied_skill_ros
+
+colcon test-result --all --verbose
+```
+
+Expected validated result: **107 tests, zero errors, zero failures, zero skips**.
+
+Run the process-separated scenario harness:
+
+```bash
 ROS_LOG_DIR=/tmp/embodied_skill_ros_logs ROS_LOCALHOST_ONLY=1 \
   ros2 run embodied_skill_ros validate_runtime \
   --output ros2_validation_outputs/runtime_scenarios.json
 ```
 
-The fake robot is an independent ROS process. Long-running commands use an action,
-state arrives asynchronously by topic, and reset/refresh/safe-stop operations use
-services. See [the runtime report](docs/ROS2_RUNTIME_VALIDATION_REPORT.md).
-
-## Mock demos
-
-### Normal multi-step task
-
-`normal_task.py` executes “收回右臂，移动到工作台旁，然后升高升降轴” and verifies every step.
-
-### Same instruction, different body state
-
-`state_grounded_task.py` runs “移动到工作台” twice:
-
-- `right_arm_safe=true` → `move_agv`
-- `right_arm_safe=false` → inserted `retract_arm` → `move_agv`
-
-### Body-resource conflict
-
-`plan_repair_demo.py` starts with arm extension and fast AGV motion in one parallel group. The grounder serializes the request and inserts a transport-safe arm action before base motion.
-
-### Accepted command, failed outcome
-
-`recovery_demo.py` injects a lift command whose receipt is accepted while height feedback remains unchanged. The verifier detects the mismatch and a bounded local retry succeeds.
-
-## JAKA hardware adapter — `STATICALLY-INSPECTED`, hardware `UNVERIFIED`
-
-`JakaRobotBackend` wraps the already-initialized legacy objects from `real_sdk_skills.make_real_sdk_skills(...)`; the new core does not import ROS2 or embed network configuration.
-
-```python
-from embodied_skill_ros.backends import JakaRobotBackend
-
-backend = JakaRobotBackend(
-    arm_skill=legacy_arm,
-    agv_skill=legacy_agv,
-    lift_skill=legacy_lift,
-    head_skill=legacy_head,
-    transport_pose_name="<locally validated preset>",
-    state_provider=my_verified_robot_state_provider,
-    agv_position_provider=my_verified_odometry_provider,
-)
-```
-
-Important: merely configuring a preset name does not prove that an arm is transport-safe. Without a measured, deployment-validated state provider, arm safety, AGV motion state, faults, and emergency stop remain `UNKNOWN`; the system will not fabricate them. The current adapter can send only the legacy AGV stop call, so it does not advertise or accept a whole-robot `safe_stop` capability.
-
-## Benchmark — `BENCHMARK-VERIFIED`
-
-`benchmarks/scenarios.json` contains 30 deterministic scenarios:
-
-- 5 single-step;
-- 10 multi-step/multi-component;
-- 5 initial-state variations;
-- 5 body-resource conflicts;
-- 5 timeouts, command failures, physical failures, or state drift cases.
-
-Run and evaluate:
-
-```bash
-python3 benchmarks/run_benchmark.py
-python3 benchmarks/evaluate.py
-```
-
-The runner compares:
-
-- A: Direct Function Calling baseline;
-- B: Structured Sequential Plan;
-- C: State-Grounded Plan;
-- D: State-Grounded Plan + Runtime Recovery.
-
-Success is computed by `BenchmarkOracle` from hidden Mock physical state, independently
-of both sensor observations and `ExecutionReport.success`.
-
-The seeded procedural experiment is generated independently of the fixed scenario file:
-
-```bash
-python3 benchmarks/run_procedural_benchmark.py --seed 20260808 --trials 200
-```
-
-Its checked-in run yields 24.00% success for direct unverified dispatch and 100.00%
-for grounded execution with bounded recovery. The direct profile has a 23.00% false-positive
-rate because accepted physical-failure commands are not verified. Every faulty trial
-contains exactly one transient event and FULL has one retry, so this 100% is a narrow
-task-completion result, not evidence about permanent or impossible cases.
-
-Run the frozen-core V2 adversarial, A-F ablation, and 78-trial post-freeze holdout:
-
-```bash
-PYTHONPATH=. python3 benchmarks/run_benchmark_v2.py
-```
-
-FULL completes 25/25 feasible design trials, correctly stops 35/40 stop-expected
-trials, and fails all five fresh-sensor-spoof trials. See the exact metric
-definitions and per-family table in
-[docs/BENCHMARK_V2_METHODOLOGY.md](docs/BENCHMARK_V2_METHODOLOGY.md).
-
-| Frozen evaluation | Correct decisions | Overall task completion | Completable cases | Correct safe handling | Unsafe / false positive |
-|---|---:|---:|---:|---:|---:|
-| Designed V2 (65) | 60/65 (92.31%) | 25/65 (38.46%) | 25/25 (100%) | 35/40 (87.50%) | 5/65 (7.69%) |
-| Holdout (78) | 72/78 | 30/78 | 30/30 | 42/48 | 6/78 |
-
-## Reproduced results
-
-The following values come from the checked-in `benchmarks/benchmark_results.json`.
-The **93.33% result is limited to 30 predefined deterministic Mock scenarios**; it
-is not a ROS2 simulation or hardware success rate. Latency is local Python runtime
-and should not be compared with hardware latency.
-
-| Configuration | Task success | Long-horizon | State-change | Invalid calls | Repair success | Recovery rate | Verification accuracy | Avg. steps |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A Direct | 60.00% | 100.00% | 0.00% | 14.55% | 0.00% | 0.00% | 81.82% | 1.83 |
-| B Structured | 60.00% | 100.00% | 0.00% | 12.96% | 0.00% | 0.00% | 100.00% | 1.80 |
-| C Grounded | 83.33% | 100.00% | 100.00% | 0.00% | 100.00% | 0.00% | 100.00% | 2.10 |
-| D Grounded + Recovery | **93.33%** | **100.00%** | **100.00%** | **0.00%** | **100.00%** | **60.00%** | **100.00%** | 2.30 |
-
-These are deterministic Mock results, not hardware claims. The two D task failures
-stop safely: one has no structurally different replan after retry exhaustion, and
-one is the intentionally persistent “AGV unavailable” scenario. The earlier 96.67%
-result incorrectly accepted an equivalent-plan replan label.
+Expected summary: **15/15 required scenarios pass** and both unsafe limitation
+probes—fresh sensor spoof and TOCTOU—remain reproduced.
 
 ## Documentation map
 
-- Original system: [analysis](docs/ORIGINAL_SYSTEM_ANALYSIS.md), [call chain](docs/CALL_CHAIN.md), [skills](docs/SKILL_INVENTORY.md), [ROS2 interfaces](docs/ROS2_INTERFACE_INVENTORY.md), [migration risks](docs/MIGRATION_RISKS.md)
-- New system: [architecture](docs/NEW_ARCHITECTURE.md), [data model](docs/DATA_MODEL.md), [constraints](docs/EMBODIED_CONSTRAINTS.md), [implementation status](docs/IMPLEMENTATION_PLAN.md)
-- Research rigor: [V2 methodology](docs/BENCHMARK_V2_METHODOLOGY.md), [remaining failures](docs/REMAINING_FAILURE_MODES.md), [evidence ledger](docs/VALIDATION_EVIDENCE.md), [literature and novelty boundaries](docs/LITERATURE_AND_NOVELTY.md)
-- Deployment validation: [Ubuntu 22.04 + ROS2 Humble plan](docs/ubuntu_ros2_validation_plan.md)
-- Project summary: [FINAL_REPORT.md](FINAL_REPORT.md)
-
-## Known limitations
-
-- JAKA hardware execution was not performed; its mapping is statically audited but vendor bridge runtime is not validated.
-- Transport-safe arm classification needs calibrated joint/TCP envelopes.
-- The legacy elementary AGV path is open-loop; odometry must be supplied for physical displacement verification.
-- The deterministic language planner intentionally covers only the demos. The provider-neutral LLM adapter validates structured JSON but does not bundle a model client or credentials.
-- Parallel requests are conservatively serialized; no concurrent scheduler is implemented.
-- Generic preparation selection is implemented; parameter correction and cost-aware alternative-skill selection remain future work.
-- The goal-directed replanner is an effect-regression baseline, not an optimal or task-and-motion planner.
-- The ROS fake backend cancels timed-out actions, but the frozen synchronous executor has no caller-facing cancellation API.
-- A fresh but false single-source observation can fool the runtime verifier; V2 records this as an unsafe false positive.
-- Freshness does not prevent a safety fact from changing between the runtime guard and physical transition; the ROS TOCTOU probe is unsafe.
+- [Validation evidence ledger](docs/VALIDATION_EVIDENCE.md)
+- [ROS2 runtime report](docs/ROS2_RUNTIME_VALIDATION_REPORT.md)
+- [Machine-readable ROS2 traces](ros2_validation_outputs/README.md)
+- [Adversarial V2 methodology](docs/BENCHMARK_V2_METHODOLOGY.md)
+- [Frozen-core reproducibility](docs/STANDALONE_REPRODUCIBILITY.md)
+- [JAKA capability audit](docs/JAKA_CAPABILITY_AUDIT.md)
+- [Architecture details](docs/NEW_ARCHITECTURE.md)
+- [Literature and novelty boundaries](docs/LITERATURE_AND_NOVELTY.md)
+- [Remaining failure modes](docs/REMAINING_FAILURE_MODES.md)
+- [Current project report](FINAL_REPORT.md)
 
 ## Roadmap
 
-See [ROADMAP.md](ROADMAP.md). A deterministic post-freeze Mock holdout is present;
-an externally administered benchmark with confidence intervals, ROS2 runtime
-validation, simulation integration, and supervised JAKA hardware validation remain planned.
+Portfolio v0.2.0 freezes the current evidence-backed execution artifact. Near-term
+work is deliberately narrow: record a real demo, add externally administered tasks,
+and validate a physics simulator or supervised robot backend without changing the
+meaning of existing benchmark results. An optional research track may study
+version/evidence-guarded command admission for ROS2 check→dispatch races; it is not
+required for the current project claims.
+
+See [ROADMAP.md](ROADMAP.md) for the status-separated roadmap.
