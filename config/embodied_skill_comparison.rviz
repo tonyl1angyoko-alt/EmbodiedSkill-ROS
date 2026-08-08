@@ -59,7 +59,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /embodied_skill/comparison_markers
+        Value: /visualization_marker_array
       Name: Comparison Overlay
       Namespaces: {}
     - Class: rviz_default_plugins/TF
