@@ -1,5 +1,10 @@
 # GitHub Release Report
 
+> **Historical v0.1.0 record.** This report documents the repository state before
+> the GitHub remote and ROS2 runtime validation existed. Its old test counts,
+> unavailable-tool statements, and benchmark presentation are not current claims.
+> See `README.md`, `FINAL_REPORT.md`, and `docs/VALIDATION_EVIDENCE.md` for v0.2.0.
+
 Report date: 2026-08-06
 
 ## 1. Repository address

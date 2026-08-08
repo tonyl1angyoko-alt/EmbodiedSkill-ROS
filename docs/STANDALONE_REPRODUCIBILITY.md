@@ -1,5 +1,10 @@
 # Standalone Reproducibility
 
+> **Historical frozen-macOS record.** This document preserves the exact pre-ROS2
+> isolation audit and its 102-test/ROS-unavailable environment. It is not the current
+> project status. For current evidence, see `docs/VALIDATION_EVIDENCE.md` and
+> `docs/ROS2_RUNTIME_VALIDATION_REPORT.md`.
+
 Validation date: 2026-08-08
 
 Evidence labels: `UNIT-VERIFIED`, `MOCK-VERIFIED`, `BENCHMARK-VERIFIED`

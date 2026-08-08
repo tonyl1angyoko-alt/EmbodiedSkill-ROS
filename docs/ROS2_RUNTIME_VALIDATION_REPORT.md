@@ -133,6 +133,18 @@ a worker thread. Consequently adapter-level cancellation is
 `ROS2-RUNTIME-VERIFIED`, while end-to-end application cancellation remains only
 partially integrated.
 
+## Terminal STOP limitation
+
+STOP denotes the executor's terminal policy decision; it is not a safety-rated
+physical-state certificate. Recovery-exhaustion paths invoke the backend stop
+operation, as shown in R3, R11's retry-only counterfactual, and R14. Some earlier
+grounding/preflight exits in the frozen executor return STOP without transmitting
+`backend.stop()`. R15 is one such path: emergency stop is already observed active,
+the prohibited AGV action is blocked, and no additional stop service call is claimed.
+An older experimental branch contains a possible funneling fix, but it was not
+cherry-picked because it modifies the frozen `SkillExecutor` and has not been
+revalidated against the frozen benchmark methodology and ROS2 evidence.
+
 ## Build and test evidence
 
 - `colcon build --symlink-install --packages-select embodied_skill_ros`: passed.

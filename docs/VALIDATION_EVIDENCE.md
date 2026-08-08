@@ -25,17 +25,18 @@ simulation, or hardware result.
 | Structural replanning through ROS | `ROS2-RUNTIME-VERIFIED` | R11 switches persistent `primary_route` failure to `alternate_route`; retry-only counterfactual fails | Synthetic route effects; no motion planner |
 | ROS capability preflight | `ROS2-RUNTIME-VERIFIED` | R12 bilateral arm semantics rejected before action transmission | JAKA endpoint itself was not run |
 | ROS action timeout and adapter cancellation | `ROS2-RUNTIME-VERIFIED` | R13 timeout/cancel/retry and R14 external cancel/coherent state | Frozen executor has no caller-facing cancel API |
+| Terminal STOP policy | `UNIT-VERIFIED` / `ROS2-RUNTIME-VERIFIED` as a decision | recovery exhaustion invokes backend stop; R15 blocks prohibited transmission | Some early grounding/preflight STOP exits do not call `backend.stop()`; STOP is not universal proof of physical stop actuation |
 | Asynchronous TOCTOU safety | `KNOWN-UNSAFE-LIMITATION` | L1 changes a fresh safety fact between guard and transition; prohibited motion succeeds | Freshness is not an atomic lease/interlock |
 | Fresh ROS sensor spoof | `KNOWN-UNSAFE-LIMITATION` | L2 reproduces executor success with false hidden state | Intentional frozen trust-model boundary |
 | Gazebo/MoveIt simulation | `UNVERIFIED` | no simulation executed | No simulation result claimed |
 | JAKA adapter mapping | `STATICALLY-INSPECTED` | `docs/JAKA_CAPABILITY_AUDIT.md`; bilateral preflight and partial-safe-stop honesty tests | Vendor bridge packages/services not active |
 | JAKA hardware | `UNVERIFIED` | adapter contract tests only | No command was sent to hardware |
 
-## Current macOS evidence
+## Historical frozen macOS evidence
 
-The hostile-audit standard-library suite contains 102 tests: 100
+At the pre-ROS2 frozen milestone, the hostile-audit standard-library suite contained 102 tests: 100
 platform-independent tests pass and 2 ROS2 runtime tests are skipped when ROS2 is absent.
-The exact current result must be regenerated rather than copied into a paper:
+This is retained as transfer provenance, not the current project-wide test count:
 
 ```bash
 PYTHONPATH=. python3 -m unittest discover -s tests -v
@@ -46,7 +47,7 @@ PYTHONPATH=. python3 benchmarks/run_benchmark_v2.py
 
 ## Ubuntu 22.04 / Humble evidence
 
-The Linux branch contains 107 tests: the original 102, four process-separated ROS
+The ROS2 Humble validation environment contains 107 tests: the original 102, four process-separated ROS
 scenario tests, and one JAKA safe-stop honesty regression. The exact final count
 must be regenerated after every test change.
 

@@ -1,5 +1,11 @@
 # Public Release Audit
 
+> **Historical v0.1.0 audit.** The remote/repository availability, package email,
+> test count, and ROS2 status below describe the private pre-ROS2 milestone and are
+> intentionally preserved as an audit record. They are superseded by
+> `docs/VALIDATION_EVIDENCE.md`, `docs/ROS2_RUNTIME_VALIDATION_REPORT.md`, and the
+> v0.2.0 portfolio release documentation.
+
 Audit date: 2026-08-08
 
 Target: the standalone `EmbodiedSkill-ROS` repository only. The separately delivered reference workspace is excluded from version control and distribution.

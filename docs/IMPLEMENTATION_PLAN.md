@@ -19,7 +19,8 @@
 | 15 | Hidden physical world and independent benchmark oracle | Complete; integrity tested |
 | 16 | Backend capabilities and recovery-policy enforcement | Complete; unit verified |
 | 17 | Seeded procedural fault benchmark and adversarial/property tests | Complete; benchmark verified |
-| 18 | Optional ROS2 Mock bridge and Ubuntu/Humble validation plan | Source complete; runtime unverified |
+| 18 | Process-separated ROS2 fake robot and Ubuntu/Humble runtime validation | Complete; ROS2 runtime verified for R1–R15 |
+| 19 | Portfolio v0.2.0 claim consolidation and release metadata | Complete after final validation/tagging |
 
 ## Hardware follow-up order
 

@@ -1,42 +1,48 @@
 # Roadmap
 
-All items below are `PLANNED`, not completed capabilities.
+Completed evidence and planned work are separated explicitly.
 
-## v0.2.0 — Research-core rigor and ROS2 validation preparation
+## v0.2.0 — ROS2 Runtime Portfolio Release — complete
 
-- declarative contracts, epistemic freshness, generic repair, genuine goal replanning;
-- hidden-world oracle, procedural benchmark, integrity/property/adversarial tests;
-- optional ROS2 Mock bridge and exact Ubuntu validation plan.
+- frozen declarative reasoning core and corrected benchmark methodology;
+- epistemic state, generic repair, structural replanning, and capability preflight;
+- hidden-state oracle, adversarial V2, ablations, and frozen holdout;
+- Ubuntu 22.04.5 / ROS2 Humble build and 107-test validation environment;
+- process-separated fake robot with topic/service/action communication;
+- R1–R15 runtime scenarios plus fresh-spoof and TOCTOU probes; and
+- static JAKA capability/side-effect audit.
 
-Core items are complete on macOS; ROS2 runtime validation remains planned.
+## Near-term portfolio work — planned
 
-## v0.2.1 — ROS2 Humble runtime validation
+- record a real terminal/runtime demo without presenting it as hardware footage;
+- add a concise release page linked to the machine-readable evidence; and
+- improve documentation navigation as external users reproduce the artifact.
 
-- Ubuntu 22.04 build;
-- `colcon build --symlink-install`;
-- ROS2 node/service/action smoke tests;
-- launch-file validation.
+## Externally administered evaluation — planned
 
-## v0.3.0 — Externally administered benchmark
+- unseen task paraphrases and hidden initial states;
+- adversarial resource conflicts administered outside the repository fixtures;
+- repeated trials and confidence intervals; and
+- matched PlanSys2 or behavior-tree recovery baselines.
 
-- unseen task paraphrases;
-- hidden initial states;
-- adversarial resource conflicts;
-- benchmark leakage audit;
-- confidence intervals and repeated trials.
+The current 78-trial frozen holdout is deterministic family replication, not a
+sample from a deployment distribution.
 
-A 78-trial deterministic post-freeze Mock holdout now exists. It does not replace
-this planned external evaluation or provide deployment-distribution confidence intervals.
+## Simulation integration — unverified / planned
 
-## v0.4.0 — Simulation integration
+- Gazebo, MoveIt2, or another physics backend;
+- reproducible simulator launch and measured before/after state; and
+- clear separation from the deterministic fake robot.
 
-- Gazebo, MoveIt2, or another suitable simulation backend;
-- RViz visualization;
-- reproducible simulation demo.
+## JAKA hardware validation — unverified / planned
 
-## v0.5.0 — JAKA hardware validation
+- calibrated transport-safe joint/TCP envelope;
+- measured AGV odometry and fault state;
+- whole-robot stop semantics;
+- supervised low-risk execution; and
+- sanitized traces and a real recorded demo.
 
-- verified adapter mapping;
-- low-risk real-robot tasks;
-- human-supervised execution;
-- real execution traces and videos.
+## Optional research track
+
+Version/evidence-guarded command admission may be studied for ROS2 check→dispatch
+races. It is optional future research, not a prerequisite for the v0.2.0 claims.
