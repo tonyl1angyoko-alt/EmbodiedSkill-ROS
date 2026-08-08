@@ -64,65 +64,62 @@ def panel_text(
     targets: VisualTargets | None,
     signals: LaneSignals,
 ) -> str:
+    """Compact copy for RViz: short lines prevent perspective text overlap."""
     arm_safe = targets.left_arm_safe if targets else None
     position = targets.agv_position_m if targets else None
 
     if case == REPAIR and lane == "baseline":
         if position is not None and position >= 0.99:
             return (
-                "POLICY: DIRECT EXECUTION\n"
-                "move_agv(1.0 m)\n\n"
-                "TASK REACHED x = 1.0\n"
-                "ARM_SAFE = FALSE\n"
+                "DIRECT EXECUTION\n"
+                "x = 1.00 m\n"
+                "arm_safe = FALSE\n\n"
                 "PRECONDITION IGNORED"
             )
         if signals.action_started:
             return (
-                "POLICY: DIRECT EXECUTION\n"
-                "move_agv(1.0 m)\n\n"
-                "EXECUTE IMMEDIATELY\n"
-                "ARM STILL EXTENDED\n"
+                "DIRECT EXECUTION\n"
+                "move_agv(1.0 m)\n"
+                "arm_safe = FALSE\n\n"
                 "NO GROUND / REPAIR"
             )
         return (
-            "INPUT: move_agv(1.0 m)\n"
-            "STATE: ARM_SAFE = FALSE\n\n"
-            "POLICY\n"
-            "TRUST PLAN AND EXECUTE"
+            "TASK: move_agv(1.0 m)\n"
+            "arm_safe = FALSE\n\n"
+            "POLICY: TRUST PLAN"
         )
 
     if case == REPAIR and lane == "embodied":
         if position is not None and position >= 0.99:
             return (
-                "GROUND -> REPAIR -> VERIFY\n\n"
-                "retract_arm: VERIFIED\n"
-                "move_agv: VERIFIED\n"
+                "GROUND -> REPAIR -> VERIFY\n"
+                "retract_arm: OK\n"
+                "move_agv: OK\n\n"
                 "FINAL: SUCCESS"
             )
         if signals.current_skill == "move_agv":
             return (
                 "REPAIR VERIFIED\n"
-                "ARM_SAFE = TRUE\n\n"
-                "RESUME ORIGINAL PLAN\n"
-                "EXECUTE move_agv"
+                "arm_safe = TRUE\n\n"
+                "RESUME PLAN\n"
+                "move_agv(1.0 m)"
             )
         if arm_safe is True:
             return (
-                "REPAIR: retract_arm(left)\n\n"
-                "OBSERVE ARM_SAFE = TRUE\n"
-                "VERIFY: PASS\n"
-                "RESUME ORIGINAL PLAN"
+                "REPAIR: retract_arm\n"
+                "OBSERVE arm_safe = TRUE\n"
+                "VERIFY: PASS"
             )
         if signals.current_skill == "retract_arm":
             return (
-                "GROUND: PRECONDITION FAILED\n"
-                "ARM_SAFE = FALSE\n\n"
+                "PRECONDITION FAILED\n"
+                "arm_safe = FALSE\n\n"
                 "DECISION: REPAIR\n"
-                "EXECUTE retract_arm(left)"
+                "retract_arm(left)"
             )
         return (
-            "INPUT: move_agv(1.0 m)\n"
-            "GROUND: ARM_SAFE = FALSE\n\n"
+            "TASK: move_agv(1.0 m)\n"
+            "GROUND arm_safe = FALSE\n\n"
             "PRECONDITION FAILED\n"
             "DECISION: REPAIR"
         )
@@ -130,49 +127,46 @@ def panel_text(
     if case == FALSE_SUCCESS and lane == "baseline":
         if signals.action_succeeded:
             return (
-                "ROS ACTION: SUCCEEDED\n"
-                f"VISUAL STATE: x = {_fmt_position(targets)}\n\n"
+                "ROS: SUCCEEDED\n"
+                f"x = {_fmt_position(targets)}\n\n"
                 "POLICY: TRUST MIDDLEWARE\n"
-                "FINAL: SUCCESS\n"
-                "(middleware-only)"
+                "FINAL: SUCCESS"
             )
         if signals.action_started:
             return (
-                "POLICY: DIRECT EXECUTION\n"
+                "DIRECT EXECUTION\n"
                 "move_agv(1.0 m)\n\n"
-                "WAIT FOR ROS RESULT..."
+                "WAIT FOR ROS RESULT"
             )
         return (
-            "FAULT: COMMAND REPORTS SUCCESS\n"
-            "BUT PHYSICAL STATE WILL NOT CHANGE\n\n"
+            "FAULT: NO MOTION\n"
+            "ROS WILL SAY SUCCEEDED\n\n"
             "POLICY: TRUST MIDDLEWARE"
         )
 
     if case == FALSE_SUCCESS and lane == "embodied":
         if signals.safe_stop_received:
             return (
-                "ROS ACTION: SUCCEEDED\n"
+                "ROS: SUCCEEDED\n"
                 "OBSERVE x = 0.00 m\n\n"
                 "VERIFY: FAILED\n"
-                "EXPECTED x = 1.00 m\n"
                 "FINAL: STOP"
             )
         if signals.action_succeeded:
             return (
-                "ROS ACTION: SUCCEEDED\n"
+                "ROS: SUCCEEDED\n"
                 f"OBSERVE x = {_fmt_position(targets)}\n\n"
-                "MIDDLEWARE != OUTCOME\n"
-                "VERIFY PHYSICAL EFFECT..."
+                "VERIFY PHYSICAL EFFECT"
             )
         if signals.action_started:
             return (
-                "EXECUTE move_agv(1.0 m)\n\n"
+                "EXECUTE move_agv\n\n"
                 "THEN OBSERVE\n"
                 "THEN VERIFY"
             )
         return (
-            "FAULT: COMMAND REPORTS SUCCESS\n"
-            "BUT PHYSICAL STATE WILL NOT CHANGE\n\n"
+            "FAULT: NO MOTION\n"
+            "ROS WILL SAY SUCCEEDED\n\n"
             "POLICY: EXECUTE -> OBSERVE -> VERIFY"
         )
 
@@ -203,10 +197,14 @@ def build_node() -> Any:
                 durability=DurabilityPolicy.TRANSIENT_LOCAL,
             )
             self._interpolators = {
-                lane: VisualStateInterpolator(arm_speed_rad_s=1.35, base_speed_m_s=0.50)
+                lane: VisualStateInterpolator(
+                    arm_speed_rad_s=1.35, base_speed_m_s=0.50
+                )
                 for lane in LANES
             }
-            self._targets: dict[str, VisualTargets | None] = {lane: None for lane in LANES}
+            self._targets: dict[str, VisualTargets | None] = {
+                lane: None for lane in LANES
+            }
             self._signals = {lane: LaneSignals() for lane in LANES}
             self._joint_publishers = {
                 lane: self.create_publisher(
@@ -235,14 +233,13 @@ def build_node() -> Any:
                 )
 
             self._tf_broadcaster = TransformBroadcaster(self)
-            # Humble RViz reliably restores its conventional MarkerArray topic.
-            # Keeping the presentation overlay there avoids saved-config topic
-            # property differences across RViz patch versions.
             self._marker_publisher = self.create_publisher(
                 MarkerArray, "/visualization_marker_array", 10
             )
             self._last_tick_ns = self.get_clock().now().nanoseconds
-            self._timer = self.create_timer(1.0 / 25.0, self._publish_visual_state)
+            self._timer = self.create_timer(
+                1.0 / 25.0, self._publish_visual_state
+            )
             self._marker_timer = self.create_timer(0.10, self._publish_markers)
 
         def _state_received(self, lane: str, message: Any) -> None:
@@ -273,7 +270,10 @@ def build_node() -> Any:
 
                 joints = JointState()
                 joints.header.stamp = now.to_msg()
-                joints.name = [f"{prefix}shoulder_joint", f"{prefix}elbow_joint"]
+                joints.name = [
+                    f"{prefix}shoulder_joint",
+                    f"{prefix}elbow_joint",
+                ]
                 joints.position = [shoulder, elbow]
                 self._joint_publishers[lane].publish(joints)
 
@@ -362,21 +362,21 @@ def build_node() -> Any:
             markers.markers = [
                 self._text_marker(
                     1,
-                    "BASELINE\nDirect middleware execution",
-                    0.45,
-                    1.70,
-                    1.40,
+                    "BASELINE\nDirect execution",
+                    -0.05,
+                    1.90,
+                    1.60,
                     baseline_color,
-                    0.22,
+                    0.14,
                 ),
                 self._text_marker(
                     2,
-                    "EMBODIEDSKILL-ROS\nContract + outcome verification",
-                    0.45,
-                    -1.70,
-                    1.40,
+                    "EMBODIEDSKILL-ROS\nGround / Repair / Verify",
+                    -0.05,
+                    -1.90,
+                    1.60,
                     embodied_color,
-                    0.22,
+                    0.14,
                 ),
                 self._text_marker(
                     3,
@@ -386,11 +386,11 @@ def build_node() -> Any:
                         self._targets["baseline"],
                         self._signals["baseline"],
                     ),
-                    0.45,
-                    1.70,
-                    0.90,
+                    -0.05,
+                    1.90,
+                    0.95,
                     white,
-                    0.145,
+                    0.085,
                 ),
                 self._text_marker(
                     4,
@@ -400,29 +400,41 @@ def build_node() -> Any:
                         self._targets["embodied"],
                         self._signals["embodied"],
                     ),
-                    0.45,
-                    -1.70,
-                    0.90,
+                    -0.05,
+                    -1.90,
+                    0.95,
                     white,
-                    0.145,
+                    0.085,
                 ),
-                self._line_marker(10, LANE_Y["baseline"], baseline_color),
-                self._line_marker(11, LANE_Y["embodied"], embodied_color),
-                self._goal_marker(20, LANE_Y["baseline"], baseline_color),
-                self._goal_marker(21, LANE_Y["embodied"], embodied_color),
+                self._line_marker(
+                    10, LANE_Y["baseline"], baseline_color
+                ),
+                self._line_marker(
+                    11, LANE_Y["embodied"], embodied_color
+                ),
+                self._goal_marker(
+                    20, LANE_Y["baseline"], baseline_color
+                ),
+                self._goal_marker(
+                    21, LANE_Y["embodied"], embodied_color
+                ),
             ]
             if self._case == REPAIR:
                 task = (
-                    "SAME TASK / SAME INITIAL STATE\n"
-                    "move_agv(1.0 m)   |   left_arm_safe = FALSE"
+                    "SAME TASK / SAME STATE\n"
+                    "move_agv(1.0 m)\n"
+                    "initial arm_safe = FALSE"
                 )
             else:
                 task = (
-                    "SAME FAULT INJECTION\n"
-                    "ROS SUCCEEDED   |   physical transition = NONE"
+                    "SAME FAULT\n"
+                    "ROS result = SUCCEEDED\n"
+                    "physical transition = NONE"
                 )
             markers.markers.append(
-                self._text_marker(30, task, -0.55, 0.0, 1.85, white, 0.18)
+                self._text_marker(
+                    30, task, -0.55, 0.0, 2.10, white, 0.105
+                )
             )
             self._marker_publisher.publish(markers)
 
