@@ -1,8 +1,8 @@
 # Ubuntu 22.04 + ROS2 Humble Validation Plan
 
-This plan is intentionally separate from macOS development evidence. Every result
-starts as `UNVERIFIED` and becomes `ROS2-RUNTIME-VERIFIED` only after the commands
-below run successfully on Ubuntu 22.04 with ROS2 Humble sourced.
+This plan is intentionally separate from macOS development evidence. It was
+executed on 2026-08-08 on Ubuntu 22.04.5 with ROS2 Humble. Exact results are in
+`docs/ROS2_RUNTIME_VALIDATION_REPORT.md`; commands remain here for reproduction.
 
 ## 1. Environment checks
 
@@ -84,7 +84,7 @@ ros2 pkg prefix embodied_skill_ros
 ros2 pkg executables embodied_skill_ros
 ```
 
-Expected executable: `embodied_skill_ros mock_bridge`.
+Expected executables: `mock_bridge`, `fake_robot`, and `validate_runtime`.
 
 ## 5. Pure-Python and ROS2 tests
 
@@ -99,8 +99,8 @@ colcon test --packages-select embodied_skill_ros --event-handlers console_direct
 colcon test-result --all --verbose
 ```
 
-Success criteria: all platform-independent tests pass; both ROS2 tests execute rather
-than skip; `colcon test-result` reports zero failures.
+Success criteria: all platform-independent tests pass; ROS2 tests execute rather
+than skip; `colcon test-result` reports zero failures and a non-zero test count.
 
 ## 6. Launch and interface checks
 
@@ -109,7 +109,8 @@ Terminal A:
 ```bash
 source /opt/ros/humble/setup.bash
 source "$HOME/embodied_skill_ws/install/setup.bash"
-ros2 launch embodied_skill_ros mock_validation.launch.py
+ROS_LOG_DIR=/tmp/embodied_skill_ros_logs ROS_LOCALHOST_ONLY=1 \
+  ros2 launch embodied_skill_ros fake_robot_validation.launch.py
 ```
 
 Terminal B:
@@ -118,26 +119,39 @@ Terminal B:
 source /opt/ros/humble/setup.bash
 source "$HOME/embodied_skill_ws/install/setup.bash"
 ros2 node list
-ros2 node info /embodied_skill_mock_bridge
+ros2 node info /embodied_skill_fake_robot
 ros2 topic list -t
 ros2 topic echo --once /embodied_skill/state std_msgs/msg/String
 ros2 service list -t
 ros2 service call /embodied_skill/get_capabilities std_srvs/srv/Trigger '{}'
-test -z "$(ros2 action list | grep '^/embodied_skill' || true)"
+ros2 action list -t
 ```
 
 Expected interfaces:
 
 | Kind | Name | Type / expectation |
 |---|---|---|
-| Node | `/embodied_skill_mock_bridge` | running |
+| Node | `/embodied_skill_fake_robot` | running |
 | Topic | `/embodied_skill/state` | `std_msgs/msg/String`, valid JSON state |
 | Service | `/embodied_skill/get_capabilities` | `std_srvs/srv/Trigger`, `success: true` |
-| Action | none | this validation bridge declares no action server |
+| Action | `/embodied_skill/execute_skill` | validation-only long-running/cancellable action lifecycle |
 
 Stop Terminal A with `Ctrl-C`; shutdown must be clean with no Python traceback.
 
-## 7. Benchmark integration tests
+## 7. Process-separated runtime scenarios
+
+```bash
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ROS_LOG_DIR=/tmp/embodied_skill_ros_logs ROS_LOCALHOST_ONLY=1 \
+  ros2 run embodied_skill_ros validate_runtime \
+  --output ros2_validation_outputs/runtime_scenarios.json
+```
+
+Success criteria: R1–R15 pass; the TOCTOU and fresh-spoof probes reproduce their
+documented unsafe limitations; the fake process exits with code zero.
+
+## 8. Benchmark integration tests
 
 ```bash
 cd "$HOME/embodied_skill_ws/src/EmbodiedSkill-ROS"
@@ -154,7 +168,7 @@ python3 -c 'import json; d=json.load(open("/tmp/embodied_skill_benchmark_v2/hold
 
 These remain `BENCHMARK-VERIFIED`, not simulation or hardware evidence.
 
-## 8. JAKA adapter checks without hardware
+## 9. JAKA adapter checks without hardware
 
 These commands construct no vendor client and send no motion command:
 
@@ -167,7 +181,7 @@ python3 -c 'from embodied_skill_ros.backends import JakaRobotBackend; b=JakaRobo
 Success criteria: import succeeds with no vendor SDK; absent adapters remain unsupported
 or `UNKNOWN`; no network address, ROS service, or robot motion is used.
 
-## 9. Hardware-only validation — separately authorized session
+## 10. Hardware-only validation — separately authorized session
 
 Do not run this section during unattended CI. Before any movement, the deployment owner
 must provide the vendor workspace, calibrated transport pose, measured state provider,
@@ -190,9 +204,9 @@ test must separately record: command receipt, measured pre/post state, verifier 
 safe-stop behavior, operator approval, robot serial/configuration hash, and sanitized
 trace. Only those trials may be labeled `HARDWARE-VERIFIED`.
 
-## 10. Evidence promotion criteria
+## 11. Evidence promotion criteria
 
-- `ROS2-RUNTIME-VERIFIED`: sections 1–8 pass on Ubuntu 22.04/Humble with logs and SHA.
+- `ROS2-RUNTIME-VERIFIED`: sections 1–9 pass on Ubuntu 22.04/Humble with logs and SHA.
 - `SIMULATION-VERIFIED`: requires a real simulator backend and physics execution; the
   Mock bridge does not qualify.
 - `HARDWARE-VERIFIED`: requires the supervised gate and measured physical outcomes.

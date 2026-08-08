@@ -4,9 +4,10 @@
 
 EmbodiedSkill-ROS turns an LLM's high-level tool plan into a state-grounded, closed-loop robot execution process that prefers **EXECUTE → REPAIR → REPLAN → STOP**.
 
-> **Milestone:** Research core scientifically audited and frozen on macOS; ROS2
-> runtime validation pending. The documented `fresh_sensor_spoof` failure remains
-> intentionally visible.
+> **Milestone:** Research core frozen at `7fdf9255`; process-separated ROS2 Humble
+> validation completed on Ubuntu 22.04 in `codex/ros2-humble-validation`. The
+> documented `fresh_sensor_spoof` failure remains intentionally visible, and ROS
+> runtime testing exposes an additional TOCTOU limitation.
 
 > **Demo media placeholder:** replace `docs/assets/embodied_skill_ros_demo.gif` with a recorded Mock/hardware demo. No video is claimed in this repository yet.
 
@@ -18,9 +19,11 @@ EmbodiedSkill-ROS turns an LLM's high-level tool plan into a state-grounded, clo
 | 93.33% task success | `BENCHMARK-VERIFIED` on 30 predefined deterministic scenarios only; equivalent-plan "replan" no longer counts |
 | 200 seeded procedural transient-fault trials | `BENCHMARK-VERIFIED`; full 100%, but all faults expire before the allowed retry |
 | Frozen-core V2 adversarial / holdout | `BENCHMARK-VERIFIED`; 92.31% correct decisions, 87.50% correct safe stops, 7.69% unsafe executions |
-| Optional ROS2 Mock bridge source and launch | `STATICALLY-INSPECTED`; runtime `UNVERIFIED` |
+| Process-separated ROS2 fake robot: 15 required scenarios | `ROS2-RUNTIME-VERIFIED` on Ubuntu 22.04.5/Humble; 15/15 correct decisions |
+| ROS action accepted but no motion | `ROS2-RUNTIME-VERIFIED`; verifier rejects transport-only success |
+| ROS delayed observations, refresh, timeout, cancellation | `ROS2-RUNTIME-VERIFIED`; caller-facing executor cancellation remains incomplete |
 | Original ROS2/JAKA interface mapping | `STATICALLY-INSPECTED` from a separately delivered reference workspace |
-| ROS2 Humble / Ubuntu 22.04 build | `UNVERIFIED` (`colcon` and ROS2 were unavailable) |
+| ROS2 Humble / Ubuntu 22.04 build | `ROS2-RUNTIME-VERIFIED`; package discovery, launch graph, and colcon tests pass |
 | JAKA hardware execution and transport-safe pose calibration | `UNVERIFIED` |
 | Gazebo, MoveIt2, and RViz integration | `PLANNED` |
 
@@ -99,6 +102,20 @@ with a clear reason when Humble is unavailable:
 python3 -m pytest
 ```
 
+Run the Linux/Humble process-separated validation after sourcing ROS:
+
+```bash
+colcon build --symlink-install --packages-select embodied_skill_ros
+source install/setup.bash
+ROS_LOG_DIR=/tmp/embodied_skill_ros_logs ROS_LOCALHOST_ONLY=1 \
+  ros2 run embodied_skill_ros validate_runtime \
+  --output ros2_validation_outputs/runtime_scenarios.json
+```
+
+The fake robot is an independent ROS process. Long-running commands use an action,
+state arrives asynchronously by topic, and reset/refresh/safe-stop operations use
+services. See [the runtime report](docs/ROS2_RUNTIME_VALIDATION_REPORT.md).
+
 ## Mock demos
 
 ### Normal multi-step task
@@ -138,7 +155,7 @@ backend = JakaRobotBackend(
 )
 ```
 
-Important: merely configuring a preset name does not prove that an arm is transport-safe. Without a measured, deployment-validated state provider, arm safety, AGV motion state, faults, and emergency stop remain `UNKNOWN`; the system will not fabricate them. The current `safe_stop` adapter only sends the confirmed legacy AGV stop call.
+Important: merely configuring a preset name does not prove that an arm is transport-safe. Without a measured, deployment-validated state provider, arm safety, AGV motion state, faults, and emergency stop remain `UNKNOWN`; the system will not fabricate them. The current adapter can send only the legacy AGV stop call, so it does not advertise or accept a whole-robot `safe_stop` capability.
 
 ## Benchmark — `BENCHMARK-VERIFIED`
 
@@ -224,15 +241,16 @@ result incorrectly accepted an equivalent-plan replan label.
 
 ## Known limitations
 
-- Hardware execution was not available in this environment; Mock behavior is tested, JAKA wiring is not physically validated.
+- JAKA hardware execution was not performed; its mapping is statically audited but vendor bridge runtime is not validated.
 - Transport-safe arm classification needs calibrated joint/TCP envelopes.
 - The legacy elementary AGV path is open-loop; odometry must be supplied for physical displacement verification.
 - The deterministic language planner intentionally covers only the demos. The provider-neutral LLM adapter validates structured JSON but does not bundle a model client or credentials.
 - Parallel requests are conservatively serialized; no concurrent scheduler is implemented.
 - Generic preparation selection is implemented; parameter correction and cost-aware alternative-skill selection remain future work.
 - The goal-directed replanner is an effect-regression baseline, not an optimal or task-and-motion planner.
-- Elapsed timeout is detected after a synchronous backend call returns. Deployment ROS2 clients should add future cancellation/timeouts.
+- The ROS fake backend cancels timed-out actions, but the frozen synchronous executor has no caller-facing cancellation API.
 - A fresh but false single-source observation can fool the runtime verifier; V2 records this as an unsafe false positive.
+- Freshness does not prevent a safety fact from changing between the runtime guard and physical transition; the ROS TOCTOU probe is unsafe.
 
 ## Roadmap
 
