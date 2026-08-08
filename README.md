@@ -1,3 +1,5 @@
+**English** | [简体中文](README_zh-CN.md)
+
 # EmbodiedSkill-ROS
 
 **Contract-Driven Reliable Skill Execution for ROS2 Robots**
