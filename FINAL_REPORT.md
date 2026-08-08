@@ -1,6 +1,6 @@
 # EmbodiedSkill-ROS Portfolio Release Report
 
-Current development target: `v0.3.0` — JAKA/Kargo Integration Layer
+Current portfolio release: `v0.3.0` — JAKA/Kargo Integration Layer
 
 Frozen portfolio milestone: `v0.2.0` — ROS2 Runtime Portfolio Release
 
@@ -65,7 +65,7 @@ historical methodology error. The corrected current fixed result is 93.33%.
 - runtime harness: R1–R15 all produced their expected decisions; and
 - limitation probes: fresh sensor spoof and ROS2 TOCTOU both remain reproduced.
 
-### JAKA/Kargo integration candidate
+### JAKA/Kargo integration release
 
 - five skill mappings: single-arm retract, map-X AGV motion, lift, head, and waist;
 - eight ROS endpoints exercised: six Services and two asynchronous topics;

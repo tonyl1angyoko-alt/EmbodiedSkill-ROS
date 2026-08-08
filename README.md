@@ -42,7 +42,7 @@ Planner / LLM  →  EmbodiedSkill-ROS  →  ROS2 / Robot Backend
 | **15 / 15** | required process-separated ROS2 runtime scenarios produced the expected decision |
 | **9 / 9** | JAKA/Kargo adapter scenarios passed through a separate ROS2 process using the external schemas |
 | **128** | tests passed in the extended ROS2 Humble environment (107 v0.2 + 20 integration contract + 1 integration runtime) |
-| **5 / 8** | robot skills mapped / external ROS endpoints exercised by the integration harness |
+| **5 skills / 8 ROS endpoints** | JAKA/Kargo integration coverage |
 | **25 / 25** | feasible cases completed in the frozen adversarial V2 design suite |
 | **60 / 65 (92.31%)** | correct decisions across all adversarial V2 trials |
 | **12 files / 1,385 LOC** | frozen reasoning core protected by a hash manifest |
@@ -406,10 +406,11 @@ a separate legacy-compatible stub; it does not load the vendor SDK or move hardw
 
 ## Roadmap
 
-Portfolio v0.2.0 remains the frozen ROS2-core milestone. v0.3 adds the JAKA/Kargo
-integration layer without changing any frozen reasoning file. The next gate is a
-reviewed deployment configuration and supervised, low-risk state/motion validation;
-until then the release is an integration-layer candidate, not a hardware release.
+Portfolio v0.2.0 remains the frozen ROS2-core milestone. v0.3.0 releases the
+JAKA/Kargo integration layer without changing any frozen reasoning file. A reviewed
+deployment configuration, vendor-backed node runtime, and supervised low-risk
+hardware validation remain future deployment gates; v0.3.0 is not a hardware
+release.
 An optional research track may study
 version/evidence-guarded command admission for ROS2 check→dispatch races; it is not
 required for the current project claims.

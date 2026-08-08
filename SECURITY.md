@@ -10,8 +10,9 @@ Before any hardware use, independently verify joint and Cartesian limits, veloci
 
 Dangerous fault injection belongs in `MockRobotBackend` or an isolated simulation. Do not reproduce command-loss, state-drift, timeout, or actuator-conflict scenarios on hardware without an approved test procedure.
 
-Version 0.2.0 is **not suitable for unsupervised real-robot deployment**. The
-process-separated fake-robot path is `ROS2-RUNTIME-VERIFIED`, but the JAKA adapter
-is only `STATICALLY-INSPECTED`; JAKA runtime, hardware execution, physics simulation,
-collision safety, safety-rated stopping, sensor trust, and real-time guarantees remain
-`UNVERIFIED`.
+Version 0.3.0 is **not suitable for unsupervised real-robot deployment**. The
+process-separated fake-robot path and exact-schema JAKA/Kargo adapter stub are
+`ROS2-RUNTIME-VERIFIED`, while the external interfaces/toolbox are
+`ROS2-BUILD-VERIFIED`. Vendor-backed JAKA node runtime, hardware execution, physics
+simulation, whole-robot stopping, collision safety, sensor trust, and real-time
+guarantees remain `UNVERIFIED`.

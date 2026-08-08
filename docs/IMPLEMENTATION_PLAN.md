@@ -21,6 +21,7 @@
 | 17 | Seeded procedural fault benchmark and adversarial/property tests | Complete; benchmark verified |
 | 18 | Process-separated ROS2 fake robot and Ubuntu/Humble runtime validation | Complete; ROS2 runtime verified for R1–R15 |
 | 19 | Portfolio v0.2.0 claim consolidation and release metadata | Complete after final validation/tagging |
+| 20 | JAKA/Kargo adapter, state/capability mapping, exact-schema runtime evidence, and v0.3.0 release | Complete; hardware remains unverified |
 
 ## Hardware follow-up order
 

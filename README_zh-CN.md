@@ -28,7 +28,8 @@ Planner / LLM → EmbodiedSkill-ROS → ROS2 / Robot Backend
 |---|---|
 | 平台 | Ubuntu 22.04.5、ROS2 Humble、Fast DDS、Python 3.10 |
 | v0.2 ROS2 核心 | R1–R15 全部得到预期决策；107/107 tests |
-| JAKA/Kargo integration | 5 个技能映射、8 个 ROS endpoint、9/9 独立进程场景 |
+| JAKA/Kargo skills | 5 个已映射技能 |
+| JAKA/Kargo ROS interfaces | 8 个已验证 endpoint；9/9 独立进程场景 |
 | 扩展测试环境 | 128/128 tests（107 个 v0.2 + 20 个 integration contract + 1 个 integration runtime） |
 | 对抗 V2 | 60/65 正确决策；25/25 可完成任务完成；5 个 fresh-sensor-spoof 假阳性 |
 | 冻结推理核心 | 12 files / 1,385 LOC；本次修改 0 个 |
@@ -216,6 +217,6 @@ ROS_LOG_DIR=/tmp/embodied_skill_jaka_logs ROS_LOCALHOST_ONLY=1 \
 - [已知 failure modes](docs/REMAINING_FAILURE_MODES.md)
 - [完整英文主页](README.md)
 
-v0.2.0 是已冻结的 ROS2 core milestone。v0.3 在不修改冻结推理核心的前提下
-增加 JAKA/Kargo integration layer；在完成受监督真机验证前，它不是 hardware
-release。
+v0.2.0 是已冻结的 ROS2 core milestone。v0.3.0 在不修改冻结推理核心的前提下
+正式发布 JAKA/Kargo integration layer。Vendor-backed node runtime、受审查的部署
+配置与受监督真机验证仍是后续 deployment gate；v0.3.0 不是 hardware release。

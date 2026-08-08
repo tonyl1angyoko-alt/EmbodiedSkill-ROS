@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
-Planned `v0.3.0` — JAKA/Kargo Integration Layer:
+No changes yet.
+
+## [0.3.0] - 2026-08-08
+
+JAKA/Kargo Integration Layer:
 
 - audit the separately delivered laboratory JAKA/Kargo workspace, its real ROS2
   interfaces, SDK boundary, observation signals, side effects, stop scope,
@@ -15,7 +19,8 @@ Planned `v0.3.0` — JAKA/Kargo Integration Layer:
 - add 20 integration contract tests and nine process-separated ROS2 scenarios,
   including Service-success/no-physical-transition and timeout negative controls;
 - build-verify the exact external interface packages and unmodified `jaka_toolbox`
-  without redistributing vendor/laboratory material; and
+  without redistributing vendor/laboratory material;
+- retain a zero-file delta across the 12-file / 1,385-LOC frozen reasoning core; and
 - document that vendor-node runtime, calibration, whole-robot stop, hardware, and
   physics simulation remain unverified.
 

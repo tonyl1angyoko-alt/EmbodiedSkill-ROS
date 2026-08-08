@@ -12,7 +12,7 @@ Completed evidence and planned work are separated explicitly.
 - R1–R15 runtime scenarios plus fresh-spoof and TOCTOU probes; and
 - static JAKA capability/side-effect audit.
 
-## v0.3.0 — JAKA/Kargo Integration Layer — branch candidate
+## v0.3.0 — JAKA/Kargo Integration Layer — complete
 
 - legacy call chain, ROS schema, SDK, state, side-effect, and IP audit;
 - five-skill backend adapter, epistemic state provider, and capability mapper;
@@ -22,9 +22,8 @@ Completed evidence and planned work are separated explicitly.
 - motion-disabled read-only deployment probe; and
 - zero modifications to the 12-file frozen reasoning core.
 
-This candidate is an integration-layer release, not a hardware release. Promotion
-requires local review of the branch evidence; vendor-node and supervised hardware
-validation remain separate gates.
+This is an integration-layer release, not a hardware release. Vendor-node runtime,
+private deployment review, and supervised hardware validation remain separate gates.
 
 ## Near-term portfolio work — planned
 
@@ -61,5 +60,5 @@ sample from a deployment distribution.
 ## Optional research track
 
 Version/evidence-guarded command admission may be studied for ROS2 check→dispatch
-races. It is optional future research, not a prerequisite for the v0.2.0 or v0.3
+races. It is optional future research, not a prerequisite for the v0.2.0 or v0.3.0
 integration-layer claims.

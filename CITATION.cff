@@ -5,10 +5,14 @@ type: software
 authors:
   - family-names: "Fu"
     given-names: "Zhengqing"
-version: 0.2.0
+version: 0.3.0
 date-released: 2026-08-08
 license: Apache-2.0
 abstract: >-
   A contract-driven execution layer with epistemic robot state, generic repair,
   structural replanning, outcome verification, adversarial evaluation, and
-  process-separated ROS2 Humble runtime validation.
+  process-separated ROS2 Humble runtime validation. Version 0.3.0 adds an explicit
+  skill, state, capability, and ROS transport integration boundary for an existing
+  JAKA/Kargo robot stack. The integration is validated against the external
+  generated ROS schemas in a separate-process stub; vendor-backed node execution
+  and robot hardware remain unverified.
