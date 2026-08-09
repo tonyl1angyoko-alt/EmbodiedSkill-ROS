@@ -175,7 +175,11 @@ Service client timeout 也不被描述成物理 cancellation。
 
 ```bash
 PYTHONPATH=. python3 -m unittest discover -s tests -v
+python3 scripts/report_test_inventory.py
 ```
+
+测试总数以 inventory script 的动态 discovery 为准；它会分别报告 portable、
+ROS2/Humble-gated 与 external-interface-gated tests。
 
 ROS2 Humble baseline：
 
@@ -215,6 +219,9 @@ ROS_LOG_DIR=/tmp/embodied_skill_jaka_logs ROS_LOCALHOST_ONLY=1 \
 - [JAKA/Kargo integration 分析](docs/JAKA_KARGO_INTEGRATION_ANALYSIS.md)
 - [JAKA/Kargo interface matrix](docs/JAKA_KARGO_INTERFACE_MATRIX.md)
 - [已知 failure modes](docs/REMAINING_FAILURE_MODES.md)
+- [工程卫生审计](docs/ENGINEERING_HYGIENE_AUDIT.md)
+- [执行器状态机与 STOP 路径](docs/SKILL_EXECUTOR_STATE_MACHINE.md)
+- [证据 artifact 管理策略](docs/EVIDENCE_ARTIFACT_POLICY.md)
 - [完整英文主页](README.md)
 
 v0.2.0 是已冻结的 ROS2 core milestone。v0.3.0 在不修改冻结推理核心的前提下

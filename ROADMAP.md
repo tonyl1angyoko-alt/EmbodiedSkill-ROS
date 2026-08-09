@@ -25,6 +25,17 @@ Completed evidence and planned work are separated explicitly.
 This is an integration-layer release, not a hardware release. Vendor-node runtime,
 private deployment review, and supervised hardware validation remain separate gates.
 
+## v0.3.1 — Engineering Hygiene — candidate, unreleased
+
+- portable CI and a Python 3.9–3.11 unit-test matrix;
+- correctness-oriented Ruff and scoped non-ROS2 Pyright baselines;
+- automated release metadata, registry mirror, and freeze-manifest checks;
+- a committed-evidence versus local-rerun artifact policy; and
+- executor/STOP-path audit documentation with zero frozen-core modifications.
+
+This candidate does not merge, tag, or replace the v0.3.0 ROS2/JAKA evidence. ROS2
+runtime and hardware validation remain separate gates.
+
 ## Near-term portfolio work — planned
 
 - record a real terminal/runtime demo without presenting it as hardware footage;

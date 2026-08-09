@@ -2,6 +2,8 @@
 
 # EmbodiedSkill-ROS
 
+[![Portable CI](https://github.com/tonyl1angyoko-alt/EmbodiedSkill-ROS/actions/workflows/ci.yml/badge.svg)](https://github.com/tonyl1angyoko-alt/EmbodiedSkill-ROS/actions/workflows/ci.yml)
+
 **Contract-Driven Reliable Skill Execution for ROS2 Robots**
 
 EmbodiedSkill-ROS addresses a practical robotics gap: a ROS action or SDK call can
@@ -342,9 +344,12 @@ dependency:
 
 ```bash
 PYTHONPATH=. python3 -m unittest discover -s tests -v
+python3 scripts/report_test_inventory.py
 ```
 
-Without ROS2, ROS-marked tests skip explicitly. On Ubuntu 22.04 with ROS2 Humble:
+The inventory command is the authority for the current discovered total and separates
+portable, ROS2/Humble-gated, and external-interface-gated tests. Without ROS2,
+ROS-marked tests skip explicitly. On Ubuntu 22.04 with ROS2 Humble:
 
 ```bash
 source /opt/ros/humble/setup.bash
@@ -402,6 +407,9 @@ a separate legacy-compatible stub; it does not load the vendor SDK or move hardw
 - [Architecture details](docs/NEW_ARCHITECTURE.md)
 - [Literature and novelty boundaries](docs/LITERATURE_AND_NOVELTY.md)
 - [Remaining failure modes](docs/REMAINING_FAILURE_MODES.md)
+- [Engineering hygiene audit](docs/ENGINEERING_HYGIENE_AUDIT.md)
+- [Executor state machine and STOP paths](docs/SKILL_EXECUTOR_STATE_MACHINE.md)
+- [Evidence artifact policy](docs/EVIDENCE_ARTIFACT_POLICY.md)
 - [Current project report](FINAL_REPORT.md)
 
 ## Roadmap
