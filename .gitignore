@@ -14,3 +14,10 @@ log/
 .idea/
 .DS_Store
 benchmark_outputs/
+.ruff_cache/
+.pyright/
+.mypy_cache/
+.coverage
+htmlcov/
+coverage.xml
+local_validation_outputs/

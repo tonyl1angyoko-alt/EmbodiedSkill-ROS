@@ -10,7 +10,13 @@ requires-python = ">=3.9"
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=7"]
+dev = [
+  "pytest>=7",
+  "pyright>=1.1.411,<2",
+  "PyYAML>=6.0,<7",
+  "ruff>=0.16,<1",
+  "tomli>=2.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -21,3 +27,51 @@ markers = [
 
 [tool.setuptools.packages.find]
 include = ["embodied_skill_ros*"]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+extend-exclude = [
+  # Frozen reasoning core: diagnose separately; do not create style-only hash drift.
+  "embodied_skill_ros/backends/base_backend.py",
+  "embodied_skill_ros/execution/outcome_verifier.py",
+  "embodied_skill_ros/execution/recovery_manager.py",
+  "embodied_skill_ros/execution/runtime_guard.py",
+  "embodied_skill_ros/execution/skill_executor.py",
+  "embodied_skill_ros/grounding/constraint_checker.py",
+  "embodied_skill_ros/grounding/plan_grounder.py",
+  "embodied_skill_ros/grounding/plan_repairer.py",
+  "embodied_skill_ros/models/robot_state.py",
+  "embodied_skill_ros/planner/goal_replanner.py",
+  "embodied_skill_ros/skills/base_skill.py",
+  "embodied_skill_ros/skills/registry.py",
+]
+
+[tool.ruff.lint]
+# Establish a correctness-oriented baseline without reformatting the frozen artifact.
+select = ["E4", "E7", "E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+# These entrypoints intentionally add the repository or benchmark directory before imports.
+"benchmarks/run_benchmark.py" = ["E402"]
+"benchmarks/run_procedural_benchmark.py" = ["E402"]
+"examples/_common.py" = ["E402"]
+"tests/test_benchmark_integrity.py" = ["E402"]
+# Existing test fixture style; changing it adds no engineering assurance.
+"tests/test_execution.py" = ["E731"]
+
+[tool.pyright]
+pythonVersion = "3.9"
+typeCheckingMode = "basic"
+include = [
+  "embodied_skill_ros/backends/jaka_backend.py",
+  "embodied_skill_ros/evaluation",
+  "embodied_skill_ros/integrations/jaka_kargo",
+  "embodied_skill_ros/ros2/state_codec.py",
+]
+exclude = [
+  # These adapters require ROS2 or external generated interfaces unavailable in portable CI.
+  "embodied_skill_ros/integrations/jaka_kargo/legacy_stub_node.py",
+  "embodied_skill_ros/integrations/jaka_kargo/ros2_transport.py",
+  "embodied_skill_ros/integrations/jaka_kargo/runtime_validation.py",
+]

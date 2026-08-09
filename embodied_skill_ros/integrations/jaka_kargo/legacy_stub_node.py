@@ -1,10 +1,10 @@
-from __future__ import annotations
-
 """Process-separated test double for the audited legacy ROS interface schema.
 
 This is not a physics simulator and is never a hardware backend.  It exists only to
 exercise the integration adapter with the exact generated service/message types.
 """
+
+from __future__ import annotations
 
 import json
 import threading
