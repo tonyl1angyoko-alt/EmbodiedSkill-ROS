@@ -9,7 +9,6 @@ from ..backends.mock_backend import MockRobotBackend
 def build_node() -> Any:
     """Construct the validation node; ROS imports stay behind this call."""
 
-    import rclpy
     from rclpy.node import Node
     from std_msgs.msg import String
     from std_srvs.srv import Trigger
