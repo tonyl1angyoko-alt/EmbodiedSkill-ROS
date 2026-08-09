@@ -132,7 +132,11 @@ def run_one(scenario: dict[str, Any], profile_name: str) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run deterministic EmbodiedSkill-ROS benchmark")
     parser.add_argument("--scenarios", type=Path, default=Path(__file__).with_name("scenarios.json"))
-    parser.add_argument("--output", type=Path, default=Path(__file__).with_name("benchmark_results.json"))
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=PROJECT_ROOT / "local_validation_outputs" / "benchmark_results.json",
+    )
     args = parser.parse_args()
     scenarios = json.loads(args.scenarios.read_text(encoding="utf-8"))
     if len(scenarios) < 30:
@@ -141,6 +145,7 @@ def main() -> int:
     for profile in PROFILES:
         runs = [run_one(scenario, profile) for scenario in scenarios]
         output["profiles"][profile] = {"metrics": summarize_runs(runs), "runs": runs}
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps({name: data["metrics"] for name, data in output["profiles"].items()}, indent=2))
     print(f"results: {args.output}")

@@ -106,7 +106,7 @@ def main() -> int:
     parser.add_argument("--trials", type=int, default=200)
     parser.add_argument(
         "--output", type=Path,
-        default=Path(__file__).with_name("procedural_results.json"),
+        default=PROJECT_ROOT / "local_validation_outputs" / "procedural_results.json",
     )
     args = parser.parse_args()
     if args.trials <= 0:
@@ -116,6 +116,7 @@ def main() -> int:
     for profile in PROFILES:
         rows = [run_trial(trial, profile) for trial in trials]
         output["profiles"][profile] = {"metrics": summarize(rows), "runs": rows}
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(output, indent=2, sort_keys=True), encoding="utf-8")
     print(json.dumps({
         profile: data["metrics"] for profile, data in output["profiles"].items()
