@@ -2,7 +2,15 @@
 
 ## [Unreleased]
 
-No changes yet.
+Engineering hygiene candidate:
+
+- add portable GitHub Actions for Python 3.9–3.11, Ruff, a scoped Pyright baseline,
+  release-metadata consistency, YAML registry consistency, and freeze verification;
+- add a dynamic unittest inventory instead of introducing another hard-coded count;
+- separate ignored local rerun output from committed canonical release evidence;
+- document the frozen executor state machine, every STOP path, and the two JAKA
+  backend roles without changing execution or robot command semantics; and
+- preserve all 12 frozen reasoning files and the v0.2.0/v0.3.0 tags unchanged.
 
 ## [0.3.0] - 2026-08-08
 

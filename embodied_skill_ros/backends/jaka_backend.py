@@ -1,3 +1,11 @@
+"""Legacy object-level JAKA adapter retained for compatibility.
+
+This module predates the v0.3 exact-schema JAKA/Kargo integration. New deployments
+should prefer ``integrations.jaka_kargo.JakaKargoBackend``; this adapter remains for
+callers that already own verified legacy skill objects. Importing either path stays
+ROS2-optional, and no deprecation warning is emitted at import time.
+"""
+
 from __future__ import annotations
 
 from typing import Any, Callable
