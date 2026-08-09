@@ -251,7 +251,7 @@ def run_scenarios() -> list[dict]:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--output", default="jaka_kargo_validation_outputs/integration_scenarios.json"
+        "--output", default="local_validation_outputs/jaka_kargo_integration_scenarios.json"
     )
     args = parser.parse_args(argv)
     scenarios = run_scenarios()

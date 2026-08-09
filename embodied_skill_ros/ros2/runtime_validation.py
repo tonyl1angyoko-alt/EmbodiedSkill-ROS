@@ -915,7 +915,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run process-separated ROS2 validation scenarios")
     parser.add_argument(
         "--output", type=Path,
-        default=Path("ros2_validation_outputs/runtime_scenarios.json"),
+        default=Path("local_validation_outputs/ros2_runtime_scenarios.json"),
     )
     args = parser.parse_args()
     result = run_validation(args.output)

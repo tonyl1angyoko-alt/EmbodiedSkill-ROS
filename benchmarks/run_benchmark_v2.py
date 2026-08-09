@@ -12,7 +12,11 @@ from adversarial_v2 import PROFILES, run_suite, verify_core_freeze
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parent)
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path(__file__).resolve().parents[1] / "local_validation_outputs",
+    )
     args = parser.parse_args()
     manifest = verify_core_freeze()
     full = next(item for item in PROFILES if item.name == "F_full")

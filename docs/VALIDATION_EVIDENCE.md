@@ -3,6 +3,12 @@
 Evidence labels are deliberately non-transitive: a unit test does not imply a ROS2,
 simulation, or hardware result.
 
+Current unittest discovery is reported by `python3 scripts/report_test_inventory.py`.
+The historical 102/107/128 totals below describe specific release environments; they
+are not a manually maintained claim about every later branch. Local benchmark and
+runtime reruns now default to the ignored `local_validation_outputs/` directory; see
+`EVIDENCE_ARTIFACT_POLICY.md` before replacing canonical artifacts.
+
 | Capability | Status | Evidence | Limit |
 |---|---|---|---|
 | Declarative `SkillContract`, predicates, effects, argument validation | `UNIT-VERIFIED` | `tests/test_models_and_registry.py`, `tests/test_research_core.py` | Pure Python semantics only |
