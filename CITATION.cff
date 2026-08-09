@@ -5,14 +5,17 @@ type: software
 authors:
   - family-names: "Fu"
     given-names: "Zhengqing"
-version: 0.3.0
-date-released: 2026-08-08
+version: 0.3.1
+date-released: 2026-08-09
 license: Apache-2.0
 abstract: >-
   A contract-driven execution layer with epistemic robot state, generic repair,
   structural replanning, outcome verification, adversarial evaluation, and
   process-separated ROS2 Humble runtime validation. Version 0.3.0 adds an explicit
   skill, state, capability, and ROS transport integration boundary for an existing
-  JAKA/Kargo robot stack. The integration is validated against the external
-  generated ROS schemas in a separate-process stub; vendor-backed node execution
-  and robot hardware remain unverified.
+  JAKA/Kargo robot stack. Version 0.3.1 adds portable CI, static-analysis baselines,
+  release and contract consistency checks, canonical evidence protection, and
+  executor audit documentation. No ROS2/JAKA execution semantics change in 0.3.1;
+  its ROS2/JAKA evidence remains inherited from 0.3.0. The integration is validated
+  against the external generated ROS schemas in a separate-process stub;
+  vendor-backed node execution and robot hardware remain unverified.

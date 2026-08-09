@@ -5,9 +5,16 @@ from __future__ import annotations
 
 import argparse
 import json
+from pathlib import Path
+import sys
 import unittest
 from collections import Counter
 from collections.abc import Iterator
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 
 def iter_tests(suite: unittest.TestSuite) -> Iterator[unittest.TestCase]:
@@ -28,7 +35,10 @@ def category(test: unittest.TestCase) -> str:
 
 
 def inventory(start_dir: str = "tests") -> dict[str, int]:
-    tests = list(iter_tests(unittest.defaultTestLoader.discover(start_dir)))
+    start_path = Path(start_dir)
+    if not start_path.is_absolute():
+        start_path = PROJECT_ROOT / start_path
+    tests = list(iter_tests(unittest.defaultTestLoader.discover(str(start_path))))
     counts = Counter(category(test) for test in tests)
     return {
         "discovered_total": len(tests),

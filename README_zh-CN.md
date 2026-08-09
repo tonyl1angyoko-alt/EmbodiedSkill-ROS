@@ -225,5 +225,8 @@ ROS_LOG_DIR=/tmp/embodied_skill_jaka_logs ROS_LOCALHOST_ONLY=1 \
 - [完整英文主页](README.md)
 
 v0.2.0 是已冻结的 ROS2 core milestone。v0.3.0 在不修改冻结推理核心的前提下
-正式发布 JAKA/Kargo integration layer。Vendor-backed node runtime、受审查的部署
-配置与受监督真机验证仍是后续 deployment gate；v0.3.0 不是 hardware release。
+正式发布 JAKA/Kargo integration layer。v0.3.1 是 Engineering Hygiene release，
+补充 portable CI、可复现性检查与审计文档，但没有改变机器人执行语义，也没有
+提升 ROS2/JAKA runtime evidence 等级。Vendor-backed node runtime、受审查的部署
+配置与受监督真机验证仍是后续 deployment gate；这两个 release 都不是 hardware
+release。

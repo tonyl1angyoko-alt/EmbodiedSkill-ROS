@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>embodied_skill_ros</name>
-  <version>0.3.0</version>
+  <version>0.3.1</version>
   <description>Contract-driven reliable skill execution for ROS2 robots.</description>
   <maintainer email="tonyl1angyoko-alt@users.noreply.github.com">Zhengqing Fu</maintainer>
   <license>Apache-2.0</license>

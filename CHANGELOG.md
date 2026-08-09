@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
-Engineering hygiene candidate:
+No changes yet.
+
+## [0.3.1] - 2026-08-09
+
+Engineering Hygiene:
 
 - add portable GitHub Actions for Python 3.9–3.11, Ruff, a scoped Pyright baseline,
   release-metadata consistency, YAML registry consistency, and freeze verification;
@@ -11,6 +15,9 @@ Engineering hygiene candidate:
 - document the frozen executor state machine, every STOP path, and the two JAKA
   backend roles without changing execution or robot command semantics; and
 - preserve all 12 frozen reasoning files and the v0.2.0/v0.3.0 tags unchanged.
+
+No robot execution semantics changed. No ROS2/JAKA runtime claim was upgraded;
+those evidence boundaries remain inherited from v0.3.0.
 
 ## [0.3.0] - 2026-08-08
 

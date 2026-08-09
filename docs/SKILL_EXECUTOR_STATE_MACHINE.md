@@ -79,7 +79,7 @@ returns. It does not prove server-side or physical cancellation.
 | Final goal verification fails | Yes | stop request attempted |
 
 The four early preflight returns occur before trace creation and intentionally remain
-unchanged in v0.3.1. `STOP` is therefore not a universal assertion that a stop command
+unchanged in the v0.3.1 release. `STOP` is therefore not a universal assertion that a stop command
 was sent, accepted, or physically completed.
 
 ## JAKA stop semantics
@@ -93,4 +93,4 @@ The current boolean `CommandReceipt.accepted` cannot express all relevant facts 
 once. A future, breaking design may use a structured `StopReceipt`/`StopResult` with
 separate fields such as `command_sent`, `scope`, `transport_accepted`,
 `physical_stop_confirmed`, and `safety_guarantee`. That redesign is not part of this
-candidate and must not be inferred from the present API.
+release and must not be inferred from the present API.
