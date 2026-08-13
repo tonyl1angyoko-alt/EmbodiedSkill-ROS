@@ -415,10 +415,12 @@ a separate legacy-compatible stub; it does not load the vendor SDK or move hardw
 ## Roadmap
 
 Portfolio v0.2.0 remains the frozen ROS2-core milestone. v0.3.0 releases the
-JAKA/Kargo integration layer without changing any frozen reasoning file. A reviewed
-deployment configuration, vendor-backed node runtime, and supervised low-risk
-hardware validation remain future deployment gates; v0.3.0 is not a hardware
-release.
+JAKA/Kargo integration layer without changing any frozen reasoning file. v0.3.1 is
+the Engineering Hygiene release: it adds portable CI, reproducibility gates, and
+audit documentation without changing robot execution semantics or upgrading ROS2/
+JAKA runtime evidence. A reviewed deployment configuration, vendor-backed node
+runtime, and supervised low-risk hardware validation remain future deployment gates;
+neither release is a hardware release.
 An optional research track may study
 version/evidence-guarded command admission for ROS2 check→dispatch races; it is not
 required for the current project claims.
